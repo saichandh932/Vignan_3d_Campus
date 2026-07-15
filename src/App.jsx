@@ -4,10 +4,11 @@ import { Sky, OrbitControls } from '@react-three/drei';
 import { Buildings } from './components/Buildings';
 import { Roads } from './components/Roads';
 import { Zones } from './components/Zones';
+import { Joystick } from './components/Joystick';
 import * as THREE from 'three';
 
 // Player Avatar controller with Road Constraints
-function PlayerController() {
+function PlayerController({ joystick }) {
   const { camera, scene } = useThree();
   const keys = useRef({ w: false, a: false, s: false, d: false });
   const playerRef = useRef();
@@ -94,13 +95,20 @@ function PlayerController() {
 
     const moveDirection = new THREE.Vector3(0, 0, 0);
 
+    // Keyboard inputs
     if (keys.current.w) moveDirection.add(forward);
     if (keys.current.s) moveDirection.sub(forward);
     if (keys.current.d) moveDirection.add(right);
+    if (keys.current.a) moveDirection.sub(right);
+
+    // Joystick inputs
+    if (joystick && joystick.current) {
+      if (joystick.current.y !== 0) moveDirection.add(forward.clone().multiplyScalar(-joystick.current.y));
+      if (joystick.current.x !== 0) moveDirection.add(right.clone().multiplyScalar(joystick.current.x));
+    }
+
     const player = playerRef.current;
     if (!player) return;
-
-    if (keys.current.a) moveDirection.sub(right);
 
     if (moveDirection.lengthSq() > 0) {
       moveDirection.normalize();
@@ -157,6 +165,8 @@ function PlayerController() {
 }
 
 export default function App() {
+  const joystick = useRef({ x: 0, y: 0 });
+
   return (
     <>
       <Canvas shadows camera={{ fov: 60, near: 0.1, far: 1000, position: [0, 15, 75] }}>
@@ -173,7 +183,7 @@ export default function App() {
         <fog attach="fog" args={['#87CEEB', 150, 600]} />
 
         {/* Custom Third-Person Controller + Orbit Controls */}
-        <PlayerController />
+        <PlayerController joystick={joystick} />
         <OrbitControls 
           makeDefault 
           enablePan={false}
@@ -194,6 +204,8 @@ export default function App() {
           <meshStandardMaterial color="#2E8B57" roughness={0.9} /> {/* Grass */}
         </mesh>
       </Canvas>
+
+      <Joystick joystickRef={joystick} />
 
       <div className="ui-container">
         <div className="instructions">

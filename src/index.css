@@ -58,3 +58,47 @@ html, body, #root {
   font-size: 0.9rem;
   opacity: 0.8;
 }
+
+/* Joystick Controls */
+.joystick-container {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  z-index: 100;
+  pointer-events: auto; /* Ensure it receives touches */
+  display: none; /* Hidden on desktop by default */
+}
+
+.joystick-base {
+  width: 120px;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  position: relative;
+  touch-action: none; /* Prevent scroll on touch */
+  backdrop-filter: blur(5px);
+}
+
+.joystick-knob {
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  position: absolute;
+  top: 35px; /* (120 - 50) / 2 */
+  left: 35px;
+  pointer-events: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .joystick-container {
+    display: block;
+  }
+  
+  .instructions {
+    display: none; /* Hide keyboard instructions on mobile */
+  }
+}
