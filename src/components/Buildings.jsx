@@ -1010,13 +1010,67 @@ export function Buildings() {
 
       {/* 🏢 U-BLOCK */}
       <MultiStoryBuilding
-        position={[-53.5, 0, -210.0]}
-        size={[85, 26]}
+        position={[-141.5, 0, -198.0]}
+        size={[70, 80]}
         floors={5}
         baseColor="#fcfcfc"
-        accentColor="#4682B4"
+        accentColor="#dad20a"
         label="U - BLOCK"
       />
+
+      {/* 🏛️ CONVOCATION HALL */}
+      <MultiStoryBuilding
+        position={[-196.5, 0, -197.5]}
+        size={[20, 80]}
+        floors={3}
+        baseColor="#f3f4f6"
+        accentColor="#9f96f7"
+        label="CONVOCATION HALL"
+      />
+
+      {/* 🏡 GUEST HOUSE */}
+      <MultiStoryBuilding
+        position={[-226.5, 0, -171.0]}
+        size={[26, 26]}
+        floors={2}
+        baseColor="#faf5ff"
+        accentColor="#37794b"
+        label="GUEST HOUSE"
+      />
+
+      {/* 🏐 VOLLEY BALL COURTS */}
+      <group position={[-236.5, 0, -214.0]}>
+        {/* Fence/Boundary around courts */}
+        <mesh position={[0, 1.5, 0]} castShadow>
+          <boxGeometry args={[50, 3, 50]} />
+          <meshStandardMaterial color="#a5b65d" transparent opacity={0.1} wireframe />
+        </mesh>
+        
+        {/* Court 1 */}
+        <group position={[0, 0.05, -12]}>
+          <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+            <planeGeometry args={[18, 9]} />
+            <meshStandardMaterial color="#E0A96D" roughness={1.0} />
+          </mesh>
+          <mesh position={[0, 1.5, -5]} castShadow><cylinderGeometry args={[0.08, 0.08, 3]}/><meshStandardMaterial color="#555"/></mesh>
+          <mesh position={[0, 1.5, 5]} castShadow><cylinderGeometry args={[0.08, 0.08, 3]}/><meshStandardMaterial color="#555"/></mesh>
+          <mesh position={[0, 2, 0]}><boxGeometry args={[0.02, 1, 10]}/><meshStandardMaterial color="#ccc" transparent opacity={0.4} wireframe /></mesh>
+        </group>
+
+        {/* Court 2 */}
+        <group position={[0, 0.05, 12]}>
+          <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+            <planeGeometry args={[18, 9]} />
+            <meshStandardMaterial color="#E0A96D" roughness={1.0} />
+          </mesh>
+          <mesh position={[0, 1.5, -5]} castShadow><cylinderGeometry args={[0.08, 0.08, 3]}/><meshStandardMaterial color="#555"/></mesh>
+          <mesh position={[0, 1.5, 5]} castShadow><cylinderGeometry args={[0.08, 0.08, 3]}/><meshStandardMaterial color="#555"/></mesh>
+          <mesh position={[0, 2, 0]}><boxGeometry args={[0.02, 1, 10]}/><meshStandardMaterial color="#ccc" transparent opacity={0.4} wireframe /></mesh>
+        </group>
+        <Text position={[0, 6, 0]} fontSize={2.5} color="white" outlineWidth={0.1} outlineColor="black">
+          VOLLEYBALL COURTS
+        </Text>
+      </group>
 
       {/* 🏨 HOSTELS */}
       {/* Boys Hostel: 3 floors (height = 12), orange accent at [40.0, 0, -165.0] */}
