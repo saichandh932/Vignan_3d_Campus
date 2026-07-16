@@ -1194,6 +1194,128 @@ export function Buildings() {
         </Text>
       </group>
 
+      {/* 🏏 CRICKET GROUND */}
+      <group position={[-121.0, 0, -340.5]}>
+        {/* Grass Oval Outfield */}
+        <mesh rotation={[-Math.PI / 2, 0, 0]} scale={[1, 85/235, 1]} position={[0, 0.02, 0]} receiveShadow>
+          <ringGeometry args={[0, 115, 64]} />
+          <meshStandardMaterial color="#3f9b42" roughness={0.9} />
+        </mesh>
+        
+        {/* Pitch (Centered, unscaled) */}
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0]} receiveShadow>
+          <planeGeometry args={[3, 20]} />
+          <meshStandardMaterial color="#c2b280" roughness={1.0} />
+        </mesh>
+        {/* Wickets */}
+        {[-10, 10].map((zPos) => (
+          <group key={zPos} position={[0, 0.05, zPos]}>
+            {[-0.2, 0, 0.2].map((xOffset) => (
+              <mesh key={xOffset} position={[xOffset, 0.4, 0]} castShadow>
+                <cylinderGeometry args={[0.02, 0.02, 0.8]} />
+                <meshStandardMaterial color="#fff" />
+              </mesh>
+            ))}
+            <mesh position={[0, 0.8, 0]} castShadow>
+              <boxGeometry args={[0.5, 0.02, 0.02]} />
+              <meshStandardMaterial color="#fff" />
+            </mesh>
+          </group>
+        ))}
+        <Text position={[0, 8, 0]} fontSize={4.0} color="white" outlineWidth={0.15} outlineColor="black">
+          CRICKET GROUND
+        </Text>
+      </group>
+
+      {/* 🏀 BASKETBALL COURTS */}
+      <group position={[-271.5, 0, -359.5]}>
+        {/* Perimeter fence */}
+        <mesh position={[0, 1.5, 0]} castShadow>
+          <boxGeometry args={[30, 3, 125]} />
+          <meshStandardMaterial color="#b29cd0" transparent opacity={0.1} wireframe />
+        </mesh>
+
+        {/* 3 Courts */}
+        {[-38, 0, 38].map((zOffset, courtIdx) => (
+          <group key={courtIdx} position={[0, 0.05, zOffset]}>
+            {/* Court surface (Blue) */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+              <planeGeometry args={[18, 28]} />
+              <meshStandardMaterial color="#2a52be" roughness={0.6} />
+            </mesh>
+            {/* Paint/Key areas */}
+            {[-12.5, 12.5].map((zKey) => (
+              <mesh key={zKey} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, zKey]}>
+                <planeGeometry args={[6, 3]} />
+                <meshStandardMaterial color="#1e3a8a" />
+              </mesh>
+            ))}
+            {/* Hoops */}
+            {[-14, 14].map((zHoop, hoopIdx) => (
+              <group key={hoopIdx} position={[0, 0, zHoop]} rotation={[0, zHoop > 0 ? Math.PI : 0, 0]}>
+                <mesh position={[0, 2, -0.5]} castShadow>
+                  <cylinderGeometry args={[0.1, 0.1, 4]} />
+                  <meshStandardMaterial color="#444" />
+                </mesh>
+                <mesh position={[0, 3.8, 0.1]} castShadow>
+                  <boxGeometry args={[3, 1.8, 0.1]} />
+                  <meshStandardMaterial color="#fff" />
+                </mesh>
+                <mesh position={[0, 3.2, 0.5]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+                  <torusGeometry args={[0.4, 0.04, 8, 16]} />
+                  <meshStandardMaterial color="#ff4500" />
+                </mesh>
+              </group>
+            ))}
+          </group>
+        ))}
+        <Text position={[0, 6, 0]} fontSize={2.5} color="white" outlineWidth={0.1} outlineColor="black">
+          BASKETBALL COURTS
+        </Text>
+      </group>
+
+      {/* 🌊 VIGNAN POND */}
+      <group position={[-322.5, 0, -321.5]}>
+        {/* Pond Water */}
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, 0]} receiveShadow>
+          <circleGeometry args={[20, 32]} />
+          <meshStandardMaterial color="#4ba3c3" roughness={0.1} metalness={0.8} transparent opacity={0.8} />
+        </mesh>
+        {/* Stone Border */}
+        {Array.from({ length: 24 }).map((_, i) => {
+          const angle = (i * Math.PI * 2) / 24;
+          const radius = 20.5;
+          const x = Math.sin(angle) * radius;
+          const z = Math.cos(angle) * radius;
+          return (
+            <mesh key={i} position={[x, 0.4, z]} rotation={[0, angle, 0]} castShadow>
+              <boxGeometry args={[2.5, 0.8, 2.5]} />
+              <meshStandardMaterial color="#708090" roughness={0.9} />
+            </mesh>
+          );
+        })}
+        {/* Lilies */}
+        {[[3, -4], [-6, 8], [8, 4], [-2, -8]].map(([lx, lz], idx) => (
+          <mesh key={idx} rotation={[-Math.PI / 2, 0, 0]} position={[lx, 0.08, lz]}>
+            <circleGeometry args={[1.2, 8]} />
+            <meshStandardMaterial color="#228B22" roughness={0.8} />
+          </mesh>
+        ))}
+        <Text position={[0, 5, 0]} fontSize={2.5} color="white" outlineWidth={0.1} outlineColor="black">
+          VIGNAN POND
+        </Text>
+      </group>
+
+      {/* 🏨 PRIYADARSHINI HOSTEL */}
+      <MultiStoryBuilding
+        position={[-322.5, 0, -379.0]}
+        size={[38, 52]}
+        floors={4}
+        baseColor="#fcfcfc"
+        accentColor="#8add61"
+        label="PRIYADARSHINI HOSTEL"
+      />
+
       {/* 🍽️ CANTEEN SHED */}
       <group position={[90.5, 0, -122.0]}>
         <mesh position={[0, 0.05, 0]} receiveShadow>

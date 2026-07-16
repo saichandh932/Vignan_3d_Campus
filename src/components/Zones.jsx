@@ -25,6 +25,11 @@ const ZONES = [
   { id: 'pharmacy', label: 'PHARMACY BLOCK', size: [30, 70], color: '#847e42', pos: [122.0, 0, -333.5] },
   { id: 'pharmacy_badminton', label: 'PHARMACY BADMINTON COURT', size: [30, 30], color: '#5ae354', pos: [86.0, 0, -317.5] },
   { id: 'pharmacy_volleyball', label: 'PHARMACY VOLLEYBALL COURT', size: [30, 25], color: '#75e391', pos: [86.0, 0, -351.5] },
+  
+  { id: 'cricketground', label: 'CRICKET GROUND', size: [235, 85], color: '#223269', pos: [-121.0, 0, -340.5] },
+  { id: 'basketballcourts', label: 'BASKETBALL COURTS', size: [30, 125], color: '#b29cd0', pos: [-271.5, 0, -359.5] },
+  { id: 'vignanpond', label: 'VIGNAN POND', size: [45, 45], color: '#7fb0c9', pos: [-322.5, 0, -321.5] },
+  { id: 'priyadarshinihostel', label: 'PRIYADARSHINI HOSTEL', size: [45, 60], color: '#8add61', pos: [-322.5, 0, -379.0] },
 ];
 
 function BoundaryWall({ position, size, rotation = [0, 0, 0] }) {
