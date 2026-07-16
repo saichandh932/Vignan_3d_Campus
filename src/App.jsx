@@ -192,7 +192,7 @@ const DEFAULT_MAP_ITEMS = [
   { id: 'ground', type: 'ground', label: 'GROUND', pos: [38, 0.05, -126.5], size: [53, 22], rotation: 0 },
   
   { id: 'ublock', type: 'building', label: 'U BLOCK', pos: [-141.5, 0, -198.0], size: [75, 85], floors: 4, color: '#dad20a', rotation: 0 },
-  { id: 'convocationhall', type: 'building', label: 'CONVOCATION HALL', pos: [-196.5, 0, -197.5], size: [25, 85], floors: 3, color: '#9f96f7', rotation: 0 },
+  { id: 'convocationhall', type: 'convocation', label: 'CONVOCATION HALL', pos: [-196.5, 0, -197.5], size: [25, 85], floors: 3, color: '#9f96f7', rotation: 0 },
   { id: 'guesthouse', type: 'building', label: 'GUEST HOUSE', pos: [-226.5, 0, -171.0], size: [30, 30], floors: 2, color: '#37794b', rotation: 0 },
   { id: 'volleyballcourts', type: 'building', label: 'VOLLEY BALL COURTS', pos: [-236.5, 0, -214.0], size: [50, 50], rotation: 0 },
   
@@ -318,9 +318,15 @@ function DroneCameraController({ active, selectedItemPos }) {
 export default function App() {
   const joystick = useRef({ x: 0, y: 0 });
   const [isDroneMode, setIsDroneMode] = useState(false);
+  const [isLayoutLocked, setIsLayoutLocked] = useState(() => localStorage.getItem('vignan_3d_campus_layout_locked') === 'true');
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [editorTab, setEditorTab] = useState('add'); // 'add', 'list', 'edit'
   const [filterCategory, setFilterCategory] = useState('all'); // 'all', 'building', 'road', 'gate', 'zone', 'landmark'
+
+  // Persist lock state
+  useEffect(() => {
+    localStorage.setItem('vignan_3d_campus_layout_locked', isLayoutLocked.toString());
+  }, [isLayoutLocked]);
 
   // Auto switch tab when selecting/deselecting items
   useEffect(() => {
@@ -341,17 +347,38 @@ export default function App() {
       'ablock': [75, 64],
       'hblock': [90, 53],
       'nblock': [62, 140],
+      'cricketground': [235, 85],
     };
     if (saved) {
       try {
-        const parsed = JSON.parse(saved);
-        // Automatically inject missing default sizes to protect user's layout
-        return parsed.map(item => {
+        let parsed = JSON.parse(saved);
+        
+        // 1. Automatically inject missing default sizes and fix convocation/landmark types to protect user's layout
+        parsed = parsed.map(item => {
+          if (item.id === 'convocationhall') {
+            return { ...item, type: 'convocation', size: item.size || defaultSizes[item.id] };
+          }
           if (!item.size && defaultSizes[item.id]) {
             return { ...item, size: defaultSizes[item.id] };
           }
           return item;
         });
+
+        // 2. Automatically inject newly added landmark structures if missing from older layout versions
+        const essentialIds = [
+          'pharmacy', 'pharmacy_badminton', 'pharmacy_volleyball', 'textile',
+          'ublock', 'convocationhall', 'guesthouse', 'volleyballcourts',
+          'cricketground', 'basketballcourts', 'vignanpond', 'priyadarshinihostel'
+        ];
+        
+        essentialIds.forEach(id => {
+          if (!parsed.some(item => item.id === id)) {
+            const defaultItem = DEFAULT_MAP_ITEMS.find(item => item.id === id);
+            if (defaultItem) parsed.push(defaultItem);
+          }
+        });
+
+        return parsed;
       } catch (e) {
         console.error("Failed to parse stored map items", e);
       }
@@ -367,13 +394,13 @@ export default function App() {
   const selectedItem = mapItems.find(item => item.id === selectedItemId);
 
   const updateSelectedItem = (updates) => {
-    if (!selectedItemId) return;
+    if (!selectedItemId || isLayoutLocked) return;
     setMapItems(prev => prev.map(item => item.id === selectedItemId ? { ...item, ...updates } : item));
   };
 
   // Keyboard nudging and shortcuts in Editor Mode
   useEffect(() => {
-    if (!isDroneMode || !selectedItem) return;
+    if (!isDroneMode || !selectedItem || isLayoutLocked) return;
     
     const handleKeyDown = (e) => {
       // Skip shortcuts if the user is typing in a text field
@@ -446,6 +473,7 @@ export default function App() {
   }, [isDroneMode, selectedItemId, selectedItem]);
 
   const addItem = (type, landmarkId = null) => {
+    if (isLayoutLocked) return;
     const id = landmarkId || `item_${Date.now()}`;
     let newItem = { id, type, pos: [0, 0, -50], rotation: 0, label: '' };
 
@@ -532,7 +560,7 @@ export default function App() {
   };
 
   const deleteSelectedItem = () => {
-    if (!selectedItemId) return;
+    if (!selectedItemId || isLayoutLocked) return;
     const name = selectedItem?.label || selectedItemId;
     if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
       setMapItems(prev => prev.filter(item => item.id !== selectedItemId));
@@ -541,6 +569,7 @@ export default function App() {
   };
 
   const clearMap = () => {
+    if (isLayoutLocked) return;
     if (window.confirm("Are you sure you want to clear the entire map layout down to dynamic land?")) {
       setMapItems([]);
       setSelectedItemId(null);
@@ -548,6 +577,7 @@ export default function App() {
   };
 
   const resetLayout = () => {
+    if (isLayoutLocked) return;
     if (window.confirm("Are you sure you want to reset the entire map layout back to default campus coordinates?")) {
       setMapItems(DEFAULT_MAP_ITEMS);
       setSelectedItemId(null);
@@ -919,7 +949,7 @@ export default function App() {
           position={[0, -0.1, 0]} 
           receiveShadow
           onClick={(e) => {
-            if (isDroneMode && selectedItem) {
+            if (isDroneMode && selectedItem && !isLayoutLocked) {
               e.stopPropagation();
               // Snap selected item to the clicked point on the ground
               updateSelectedItem({ pos: [parseFloat(e.point.x.toFixed(1)), selectedItem.pos[1], parseFloat(e.point.z.toFixed(1))] });
@@ -945,8 +975,28 @@ export default function App() {
       {/* Sandbox Editor Sidebar */}
       {isDroneMode && (
         <div className="editor-sidebar">
-          <div className="editor-header">
+          <div className="editor-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h2>🗺️ Sandbox Builder</h2>
+            <button 
+              onClick={() => setIsLayoutLocked(!isLayoutLocked)}
+              style={{
+                background: isLayoutLocked ? '#ef4444' : 'rgba(255, 255, 255, 0.1)',
+                color: 'white',
+                border: 'none',
+                padding: '6px 12px',
+                borderRadius: '20px',
+                fontSize: '0.75rem',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                transition: 'all 0.2s',
+                pointerEvents: 'auto'
+              }}
+            >
+              {isLayoutLocked ? '🔒 Locked' : '🔓 Unlock'}
+            </button>
           </div>
           
           {/* Tabs header */}
@@ -1053,10 +1103,16 @@ export default function App() {
             {/* TAB 3: PROPERTIES & POSITION EDITING */}
             {editorTab === 'edit' && selectedItem && (
               <div className="editor-details-section" style={{ borderTop: 'none', paddingTop: '0px' }}>
-                {/* Advanced Shortcut helper */}
-                <div style={{ fontSize: '0.75rem', background: 'rgba(59, 130, 246, 0.15)', border: '1px solid rgba(59, 130, 246, 0.3)', padding: '8px 10px', borderRadius: '6px', marginBottom: '10px', color: '#93c5fd', lineHeight: '1.4' }}>
-                  💡 <b>Advanced controls:</b> Click grass to teleport block. Move with <b>WASD/Arrows</b>, rotate with <b>Q/E/R</b>, delete with <b>Delete/Backspace</b>.
-                </div>
+                {isLayoutLocked ? (
+                  <div style={{ fontSize: '0.8rem', background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '8px 10px', borderRadius: '6px', marginBottom: '10px', color: '#fca5a5', fontWeight: 'bold', textAlign: 'center' }}>
+                    🔒 Layout is locked! Unlock from top to edit.
+                  </div>
+                ) : (
+                  /* Advanced Shortcut helper */
+                  <div style={{ fontSize: '0.75rem', background: 'rgba(59, 130, 246, 0.15)', border: '1px solid rgba(59, 130, 246, 0.3)', padding: '8px 10px', borderRadius: '6px', marginBottom: '10px', color: '#93c5fd', lineHeight: '1.4' }}>
+                    💡 <b>Advanced controls:</b> Click grass to teleport block. Move with <b>WASD/Arrows</b>, rotate with <b>Q/E/R</b>, delete with <b>Delete/Backspace</b>.
+                  </div>
+                )}
 
                 <div className="input-group">
                   <label className="input-label">Entity Label/Name</label>
@@ -1065,22 +1121,24 @@ export default function App() {
                     className="editor-input" 
                     value={selectedItem.label} 
                     onChange={(e) => updateSelectedItem({ label: e.target.value })} 
+                    disabled={isLayoutLocked}
+                    style={{ opacity: isLayoutLocked ? 0.5 : 1 }}
                   />
                 </div>
 
                 {/* 🎯 Nudge Positioning Grid */}
                 <div style={{ marginTop: '4px', textAlign: 'center' }}>
                   <span className="input-label" style={{ display: 'block', marginBottom: '6px', textAlign: 'left' }}>🎯 Nudge Position</span>
-                  <div className="nudge-grid">
-                    <button className="nudge-btn" onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0] - 2, selectedItem.pos[1], selectedItem.pos[2] - 2] })}>↖️</button>
-                    <button className="nudge-btn" onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0], selectedItem.pos[1], selectedItem.pos[2] - 2] })}>▲</button>
-                    <button className="nudge-btn" onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0] + 2, selectedItem.pos[1], selectedItem.pos[2] - 2] })}>↗️</button>
-                    <button className="nudge-btn" onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0] - 2, selectedItem.pos[1], selectedItem.pos[2]] })}>◀</button>
-                    <button className="nudge-btn" style={{ background: '#3b82f6', borderColor: '#3b82f6' }} onClick={() => updateSelectedItem({ pos: [0, selectedItem.pos[1], -50] })}>⌖</button>
-                    <button className="nudge-btn" onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0] + 2, selectedItem.pos[1], selectedItem.pos[2]] })}>▶</button>
-                    <button className="nudge-btn" onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0] - 2, selectedItem.pos[1], selectedItem.pos[2] + 2] })}>↙️</button>
-                    <button className="nudge-btn" onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0], selectedItem.pos[1], selectedItem.pos[2] + 2] })}>▼</button>
-                    <button className="nudge-btn" onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0] + 2, selectedItem.pos[1], selectedItem.pos[2] + 2] })}>↘️</button>
+                  <div className="nudge-grid" style={{ opacity: isLayoutLocked ? 0.4 : 1, pointerEvents: isLayoutLocked ? 'none' : 'auto' }}>
+                    <button className="nudge-btn" disabled={isLayoutLocked} onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0] - 2, selectedItem.pos[1], selectedItem.pos[2] - 2] })}>↖️</button>
+                    <button className="nudge-btn" disabled={isLayoutLocked} onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0], selectedItem.pos[1], selectedItem.pos[2] - 2] })}>▲</button>
+                    <button className="nudge-btn" disabled={isLayoutLocked} onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0] + 2, selectedItem.pos[1], selectedItem.pos[2] - 2] })}>↗️</button>
+                    <button className="nudge-btn" disabled={isLayoutLocked} onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0] - 2, selectedItem.pos[1], selectedItem.pos[2] ] })}>◀</button>
+                    <button className="nudge-btn" style={{ background: '#3b82f6', borderColor: '#3b82f6' }} disabled={isLayoutLocked} onClick={() => updateSelectedItem({ pos: [0, selectedItem.pos[1], -50] })}>⌖</button>
+                    <button className="nudge-btn" disabled={isLayoutLocked} onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0] + 2, selectedItem.pos[1], selectedItem.pos[2]] })}>▶</button>
+                    <button className="nudge-btn" disabled={isLayoutLocked} onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0] - 2, selectedItem.pos[1], selectedItem.pos[2] + 2] })}>↙️</button>
+                    <button className="nudge-btn" disabled={isLayoutLocked} onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0], selectedItem.pos[1], selectedItem.pos[2] + 2] })}>▼</button>
+                    <button className="nudge-btn" disabled={isLayoutLocked} onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0] + 2, selectedItem.pos[1], selectedItem.pos[2] + 2] })}>↘️</button>
                   </div>
                 </div>
 
@@ -1096,6 +1154,7 @@ export default function App() {
                       min="-200" 
                       max="200" 
                       value={selectedItem.pos[0]} 
+                      disabled={isLayoutLocked}
                       onChange={(e) => {
                         const val = parseFloat(e.target.value);
                         updateSelectedItem({ pos: [val, selectedItem.pos[1], selectedItem.pos[2]] });
@@ -1116,6 +1175,7 @@ export default function App() {
                       min="-250" 
                       max="50" 
                       value={selectedItem.pos[2]} 
+                      disabled={isLayoutLocked}
                       onChange={(e) => {
                         const val = parseFloat(e.target.value);
                         updateSelectedItem({ pos: [selectedItem.pos[0], selectedItem.pos[1], val] });
@@ -1124,13 +1184,13 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* ↺ Rotation Quick Controls */}
+                {/* ↺ Quick Rotation Controls */}
                 <div className="input-group">
                   <span className="input-label">Rotate Block</span>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <button className="btn-secondary" style={{ flexGrow: 1, padding: '6px' }} onClick={() => updateSelectedItem({ rotation: (selectedItem.rotation || 0) - Math.PI / 12 })}>↺ 15°</button>
-                    <button className="btn-secondary" style={{ flexGrow: 1, padding: '6px' }} onClick={() => updateSelectedItem({ rotation: (selectedItem.rotation || 0) + Math.PI / 12 })}>↻ 15°</button>
-                    <button className="btn-secondary" style={{ flexGrow: 1, padding: '6px' }} onClick={() => updateSelectedItem({ rotation: ((selectedItem.rotation || 0) + Math.PI / 2) % (Math.PI * 2) })}>↻ 90°</button>
+                  <div style={{ display: 'flex', gap: '8px', opacity: isLayoutLocked ? 0.4 : 1, pointerEvents: isLayoutLocked ? 'none' : 'auto' }}>
+                    <button className="btn-secondary" style={{ flexGrow: 1, padding: '6px' }} disabled={isLayoutLocked} onClick={() => updateSelectedItem({ rotation: (selectedItem.rotation || 0) - Math.PI / 12 })}>↺ 15°</button>
+                    <button className="btn-secondary" style={{ flexGrow: 1, padding: '6px' }} disabled={isLayoutLocked} onClick={() => updateSelectedItem({ rotation: (selectedItem.rotation || 0) + Math.PI / 12 })}>↻ 15°</button>
+                    <button className="btn-secondary" style={{ flexGrow: 1, padding: '6px' }} disabled={isLayoutLocked} onClick={() => updateSelectedItem({ rotation: ((selectedItem.rotation || 0) + Math.PI / 2) % (Math.PI * 2) })}>↻ 90°</button>
                   </div>
                 </div>
 
@@ -1146,6 +1206,7 @@ export default function App() {
                       min="0" 
                       max="360" 
                       value={rotationDeg} 
+                      disabled={isLayoutLocked}
                       onChange={(e) => {
                         const rad = (parseFloat(e.target.value) * Math.PI) / 180;
                         updateSelectedItem({ rotation: rad });
@@ -1168,6 +1229,7 @@ export default function App() {
                           min="5" 
                           max="150" 
                           value={selectedItem.size[0]} 
+                          disabled={isLayoutLocked}
                           onChange={(e) => {
                             const val = parseFloat(e.target.value);
                             updateSelectedItem({ size: [val, selectedItem.size[1]] });
@@ -1188,6 +1250,7 @@ export default function App() {
                           min="5" 
                           max="600" 
                           value={selectedItem.size[1]} 
+                          disabled={isLayoutLocked}
                           onChange={(e) => {
                             const val = parseFloat(e.target.value);
                             updateSelectedItem({ size: [selectedItem.size[0], val] });
@@ -1211,6 +1274,7 @@ export default function App() {
                         min="1" 
                         max="10" 
                         value={selectedItem.floors || 3} 
+                        disabled={isLayoutLocked}
                         onChange={(e) => {
                           updateSelectedItem({ floors: parseInt(e.target.value) });
                         }} 
@@ -1222,25 +1286,26 @@ export default function App() {
                 {(selectedItem.type === 'building' || selectedItem.type === 'zone') && (
                   <div className="input-group">
                     <label className="input-label">Theme Color</label>
-                    <div className="color-palette">
+                    <div className="color-palette" style={{ opacity: isLayoutLocked ? 0.4 : 1, pointerEvents: isLayoutLocked ? 'none' : 'auto' }}>
                       {['#8B4513', '#228B22', '#0000FF', '#FF1493', '#DAA520', '#4B0082', '#00FFFF', '#3CB371', '#DC143C', '#800000', '#FF8C00', '#FFFF00', '#A9A9A9', '#4682B4'].map(c => (
                         <div 
                           key={c} 
                           className={`color-choice ${selectedItem.color === c ? 'selected' : ''}`}
-                          style={{ backgroundColor: c }}
-                          onClick={() => updateSelectedItem({ color: c })}
+                          style={{ backgroundColor: c, cursor: isLayoutLocked ? 'not-allowed' : 'pointer' }}
+                          onClick={() => !isLayoutLocked && updateSelectedItem({ color: c })}
                         />
                       ))}
                     </div>
                   </div>
                 )}
 
-                <div className="editor-actions" style={{ gap: '8px', display: 'flex', marginTop: '10px' }}>
+                <div className="editor-actions" style={{ gap: '8px', display: 'flex', marginTop: '10px', opacity: isLayoutLocked ? 0.4 : 1, pointerEvents: isLayoutLocked ? 'none' : 'auto' }}>
                   <button 
                     className="btn-secondary" 
                     style={{ flexGrow: 1 }} 
+                    disabled={isLayoutLocked}
                     onClick={() => {
-                      if (!selectedItem) return;
+                      if (!selectedItem || isLayoutLocked) return;
                       const id = `item_${Date.now()}`;
                       const newItem = {
                         ...selectedItem,
@@ -1254,7 +1319,7 @@ export default function App() {
                   >
                     👯 Clone Block
                   </button>
-                  <button className="btn-danger" style={{ flexGrow: 1 }} onClick={deleteSelectedItem}>🗑️ Delete</button>
+                  <button className="btn-danger" style={{ flexGrow: 1 }} disabled={isLayoutLocked} onClick={deleteSelectedItem}>🗑️ Delete</button>
                 </div>
               </div>
             )}

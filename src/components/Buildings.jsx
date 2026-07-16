@@ -1624,45 +1624,249 @@ export function Buildings({ zones = [] }) {
       )}
 
       {/* 🏟️ SECTOR C: NORTH-WEST / SPORTS ZONE LANDMARKS */}
-      {cricketZone.render && (
-        <group position={cricketZone.pos} rotation={[0, cricketZone.rotation, 0]}>
-          {/* Oval green field — circleGeometry scaled on Z to form an ellipse (110 x 40) */}
-          <group scale={[1, 1, 40 / 110]}>
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
-              <circleGeometry args={[110, 64]} />
-              <meshStandardMaterial color="#1e5c2f" roughness={0.9} />
-            </mesh>
-            {/* White boundary ring */}
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.025, 0]}>
-              <ringGeometry args={[107, 110, 64]} />
-              <meshBasicMaterial color="white" />
-            </mesh>
-          </group>
-          {/* Pitch strip (unscaled — centered on ground) */}
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0]}>
-            <planeGeometry args={[6, 20]} />
-            <meshStandardMaterial color="#c29c6a" roughness={0.8} />
-          </mesh>
-          {/* Wickets at each end */}
-          {[-8, 8].map((z) => (
-            <group key={z} position={[0, 0, z]}>
-              {[-0.2, 0, 0.2].map((x) => (
-                <mesh key={x} position={[x, 0.5, 0]} castShadow>
-                  <cylinderGeometry args={[0.03, 0.03, 1]} />
-                  <meshStandardMaterial color="#e0a96d" />
+      {cricketZone.render && (() => {
+        const [w, d] = cricketZone.size || [235, 85];
+        return (
+          <group position={cricketZone.pos} rotation={[0, cricketZone.rotation, 0]}>
+            <group scale={[w / 235, 1, d / 85]}>
+              {/* ==================================================== */}
+              {/* 1. LEFT AREA: ATHLETICS RUNNING TRACK & FIELD       */}
+              {/* ==================================================== */}
+              <group position={[-37.5, 0, 0]}>
+                {/* Oval/Elliptical Group */}
+                <group scale={[1, 1, 35 / 75]}>
+                  {/* Reddish-brown Cinder Running Track */}
+                  <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
+                    <circleGeometry args={[75, 64]} />
+                    <meshStandardMaterial color="#b25329" roughness={0.9} />
+                  </mesh>
+                  
+                  {/* Concentric white lane rings */}
+                  {[71, 67, 63].map((r, idx) => (
+                    <mesh key={idx} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.025, 0]}>
+                      <ringGeometry args={[r, r + 0.3, 64]} />
+                      <meshBasicMaterial color="#ffffff" />
+                    </mesh>
+                  ))}
+                  
+                  {/* Central grass infield */}
+                  <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0]} receiveShadow>
+                    <circleGeometry args={[59, 64]} />
+                    <meshStandardMaterial color="#1e5c2f" roughness={0.8} />
+                  </mesh>
+                </group>
+                
+                {/* Cricket Pitch (Centered on the grass field) */}
+                <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, 0]}>
+                  <planeGeometry args={[6, 20]} />
+                  <meshStandardMaterial color="#c29c6a" roughness={0.8} />
                 </mesh>
-              ))}
-              <mesh position={[0, 1.02, 0]}>
-                <boxGeometry args={[0.5, 0.03, 0.03]} />
-                <meshStandardMaterial color="#e0a96d" />
-              </mesh>
+                
+                {/* Wickets at each end of the pitch */}
+                {[-8, 8].map((zVal) => (
+                  <group key={zVal} position={[0, 0.04, zVal]}>
+                    {[-0.2, 0, 0.2].map((xVal) => (
+                      <mesh key={xVal} position={[xVal, 0.5, 0]} castShadow>
+                        <cylinderGeometry args={[0.03, 0.03, 1, 8]} />
+                        <meshStandardMaterial color="#e0a96d" />
+                      </mesh>
+                    ))}
+                    <mesh position={[0, 1.02, 0]}>
+                      <boxGeometry args={[0.5, 0.03, 0.03]} />
+                      <meshStandardMaterial color="#e0a96d" />
+                    </mesh>
+                  </group>
+                ))}
+              </group>
+
+              {/* ==================================================== */}
+              {/* 2. RIGHT AREA: SPORTS COURTS & OPEN GYM              */}
+              {/* ==================================================== */}
+              
+              {/* A. Open Gym */}
+              <group position={[62.5, 0, -20]}>
+                {/* Concrete Pad */}
+                <mesh position={[0, 0.02, 0]} receiveShadow>
+                  <boxGeometry args={[30, 0.1, 30]} />
+                  <meshStandardMaterial color="#7f8c8d" roughness={0.7} />
+                </mesh>
+                {/* Border Line */}
+                <mesh position={[0, 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                  <ringGeometry args={[14.5, 15, 4, 1, 0, Math.PI * 2]} />
+                  <meshBasicMaterial color="#fff" />
+                </mesh>
+                {/* Gym Equipment (Procedural shapes) */}
+                {/* Pull-up Rig */}
+                <group position={[-5, 0, -5]}>
+                  <mesh position={[-2, 2.5, 0]} castShadow>
+                    <cylinderGeometry args={[0.1, 0.1, 5, 8]} />
+                    <meshStandardMaterial color="#2c3e50" metalness={0.8} />
+                  </mesh>
+                  <mesh position={[2, 2.5, 0]} castShadow>
+                    <cylinderGeometry args={[0.1, 0.1, 5, 8]} />
+                    <meshStandardMaterial color="#2c3e50" metalness={0.8} />
+                  </mesh>
+                  <mesh position={[0, 4.9, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
+                    <cylinderGeometry args={[0.07, 0.07, 4, 8]} />
+                    <meshStandardMaterial color="#bdc3c7" metalness={0.9} />
+                  </mesh>
+                </group>
+                {/* Situp Bench */}
+                <group position={[5, 0, 5]} rotation={[0, Math.PI / 4, 0]}>
+                  <mesh position={[0, 0.5, 0]} rotation={[0.2, 0, 0]} castShadow>
+                    <boxGeometry args={[1.5, 0.2, 3]} />
+                    <meshStandardMaterial color="#e74c3c" roughness={0.6} />
+                  </mesh>
+                  <mesh position={[0, 0.2, -1]} castShadow>
+                    <boxGeometry args={[0.2, 0.4, 0.2]} />
+                    <meshStandardMaterial color="#2c3e50" metalness={0.8} />
+                  </mesh>
+                  <mesh position={[0, 0.5, 1]} castShadow>
+                    <boxGeometry args={[0.2, 1.0, 0.2]} />
+                    <meshStandardMaterial color="#2c3e50" metalness={0.8} />
+                  </mesh>
+                </group>
+                {/* Parallel Bars */}
+                <group position={[-6, 0, 6]}>
+                  {[-0.6, 0.6].map((xOffset) => (
+                    <group key={xOffset} position={[xOffset, 0, 0]}>
+                      <mesh position={[0, 1.2, -1.5]} castShadow>
+                        <cylinderGeometry args={[0.08, 0.08, 2.4, 8]} />
+                        <meshStandardMaterial color="#2c3e50" />
+                      </mesh>
+                      <mesh position={[0, 1.2, 1.5]} castShadow>
+                        <cylinderGeometry args={[0.08, 0.08, 2.4, 8]} />
+                        <meshStandardMaterial color="#2c3e50" />
+                      </mesh>
+                      <mesh position={[0, 2.3, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+                        <cylinderGeometry args={[0.06, 0.06, 3, 8]} />
+                        <meshStandardMaterial color="#bdc3c7" metalness={0.9} />
+                      </mesh>
+                    </group>
+                  ))}
+                </group>
+                {/* Label */}
+                <Text position={[0, 4, 0]} fontSize={2.0} color="white" outlineColor="black" outlineWidth={0.1}>
+                  OPEN GYM
+                </Text>
+              </group>
+
+              {/* B. 2 Kabaddi Courts */}
+              <group position={[97.5, 0, -20]}>
+                {/* Clay Base Pad */}
+                <mesh position={[0, 0.02, 0]} receiveShadow>
+                  <boxGeometry args={[30, 0.1, 30]} />
+                  <meshStandardMaterial color="#d35400" roughness={0.9} />
+                </mesh>
+                {/* Boundary Line */}
+                <mesh position={[0, 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                  <ringGeometry args={[14.4, 14.7, 4, 1, Math.PI / 4, Math.PI * 2]} />
+                  <meshBasicMaterial color="#ffffff" />
+                </mesh>
+                {/* Mid Line */}
+                <mesh position={[0, 0.085, 0]}>
+                  <boxGeometry args={[0.2, 0.01, 29]} />
+                  <meshBasicMaterial color="#ffffff" />
+                </mesh>
+                {/* Baulk Lines */}
+                {[-6, 6].map((zOffset) => (
+                  <mesh key={zOffset} position={[zOffset, 0.085, 0]}>
+                    <boxGeometry args={[0.15, 0.01, 29]} />
+                    <meshBasicMaterial color="#f1c40f" />
+                  </mesh>
+                ))}
+                {/* Bonus Lines */}
+                {[-10, 10].map((zOffset) => (
+                  <mesh key={zOffset} position={[zOffset, 0.085, 0]}>
+                    <boxGeometry args={[0.15, 0.01, 29]} />
+                    <meshBasicMaterial color="#f1c40f" />
+                  </mesh>
+                ))}
+                {/* Label */}
+                <Text position={[0, 4, 0]} fontSize={2.0} color="white" outlineColor="black" outlineWidth={0.1}>
+                  KABADDI COURTS
+                </Text>
+              </group>
+
+              {/* C. Long Floodlight Lamp Pole (between Gym and Kabaddi) */}
+              <group position={[80, 0, -20]}>
+                {/* Pole Base */}
+                <mesh position={[0, 0.4, 0]} castShadow>
+                  <cylinderGeometry args={[0.8, 1.2, 0.8, 8]} />
+                  <meshStandardMaterial color="#34495e" roughness={0.6} />
+                </mesh>
+                {/* Vertical Mast */}
+                <mesh position={[0, 12, 0]} castShadow>
+                  <cylinderGeometry args={[0.2, 0.35, 24, 8]} />
+                  <meshStandardMaterial color="#7f8c8d" metalness={0.8} roughness={0.2} />
+                </mesh>
+                {/* Crossbar at top */}
+                <mesh position={[0, 23.8, 0]} castShadow>
+                  <boxGeometry args={[6, 0.3, 0.3]} />
+                  <meshStandardMaterial color="#7f8c8d" metalness={0.8} />
+                </mesh>
+                {/* Floodlight Fixtures */}
+                {[-2.2, -0.8, 0.8, 2.2].map((xOffset) => (
+                  <group key={xOffset} position={[xOffset, 23.5, 0]} rotation={[0.4, 0, 0]}>
+                    {/* Fixture box */}
+                    <mesh castShadow>
+                      <boxGeometry args={[0.8, 0.4, 0.6]} />
+                      <meshStandardMaterial color="#2c3e50" />
+                    </mesh>
+                    {/* Glowing light face */}
+                    <mesh position={[0, -0.21, 0.1]}>
+                      <boxGeometry args={[0.7, 0.02, 0.5]} />
+                      <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={3.0} />
+                    </mesh>
+                  </group>
+                ))}
+              </group>
+
+              {/* D. 2 Kho-Kho Courts (Vertical alignment next to Kabaddi) */}
+              <group position={[80, 0, 20]}>
+                {/* Clay Base Pad */}
+                <mesh position={[0, 0.02, 0]} receiveShadow>
+                  <boxGeometry args={[70, 0.1, 30]} />
+                  <meshStandardMaterial color="#d35400" roughness={0.9} />
+                </mesh>
+                {/* Boundary lines */}
+                <mesh position={[0, 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                  <planeGeometry args={[68, 28]} />
+                  <meshBasicMaterial color="#ffffff" wireframe />
+                </mesh>
+                {/* Central Long Lane */}
+                <mesh position={[0, 0.085, 0]}>
+                  <boxGeometry args={[60, 0.01, 0.3]} />
+                  <meshBasicMaterial color="#ffffff" />
+                </mesh>
+                {/* Wooden Posts */}
+                {[-30, 30].map((xOffset) => (
+                  <mesh key={xOffset} position={[xOffset, 1.0, 0]} castShadow>
+                    <cylinderGeometry args={[0.15, 0.15, 2, 8]} />
+                    <meshStandardMaterial color="#8e44ad" roughness={0.7} />
+                  </mesh>
+                ))}
+                {/* 8 Cross Lanes */}
+                {[-25, -18, -11, -4, 4, 11, 18, 25].map((xOffset) => (
+                  <mesh key={xOffset} position={[xOffset, 0.082, 0]}>
+                    <boxGeometry args={[0.2, 0.01, 26]} />
+                    <meshBasicMaterial color="#ffffff" />
+                  </mesh>
+                ))}
+                {/* Label */}
+                <Text position={[0, 4, 0]} fontSize={2.0} color="white" outlineColor="black" outlineWidth={0.1}>
+                  KHO-KHO COURTS
+                </Text>
+              </group>
             </group>
-          ))}
-          <Text position={[0, 6, 0]} fontSize={4} color="white" outlineColor="black" outlineWidth={0.15}>
-            {cricketZone.label}
-          </Text>
-        </group>
-      )}
+
+            {/* Floating Zone Label */}
+            <Text position={[0, 8, 0]} fontSize={3.2} color="white" outlineColor="black" outlineWidth={0.15}>
+              {cricketZone.label}
+            </Text>
+          </group>
+        );
+      })()}
 
       {basketballZone.render && (
         <group position={basketballZone.pos} rotation={[0, basketballZone.rotation, 0]}>
@@ -1821,31 +2025,66 @@ export function OShapeBlock({ position, size = [30, 15, 30], floors = 3, color =
   );
 }
 
-export function ConvocationHall({ position, size = [24, 24], floors = 3, color = '#eaeaea', label }) {
+export function ConvocationHall({ position, size = [25, 85], floors = 3, color = '#eaeaea', label }) {
   const height = floors * 4;
-  const radius = size[0] / 2;
-  const coneHeight = radius * 0.6;
+  const [w, d] = size;
+  const roofHeight = 6;
+  const halfW = w / 2;
+  const halfD = d / 2;
   
+  // Calculate roof panel width and rotation angle
+  const panelWidth = Math.sqrt(halfW * halfW + roofHeight * roofHeight);
+  const angle = Math.atan2(roofHeight, halfW);
+
+  // Generate pillar positions along the long edges
+  const spacing = 12;
+  const pillarsCount = Math.max(2, Math.floor(d / spacing));
+  const pillarPositions = [];
+  for (let i = 0; i <= pillarsCount; i++) {
+    const z = -halfD + (i * d) / pillarsCount;
+    pillarPositions.push([-halfW + 0.5, z]);
+    pillarPositions.push([halfW - 0.5, z]);
+  }
+
   return (
     <group position={position}>
-      {/* Octagonal Main Structure */}
-      <mesh position={[0, height / 2, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[radius, radius, height, 8]} />
-        <meshStandardMaterial color={color} roughness={0.7} />
+      {/* Concrete Base Platform */}
+      <mesh position={[0, 0.1, 0]} receiveShadow>
+        <boxGeometry args={[w, 0.2, d]} />
+        <meshStandardMaterial color="#c0c0c0" roughness={0.9} />
       </mesh>
-      {/* Dome/Cone Roof */}
-      <mesh position={[0, height + coneHeight / 2, 0]} castShadow>
-        <coneGeometry args={[radius * 1.1, coneHeight, 8]} />
-        <meshStandardMaterial color="#DAA520" roughness={0.3} metalness={0.7} />
+
+      {/* Columns / Pillars */}
+      {pillarPositions.map(([px, pz], idx) => (
+        <mesh key={idx} position={[px, height / 2, pz]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.3, 0.3, height, 16]} />
+          <meshStandardMaterial color="#eaeaea" metalness={0.2} roughness={0.8} />
+        </mesh>
+      ))}
+
+      {/* Inverted V Pitched Roof (Left Panel) */}
+      <mesh 
+        position={[-halfW / 2, height + roofHeight / 2, 0]} 
+        rotation={[0, 0, angle]} 
+        castShadow
+      >
+        <boxGeometry args={[panelWidth, 0.3, d + 1]} />
+        <meshStandardMaterial color="#b5651d" roughness={0.6} /> {/* Clay tile color */}
       </mesh>
-      {/* Spike top */}
-      <mesh position={[0, height + coneHeight + 1, 0]} castShadow>
-        <cylinderGeometry args={[0.08, 0.08, 2]} />
-        <meshStandardMaterial color="#FFD700" />
+
+      {/* Inverted V Pitched Roof (Right Panel) */}
+      <mesh 
+        position={[halfW / 2, height + roofHeight / 2, 0]} 
+        rotation={[0, 0, -angle]} 
+        castShadow
+      >
+        <boxGeometry args={[panelWidth, 0.3, d + 1]} />
+        <meshStandardMaterial color="#b5651d" roughness={0.6} />
       </mesh>
+
       {/* Floating Label */}
       {label && (
-        <Text position={[0, height + coneHeight + 3, 0]} fontSize={2.5} color="white" outlineColor="black" outlineWidth={0.1}>
+        <Text position={[0, height + roofHeight + 3, 0]} fontSize={2.5} color="white" outlineColor="black" outlineWidth={0.1}>
           {label}
         </Text>
       )}
