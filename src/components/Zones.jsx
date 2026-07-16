@@ -1,7 +1,7 @@
 import { Text } from '@react-three/drei';
 
 // Final hardcoded zone positions
-const ZONES = [
+export const ZONES = [
   { id: 'library', label: 'LIBRARY', size: [21, 21], color: '#8B4513', pos: [-25.0, 0, -40.0] },
   { id: 'farm', label: 'FARM ZONE', size: [46, 53], color: '#228B22', pos: [-30.0, 0, -93.5] },
   { id: 'ablock', label: 'A-BLOCK', size: [75, 64], color: '#0000FF', pos: [47.5, 0, -2.0] },
@@ -12,14 +12,15 @@ const ZONES = [
   { id: 'sportsground', label: 'HOCKEY & FOOTBALL GROUND', size: [70, 94], color: '#3CB371', pos: [135.0, 0, -93.0] },
   { id: 'mhp', label: 'MHP (Ground Floor)', size: [20, 20], color: '#DC143C', pos: [-20.0, 0, -165.0] },
   { id: 'nblock', label: 'N-BLOCK', size: [62, 140], color: '#800000', pos: [-53.5, 0, -192.0] },
-  { id: 'ublock', label: 'U-BLOCK', size: [75, 85], color: '#dad20a', pos: [-141.5, 0, -198.0] },
-  { id: 'convocationhall', label: 'CONVOCATION HALL', size: [25, 85], color: '#9f96f7', pos: [-196.5, 0, -197.5] },
-  { id: 'guesthouse', label: 'GUEST HOUSE', size: [30, 30], color: '#37794b', pos: [-226.5, 0, -171.0] },
-  { id: 'volleyballcourts', label: 'VOLLEY BALL COURTS', size: [50, 50], color: '#a5b65d', pos: [-236.5, 0, -214.0] },
   { id: 'boyshostel', label: 'BOYS HOSTEL', size: [60, 50], color: '#FF8C00', pos: [40.0, 0, -165.0] },
   { id: 'achostel', label: 'AC HOSTEL', size: [30, 50], color: '#FF8C00', pos: [95.0, 0, -165.0] },
   { id: 'hostel_connector', label: '', size: [10, 20], color: '#FF8C00', pos: [75.0, 0, -180.0] },
   { id: 'ground', label: 'GROUND', size: [60, 25], color: '#FFFF00', pos: [40.0, 0, -125.0] },
+  
+  { id: 'ublock', label: 'U-BLOCK', size: [75, 85], color: '#dad20a', pos: [-141.5, 0, -198.0] },
+  { id: 'convocationhall', label: 'CONVOCATION HALL', size: [25, 85], color: '#9f96f7', pos: [-196.5, 0, -197.5] },
+  { id: 'guesthouse', label: 'GUEST HOUSE', size: [30, 30], color: '#37794b', pos: [-226.5, 0, -171.0] },
+  { id: 'volleyballcourts', label: 'VOLLEY BALL COURTS', size: [50, 50], color: '#a5b65d', pos: [-236.5, 0, -214.0] },
   
   { id: 'textile', label: 'TEXTILE TECHNOLOGY', size: [15, 70], color: '#927b5d', pos: [49.0, 0, -334.5] },
   { id: 'pharmacy', label: 'PHARMACY BLOCK', size: [30, 70], color: '#847e42', pos: [122.0, 0, -333.5] },
@@ -48,16 +49,64 @@ function BoundaryWall({ position, size, rotation = [0, 0, 0] }) {
   );
 }
 
-export function Zones() {
+export function Zones({ zones = ZONES, isDroneMode = false, selectedZoneId = null, onSelectZone = () => {} }) {
   return (
     <group>
       {/* Zone ground planes (subtle, under buildings) */}
-      {ZONES.map((z) => (
-        <group key={z.id} position={z.pos}>
+      {zones.map((z) => (
+        <group 
+          key={z.id} 
+          position={z.pos}
+          onClick={(e) => {
+            if (isDroneMode) {
+              e.stopPropagation();
+              onSelectZone(z.id);
+            }
+          }}
+          onPointerOver={(e) => {
+            if (isDroneMode) {
+              e.stopPropagation();
+              document.body.style.cursor = 'pointer';
+            }
+          }}
+          onPointerOut={(e) => {
+            if (isDroneMode) {
+              document.body.style.cursor = 'default';
+            }
+          }}
+        >
+          {/* Main Ground Plane */}
           <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
             <planeGeometry args={z.size} />
-            <meshStandardMaterial color={z.color} opacity={0.2} transparent />
+            <meshStandardMaterial 
+              color={z.color} 
+              opacity={selectedZoneId === z.id ? 0.55 : 0.25} 
+              transparent 
+            />
           </mesh>
+
+          {/* Active selection outline helper */}
+          {selectedZoneId === z.id && (
+            <mesh position={[0, 0.1, 0]}>
+              <boxGeometry args={[z.size[0], 0.25, z.size[1]]} />
+              <meshBasicMaterial color="#ffffff" wireframe />
+            </mesh>
+          )}
+
+          {/* Flat visual label in drone editor view */}
+          {isDroneMode && z.label && (
+            <Text
+              position={[0, 0.15, 0]}
+              rotation={[-Math.PI / 2, 0, 0]}
+              fontSize={Math.min(z.size[0], z.size[1]) * 0.12 + 1.2}
+              color={selectedZoneId === z.id ? "#ffffff" : "#cccccc"}
+              fontWeight="bold"
+              outlineWidth={0.1}
+              outlineColor="#000000"
+            >
+              {z.label}
+            </Text>
+          )}
         </group>
       ))}
 

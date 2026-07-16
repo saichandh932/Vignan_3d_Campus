@@ -154,7 +154,7 @@ function MudGroundWithTrack({ position, size = [60, 25] }) {
 }
 
 // Helper component for drawing a standard multi-story building
-function MultiStoryBuilding({ 
+export function MultiStoryBuilding({ 
   position, 
   size, 
   floors, 
@@ -277,7 +277,7 @@ function MultiStoryBuilding({
 }
 
 // Reusable Campus Gate Component
-function CampusGate({ position, rotation = [0, 0, 0], label = "VIGNAN'S FOUNDATION" }) {
+export function CampusGate({ position, rotation = [0, 0, 0], label = "VIGNAN'S FOUNDATION" }) {
   return (
     <group position={position} rotation={rotation}>
       {/* Main Central Red Roof */}
@@ -326,41 +326,91 @@ function CampusGate({ position, rotation = [0, 0, 0], label = "VIGNAN'S FOUNDATI
   );
 }
 
-export function Buildings() {
+export function Buildings({ zones = [] }) {
+  const getZone = (id, defaultLabel, defaultPos, defaultSize = null, defaultRot = 0) => {
+    const found = zones.find(z => z.id === id);
+    return {
+      render: found ? true : false,
+      pos: found ? found.pos : defaultPos,
+      label: found ? found.label : defaultLabel,
+      size: found ? found.size : defaultSize,
+      rotation: found && found.rotation !== undefined ? found.rotation : defaultRot
+    };
+  };
+
+  const gateMain = getZone('gate_main', "VIGNAN'S FOUNDATION", [0, 0, 0], null, 0);
+  const gateLibrary = getZone('gate_library', "LIBRARY ENTRANCE GATE", [-110, 0, -60], null, Math.PI / 2);
+  const boundaryWall = getZone('boundary_wall', "WALL", [10, 0, 15], null, -Math.PI / 2);
+  const busStopZone = getZone('bus_stop', 'BUS STOP', [-55, 0.01, 5], null, Math.atan2(110, 130));
+
+  const libZone = getZone('library', 'LIBRARY', [-25.0, 0, -40.0], null, Math.PI / 6);
+  const ablockZone = getZone('ablock', 'A-BLOCK', [52, 0, -12.0], null, Math.PI);
+  const hblockZone = getZone('hblock', 'H-BLOCK', [55.0, 0, -72.5], null, 0);
+  const nblockZone = getZone('nblock', 'N-BLOCK', [-53.5, 0, -192.0], [62, 140], Math.PI / 2);
+  const boyshostelZone = getZone('boyshostel', 'BOYS HOSTEL', [40.0, 0, -165.0], [52, 22], 0);
+  const achostelZone = getZone('achostel', 'AC HOSTEL', [95.0, 0, -165.0], [26, 22], 0);
+  const connectorZone = getZone('hostel_connector', '', [75.0, 0, -180.0], null, 0);
+  const canteenZone = getZone('canteen', 'CANTEEN & TT', [90.5, 0, -122.0], [19, 22], 0);
+  const sportsZone = getZone('sportsground', 'HOCKEY & FOOTBALL GROUND', [135.0, 0, -93.0], [70, 94], 0);
+  const farmZone = getZone('farm', 'FARM ZONE', [-30.0, 0, -93.5], [46, 53], 0);
+  const smallZone = getZone('smallzone', 'SMALL ZONE', [92.5, 0, -2.0], null, 0);
+  const newOutsideZone = getZone('new_outside_zone', 'NEW ZONE', [-10, 0, 25.0], null, 0);
+  const groundZone = getZone('ground', 'GROUND', [38, 0.05, -126.5], [53, 22], 0);
+
+  const ublockZone = getZone('ublock', 'U-BLOCK', [-141.5, 0, -198.0], [75, 85], 0);
+  const convocationhallZone = getZone('convocationhall', 'CONVOCATION HALL', [-196.5, 0, -197.5], [25, 85], 0);
+  const guesthouseZone = getZone('guesthouse', 'GUEST HOUSE', [-226.5, 0, -171.0], [30, 30], 0);
+  const volleyballcourtsZone = getZone('volleyballcourts', 'VOLLEY BALL COURTS', [-236.5, 0, -214.0], [50, 50], 0);
+
+  const textileZone = getZone('textile', 'TEXTILE TECHNOLOGY', [49.0, 0, -334.5], [15, 70], 0);
+  const pharmacyZone = getZone('pharmacy', 'PHARMACY BLOCK', [122.0, 0, -333.5], [30, 70], 0);
+  const pharmacyBadmintonZone = getZone('pharmacy_badminton', 'PHARMACY BADMINTON COURT', [86.0, 0, -317.5], [30, 30], 0);
+  const pharmacyVolleyballZone = getZone('pharmacy_volleyball', 'PHARMACY VOLLEYBALL COURT', [86.0, 0, -351.5], [30, 25], 0);
+
+  const cricketZone = getZone('cricketground', 'CRICKET GROUND', [-121.0, 0, -340.5], [235, 85], 0);
+  const basketballZone = getZone('basketballcourts', 'BASKETBALL COURTS', [-271.5, 0, -359.5], [30, 125], 0);
+  const pondZone = getZone('vignanpond', 'VIGNAN POND', [-322.5, 0, -321.5], [45, 45], 0);
+  const girlsHostelZone = getZone('priyadarshinihostel', 'PRIYADARSHINI HOSTEL', [-322.5, 0, -379.0], [45, 60], 0);
+
   return (
     <group>
       {/* ⛩️ MAIN GATE AREA LANDMARKS */}
-      {/* 1. Main Gate Architecture (Scaled up to 3rd floor height ~ 16 units) */}
-      <CampusGate position={[0, 0, 0]} rotation={[0, 0, 0]} label="VIGNAN'S FOUNDATION" />
+      {/* 1. Main Gate Architecture */}
+      {gateMain.render && (
+        <CampusGate position={gateMain.pos} rotation={[0, gateMain.rotation, 0]} label={gateMain.label} />
+      )}
 
       {/* 2. Library Gate */}
-      <CampusGate position={[-110, 0, -60]} rotation={[0, Math.PI / 2, 0]} label="LIBRARY ENTRANCE GATE" />
-
+      {gateLibrary.render && (
+        <CampusGate position={gateLibrary.pos} rotation={[0, gateLibrary.rotation, 0]} label={gateLibrary.label} />
+      )}
 
       {/* 2. Boundary Wall & VIGNAN'S FOUNDATION Signboard */}
-      {/* Placed on the right boundary of the road (X=8), facing the left (-X direction) towards the Shrine */}
-      <group position={[10, 0, 15]} rotation={[0, -Math.PI / 2, 0]}>
-        {/* Black Tiled Wall (Foreground) */}
-        <mesh position={[0, 2, 0]} castShadow receiveShadow>
-          <boxGeometry args={[25, 4, 1]} />
-          <meshStandardMaterial color="#1a1a1a" roughness={0.4} />
-        </mesh>
-        {/* Golden 3D Text */}
-        <Text position={[0, 2.5, 0.6]} fontSize={1.5} color="#FFD700" fontStyle="italic" fontWeight="bold">
-          VIGNAN'S FOUNDATION
-        </Text>
-        <Text position={[0, 1.2, 0.6]} fontSize={0.7} color="#FFD700">
-          FOR SCIENCE, TECHNOLOGY AND RESEARCH
-        </Text>
-      </group>
-
-      {/* (Hoarding moved to the left side near the shrine) */}
+      {boundaryWall.render && (
+        <group position={boundaryWall.pos} rotation={[0, boundaryWall.rotation, 0]}>
+          {/* Black Tiled Wall (Foreground) */}
+          <mesh position={[0, 2, 0]} castShadow receiveShadow>
+            <boxGeometry args={[25, 4, 1]} />
+            <meshStandardMaterial color="#1a1a1a" roughness={0.4} />
+          </mesh>
+          {/* Golden 3D Text */}
+          <Text position={[0, 2.5, 0.6]} fontSize={1.5} color="#FFD700" fontStyle="italic" fontWeight="bold">
+            {boundaryWall.label}
+          </Text>
+          <Text position={[0, 1.2, 0.6]} fontSize={0.7} color="#FFD700">
+            FOR SCIENCE, TECHNOLOGY AND RESEARCH
+          </Text>
+        </group>
+      )}
 
       {/* 3. Vignan Bus Stop (Across the Highway) */}
-      <VignanBusStop />
+      {busStopZone.render && (
+        <VignanBusStop position={busStopZone.pos} rotation={[0, busStopZone.rotation, 0]} />
+      )}
       {/* 🏛️ NTR VIGNAN CENTRAL LIBRARY */}
       {/* Position: [-25.0, 0, -40.0]. Rotated to face the center circle */}
-      <group position={[-25.0, 0, -40.0]} rotation={[0, Math.PI / 6, 0]}>
+      {libZone.render && (
+        <group position={libZone.pos} rotation={[0, libZone.rotation, 0]}>
         
         {/* MAIN OCTAGONAL STRUCTURE */}
         {/* 3 Floors of Octagon with Windows */}
@@ -404,7 +454,7 @@ export function Buildings() {
           
           {/* English Text (Top Left) */}
           <Text position={[-4, 13.5, 0.8]} fontSize={1.2} color="white" fontWeight="bold" anchorX="center">
-            NTR{"\n"}VIGNAN LIBRARY
+            {libZone.label}
           </Text>
           
           {/* Telugu Text (Bottom Right) */}
@@ -458,10 +508,15 @@ export function Buildings() {
           </group>
         </group>
       </group>
+      )}
 
       {/* 🏢 A-BLOCK (Administrative Block) */}
-      {/* Position: [52, 0, -12.0]. Rotated 180deg to face inward towards H-Block */}
-      <group position={[52, 0, -12.0]} rotation={[0, Math.PI, 0]}>
+      {ablockZone.render && (
+        <group position={ablockZone.pos} rotation={[0, ablockZone.rotation, 0]}>
+        {/* Floating Label for A-Block */}
+        <Text position={[0, 26, 0]} fontSize={4} color="white" outlineWidth={0.2} outlineColor="black">
+          {ablockZone.label}
+        </Text>
         {/* --- Back Wing --- */}
         {/* Upper Floors */}
         <mesh position={[0, 14, -6]} castShadow receiveShadow>
@@ -593,10 +648,11 @@ export function Buildings() {
           </Text>
         </group>
       </group>
+      )}
 
       {/* 🏢 H-BLOCK (Sri Visweswaraya Bhavan) */}
-      {/* Position: [55.0, 0, -72.5]. 4 floors, H-shaped, pure white, large dome, curved balconies */}
-      <group position={[55.0, 0, -72.5]}>
+      {hblockZone.render && (
+        <group position={hblockZone.pos} rotation={[0, hblockZone.rotation, 0]}>
         {/* --- Central Bar --- */}
         <mesh position={[0, 10, -5]} castShadow receiveShadow>
           <boxGeometry args={[80, 12, 12]} />
@@ -888,370 +944,317 @@ export function Buildings() {
             color="black"
             fontWeight="bold"
           >
-            SRI VISWESWARAYA BHAVAN
+            {hblockZone.label}
           </Text>
         </group>
       </group>
+      )}
 
       {/* 🏢 N-BLOCK (Nagarjuna Block) & MHP (The Most Happening Place) */}
-      {/* Position: [-53.5, 0, -192.0]. Size [62, 140]. 6 floors, red/maroon brick facade, MHP on ground floor */}
-      <group position={[-53.5, 0, -192.0]} rotation={[0, Math.PI / 2, 0]}>
-        {/* Courtyard Concrete Pavement */}
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
-          <planeGeometry args={[104, 58]} />
-          <meshStandardMaterial color="#a0a0a0" roughness={0.9} />
-        </mesh>
-
-        {/* 🏢 WEST WING (North side in rotated frame) */}
-        <mesh position={[-60, 12, -2]} castShadow receiveShadow>
-          <boxGeometry args={[16, 24, 58]} />
-          <meshStandardMaterial color="#fcfcfc" roughness={0.9} />
-        </mesh>
-        
-        {/* 🏢 EAST WING (South side in rotated frame) */}
-        <mesh position={[60, 12, -2]} castShadow receiveShadow>
-          <boxGeometry args={[16, 24, 58]} />
-          <meshStandardMaterial color="#fcfcfc" roughness={0.9} />
-        </mesh>
-
-        {/* Orange End Cladding for West Wing (facing East/courtyard opening) */}
-        <mesh position={[-60, 12, 27.1]} castShadow>
-          <boxGeometry args={[16, 24, 0.2]} />
-          <meshStandardMaterial color="#C26D38" roughness={0.5} />
-        </mesh>
-
-        {/* Orange End Cladding for East Wing (facing East/courtyard opening) */}
-        <mesh position={[60, 12, 27.1]} castShadow>
-          <boxGeometry args={[16, 24, 0.2]} />
-          <meshStandardMaterial color="#C26D38" roughness={0.5} />
-        </mesh>
-
-        {/* Orange Corner Cladding (West Wing / Connector junction) */}
-        <mesh position={[-51, 12, -15]} castShadow>
-          <boxGeometry args={[2, 24, 2]} />
-          <meshStandardMaterial color="#C26D38" roughness={0.5} />
-        </mesh>
-
-        {/* Orange Corner Cladding (East Wing / Connector junction) */}
-        <mesh position={[51, 12, -15]} castShadow>
-          <boxGeometry args={[2, 24, 2]} />
-          <meshStandardMaterial color="#C26D38" roughness={0.5} />
-        </mesh>
-
-        {/* 🏢 NORTH WING (Connector - West side in rotated frame) */}
-        <mesh position={[0, 12, -23]} castShadow receiveShadow>
-          <boxGeometry args={[104, 24, 16]} />
-          <meshStandardMaterial color="#fcfcfc" roughness={0.9} />
-        </mesh>
-
-        {/* 🏛️ Central Concrete Atrium Grid (Back of Courtyard) */}
-        <group position={[0, 0, -15]}>
-          {/* 4 Corner columns */}
-          {[-8, 8].map((ax) => 
-            [-4, 4].map((az) => (
-              <mesh key={`atrium-col-${ax}-${az}`} position={[ax, 13, az]} castShadow>
-                <boxGeometry args={[0.8, 26, 0.8]} />
-                <meshStandardMaterial color="#888888" roughness={0.9} />
-              </mesh>
-            ))
-          )}
-          {/* Horizontal floor slabs for atrium (every 4 units) */}
-          {Array.from({ length: 7 }).map((_, f) => (
-            <mesh key={`atrium-slab-${f}`} position={[0, f * 4, 0]} castShadow>
-              <boxGeometry args={[16.8, 0.3, 8.8]} />
-              <meshStandardMaterial color="#777777" roughness={0.9} />
-            </mesh>
-          ))}
-        </group>
-
-        {/* 🎢 ZIG-ZAG RAMPS (West Wing Outer Face - North side of courtyard) */}
-        {Array.from({ length: 6 }).map((_, f) => {
-          const isForward = f % 2 === 0;
-          const startZ = isForward ? 20 : -20;
-          const endZ = isForward ? -20 : 20;
-          const startY = f * 4;
-          const endY = (f + 1) * 4;
-          const centerZ = (startZ + endZ) / 2;
-          const centerY = (startY + endY) / 2;
-          const len = 40;
-          const angle = Math.atan2(4, 40);
-          return (
-            <group key={`ramp-${f}`}>
-              {/* Sloped ramp deck */}
-              <mesh 
-                position={[-71, centerY, centerZ]} 
-                rotation={[isForward ? angle : -angle, 0, 0]}
-                castShadow 
-                receiveShadow
-              >
-                <boxGeometry args={[4, 0.25, len]} />
-                <meshStandardMaterial color="#f3f4f6" roughness={0.8} />
-              </mesh>
-              {/* Outer wall/railing for ramp */}
-              <mesh 
-                position={[-73, centerY + 0.5, centerZ]} 
-                rotation={[isForward ? angle : -angle, 0, 0]}
-                castShadow
-              >
-                <boxGeometry args={[0.1, 1.2, len]} />
-                <meshStandardMaterial color="#e5e7eb" />
-              </mesh>
-            </group>
-          );
-        })}
-
-        {/* Vertical support columns for the ramps */}
-        {[-20, 0, 20].map((z) => (
-          <mesh key={`ramp-support-${z}`} position={[-73, 12, z]} castShadow>
-            <cylinderGeometry args={[0.2, 0.2, 24]} />
-            <meshStandardMaterial color="#ffffff" roughness={0.8} />
+      {nblockZone.render && (
+        <group position={nblockZone.pos} rotation={[0, nblockZone.rotation, 0]}>
+          {/* Courtyard Concrete Pavement */}
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
+            <planeGeometry args={[104, 58]} />
+            <meshStandardMaterial color="#a0a0a0" roughness={0.9} />
           </mesh>
-        ))}
 
-        {/* 🧱 TERRACOTTA VERTICAL PILLARS (Spacing out the windows) */}
-        {[-25, -15, -5, 5, 15, 25].map((z) => (
-          <group key={`pillars-${z}`}>
-            {/* West Wing Inner Pillar */}
-            <mesh position={[-51.8, 12, z]} castShadow>
-              <boxGeometry args={[0.5, 24, 1.4]} />
-              <meshStandardMaterial color="#C26D38" roughness={0.5} />
-            </mesh>
-            {/* West Wing Outer Pillar */}
-            <mesh position={[-68.2, 12, z]} castShadow>
-              <boxGeometry args={[0.5, 24, 1.4]} />
-              <meshStandardMaterial color="#C26D38" roughness={0.5} />
-            </mesh>
-            {/* East Wing Inner Pillar */}
-            <mesh position={[51.8, 12, z]} castShadow>
-              <boxGeometry args={[0.5, 24, 1.4]} />
-              <meshStandardMaterial color="#C26D38" roughness={0.5} />
-            </mesh>
-            {/* East Wing Outer Pillar */}
-            <mesh position={[68.2, 12, z]} castShadow>
-              <boxGeometry args={[0.5, 24, 1.4]} />
-              <meshStandardMaterial color="#C26D38" roughness={0.5} />
-            </mesh>
-          </group>
-        ))}
+          {/* 🏢 WEST WING (North side in rotated frame) */}
+          <mesh position={[-60, 12, -2]} castShadow receiveShadow>
+            <boxGeometry args={[16, 24, 58]} />
+            <meshStandardMaterial color="#fcfcfc" roughness={0.9} />
+          </mesh>
+          
+          {/* 🏢 EAST WING (South side in rotated frame) */}
+          <mesh position={[60, 12, -2]} castShadow receiveShadow>
+            <boxGeometry args={[16, 24, 58]} />
+            <meshStandardMaterial color="#fcfcfc" roughness={0.9} />
+          </mesh>
 
-        {/* 🏢 HORIZONTAL WHITE FLOOR LEDGES */}
-        {Array.from({ length: 6 }).map((_, f) => {
-          const y = (f + 1) * 4 - 0.2;
-          return (
-            <group key={`floor-ledges-${f}`}>
-              {/* West Wing Ledges */}
-              <mesh position={[-60, y, -2]} castShadow>
-                <boxGeometry args={[16.2, 0.3, 58.2]} />
-                <meshStandardMaterial color="#ffffff" roughness={0.7} />
-              </mesh>
-              {/* East Wing Ledges */}
-              <mesh position={[60, y, -2]} castShadow>
-                <boxGeometry args={[16.2, 0.3, 58.2]} />
-                <meshStandardMaterial color="#ffffff" roughness={0.7} />
-              </mesh>
-              {/* North Wing Ledges */}
-              <mesh position={[0, y, -23]} castShadow>
-                <boxGeometry args={[104.2, 0.3, 16.2]} />
-                <meshStandardMaterial color="#ffffff" roughness={0.7} />
-              </mesh>
-            </group>
-          )
-        })}
+          {/* Orange End Cladding for West Wing (facing East/courtyard opening) */}
+          <mesh position={[-60, 12, 27.1]} castShadow>
+            <boxGeometry args={[16, 24, 0.2]} />
+            <meshStandardMaterial color="#C26D38" roughness={0.5} />
+          </mesh>
 
-        {/* ⛺ TENSILE CANOPY TENTS (North Wing Roof) */}
-        {[-45, -30, -15, 0, 15, 30, 45].map((x) => (
-          <group key={`tent-${x}`} position={[x, 24, -23]}>
-            {/* Tent Membrane */}
-            <mesh position={[0, 2.5, 0]} castShadow>
-              <coneGeometry args={[4.5, 5, 4, 1, false, Math.PI / 4]} />
-              <meshStandardMaterial color="#f0f4f8" roughness={0.4} side={2} />
-            </mesh>
-            {/* Supporting corner posts */}
-            {[-3.5, 3.5].map((tx) => 
-              [-3.5, 3.5].map((tz) => (
-                <mesh key={`post-${tx}-${tz}`} position={[tx, 1, tz]} castShadow>
-                  <cylinderGeometry args={[0.05, 0.05, 2]} />
-                  <meshStandardMaterial color="#bbbbbb" />
+          {/* Orange End Cladding for East Wing (facing East/courtyard opening) */}
+          <mesh position={[60, 12, 27.1]} castShadow>
+            <boxGeometry args={[16, 24, 0.2]} />
+            <meshStandardMaterial color="#C26D38" roughness={0.5} />
+          </mesh>
+
+          {/* Orange Corner Cladding (West Wing / Connector junction) */}
+          <mesh position={[-51, 12, -15]} castShadow>
+            <boxGeometry args={[2, 24, 2]} />
+            <meshStandardMaterial color="#C26D38" roughness={0.5} />
+          </mesh>
+
+          {/* Orange Corner Cladding (East Wing / Connector junction) */}
+          <mesh position={[51, 12, -15]} castShadow>
+            <boxGeometry args={[2, 24, 2]} />
+            <meshStandardMaterial color="#C26D38" roughness={0.5} />
+          </mesh>
+
+          {/* 🏢 NORTH WING (Connector - West side in rotated frame) */}
+          <mesh position={[0, 12, -23]} castShadow receiveShadow>
+            <boxGeometry args={[104, 24, 16]} />
+            <meshStandardMaterial color="#fcfcfc" roughness={0.9} />
+          </mesh>
+
+          {/* 🏛️ Central Concrete Atrium Grid (Back of Courtyard) */}
+          <group position={[0, 0, -15]}>
+            {/* 4 Corner columns */}
+            {[-8, 8].map((ax) => 
+              [-4, 4].map((az) => (
+                <mesh key={`atrium-col-${ax}-${az}`} position={[ax, 13, az]} castShadow>
+                  <boxGeometry args={[0.8, 26, 0.8]} />
+                  <meshStandardMaterial color="#888888" roughness={0.9} />
                 </mesh>
               ))
             )}
+            {/* Horizontal floor slabs for atrium (every 4 units) */}
+            {Array.from({ length: 7 }).map((_, f) => (
+              <mesh key={`atrium-slab-${f}`} position={[0, f * 4, 0]} castShadow>
+                <boxGeometry args={[16.8, 0.3, 8.8]} />
+                <meshStandardMaterial color="#777777" roughness={0.9} />
+              </mesh>
+            ))}
           </group>
-        ))}
 
-        {/* 🖼️ WINDOWS GRIDS (Inner faces facing Courtyard) */}
-        {/* West Wing Windows (facing +X) */}
-        <group position={[-52.05, 0, -2]} rotation={[0, Math.PI / 2, 0]}>
-          <WindowGrid width={58} height={24} floors={6} floorHeight={4} />
-        </group>
-        {/* East Wing Windows (facing -X) */}
-        <group position={[52.05, 0, -2]} rotation={[0, -Math.PI / 2, 0]}>
-          <WindowGrid width={58} height={24} floors={6} floorHeight={4} />
-        </group>
-        {/* North Wing Windows (facing +Z) */}
-        <group position={[0, 0, -15.05]}>
-          <WindowGrid width={104} height={24} floors={6} floorHeight={4} />
-        </group>
+          {/* 🎢 ZIG-ZAG RAMPS (West Wing Outer Face - North side of courtyard) */}
+          {Array.from({ length: 6 }).map((_, f) => {
+            const isForward = f % 2 === 0;
+            const startZ = isForward ? 20 : -20;
+            const endZ = isForward ? -20 : 20;
+            const startY = f * 4;
+            const endY = (f + 1) * 4;
+            const centerZ = (startZ + endZ) / 2;
+            const centerY = (startY + endY) / 2;
+            const len = 40;
+            const angle = Math.atan2(4, 40);
+            return (
+              <group key={`ramp-${f}`}>
+                {/* Sloped ramp deck */}
+                <mesh 
+                  position={[-71, centerY, centerZ]} 
+                  rotation={[isForward ? angle : -angle, 0, 0]}
+                  castShadow 
+                  receiveShadow
+                >
+                  <boxGeometry args={[4, 0.25, len]} />
+                  <meshStandardMaterial color="#f3f4f6" roughness={0.8} />
+                </mesh>
+                {/* Outer wall/railing for ramp */}
+                <mesh 
+                  position={[-73, centerY + 0.5, centerZ]} 
+                  rotation={[isForward ? angle : -angle, 0, 0]}
+                  castShadow
+                >
+                  <boxGeometry args={[0.1, 1.2, len]} />
+                  <meshStandardMaterial color="#e5e7eb" />
+                </mesh>
+              </group>
+            );
+          })}
 
-        {/* NAGARJUNA BLOCK sign at top of North Wing (facing south/courtyard) */}
-        <group position={[0, 21, -14.9]}>
-          <Text fontSize={1.8} color="white" outlineColor="black" outlineWidth={0.1}>
-            N - BLOCK
-          </Text>
-          <Text position={[0, -1.3, 0]} fontSize={0.8} color="#FFD700" outlineColor="black" outlineWidth={0.05}>
-            NAGARJUNA BLOCK
-          </Text>
-        </group>
-
-        {/* 🍔 THE MOST HAPPENING PLACE (MHP) */}
-        {/* Relocated to the ground floor inner face of East Wing, facing the courtyard */}
-        <group position={[52.1, 0, 10]} rotation={[0, -Math.PI / 2, 0]}>
-          {/* Main Entrance portal frame */}
-          <mesh position={[0, 2.5, 0.1]} castShadow>
-            <boxGeometry args={[18, 5, 0.5]} />
-            <meshStandardMaterial color="#6E1E1E" />
-          </mesh>
-          {/* Glass facade entrance doors */}
-          <mesh position={[0, 2.2, 0.2]} castShadow>
-            <boxGeometry args={[14, 3.6, 0.1]} />
-            <meshStandardMaterial color="#88ccff" transparent opacity={0.6} roughness={0.1} />
-          </mesh>
-
-          {/* Blue illuminated LED Sign "THE MOST HAPPENING PLACE" */}
-          <group position={[0, 4.4, 0.3]}>
-            {/* Background signboard panel */}
-            <mesh>
-              <boxGeometry args={[16, 0.8, 0.1]} />
-              <meshStandardMaterial color="#111" />
+          {/* Vertical support columns for the ramps */}
+          {[-20, 0, 20].map((z) => (
+            <mesh key={`ramp-support-${z}`} position={[-73, 12, z]} castShadow>
+              <cylinderGeometry args={[0.2, 0.2, 24]} />
+              <meshStandardMaterial color="#ffffff" roughness={0.8} />
             </mesh>
-            {/* Blue LED Text */}
-            <Text
-              position={[0, 0, 0.1]}
-              fontSize={0.65}
-              color="#00D2FF"
-              fontWeight="bold"
-              outlineWidth={0.05}
-              outlineColor="#003366"
-            >
-              THE MOST HAPPENING PLACE
+          ))}
+
+          {/* 🧱 TERRACOTTA VERTICAL PILLARS (Spacing out the windows) */}
+          {[-25, -15, -5, 5, 15, 25].map((z) => (
+            <group key={`pillars-${z}`}>
+              {/* West Wing Inner Pillar */}
+              <mesh position={[-51.8, 12, z]} castShadow>
+                <boxGeometry args={[0.5, 24, 1.4]} />
+                <meshStandardMaterial color="#C26D38" roughness={0.5} />
+              </mesh>
+              {/* West Wing Outer Pillar */}
+              <mesh position={[-68.2, 12, z]} castShadow>
+                <boxGeometry args={[0.5, 24, 1.4]} />
+                <meshStandardMaterial color="#C26D38" roughness={0.5} />
+              </mesh>
+              {/* East Wing Inner Pillar */}
+              <mesh position={[51.8, 12, z]} castShadow>
+                <boxGeometry args={[0.5, 24, 1.4]} />
+                <meshStandardMaterial color="#C26D38" roughness={0.5} />
+              </mesh>
+              {/* East Wing Outer Pillar */}
+              <mesh position={[68.2, 12, z]} castShadow>
+                <boxGeometry args={[0.5, 24, 1.4]} />
+                <meshStandardMaterial color="#C26D38" roughness={0.5} />
+              </mesh>
+            </group>
+          ))}
+
+          {/* 🏢 HORIZONTAL WHITE FLOOR LEDGES */}
+          {Array.from({ length: 6 }).map((_, f) => {
+            const y = (f + 1) * 4 - 0.2;
+            return (
+              <group key={`floor-ledges-${f}`}>
+                {/* West Wing Ledges */}
+                <mesh position={[-60, y, -2]} castShadow>
+                  <boxGeometry args={[16.2, 0.3, 58.2]} />
+                  <meshStandardMaterial color="#ffffff" roughness={0.7} />
+                </mesh>
+                {/* East Wing Ledges */}
+                <mesh position={[60, y, -2]} castShadow>
+                  <boxGeometry args={[16.2, 0.3, 58.2]} />
+                  <meshStandardMaterial color="#ffffff" roughness={0.7} />
+                </mesh>
+                {/* North Wing Ledges */}
+                <mesh position={[0, y, -23]} castShadow>
+                  <boxGeometry args={[104.2, 0.3, 16.2]} />
+                  <meshStandardMaterial color="#ffffff" roughness={0.7} />
+                </mesh>
+              </group>
+            )
+          })}
+
+          {/* ⛺ TENSILE CANOPY TENTS (North Wing Roof) */}
+          {[-45, -30, -15, 0, 15, 30, 45].map((x) => (
+            <group key={`tent-${x}`} position={[x, 24, -23]}>
+              {/* Tent Membrane */}
+              <mesh position={[0, 2.5, 0]} castShadow>
+                <coneGeometry args={[4.5, 5, 4, 1, false, Math.PI / 4]} />
+                <meshStandardMaterial color="#f0f4f8" roughness={0.4} side={2} />
+              </mesh>
+              {/* Supporting corner posts */}
+              {[-3.5, 3.5].map((tx) => 
+                [-3.5, 3.5].map((tz) => (
+                  <mesh key={`post-${tx}-${tz}`} position={[tx, 1, tz]} castShadow>
+                    <cylinderGeometry args={[0.05, 0.05, 2]} />
+                    <meshStandardMaterial color="#bbbbbb" />
+                  </mesh>
+                ))
+              )}
+            </group>
+          ))}
+
+          {/* 🖼️ WINDOWS GRIDS (Inner faces facing Courtyard) */}
+          {/* West Wing Windows (facing +X) */}
+          <group position={[-52.05, 0, -2]} rotation={[0, Math.PI / 2, 0]}>
+            <WindowGrid width={58} height={24} floors={6} floorHeight={4} />
+          </group>
+          {/* East Wing Windows (facing -X) */}
+          <group position={[52.05, 0, -2]} rotation={[0, -Math.PI / 2, 0]}>
+            <WindowGrid width={58} height={24} floors={6} floorHeight={4} />
+          </group>
+          {/* North Wing Windows (facing +Z) */}
+          <group position={[0, 0, -15.05]}>
+            <WindowGrid width={104} height={24} floors={6} floorHeight={4} />
+          </group>
+
+          {/* NAGARJUNA BLOCK sign at top of North Wing (facing south/courtyard) */}
+          <group position={[0, 21, -14.9]}>
+            <Text fontSize={1.8} color="white" outlineColor="black" outlineWidth={0.1}>
+              {nblockZone.label}
+            </Text>
+            <Text position={[0, -1.3, 0]} fontSize={0.8} color="#FFD700" outlineColor="black" outlineWidth={0.05}>
+              NAGARJUNA BLOCK
             </Text>
           </group>
 
-          {/* Interior Food Court (Tables & Chairs inside East Wing ground floor) */}
-          <group position={[0, 0, -4]}>
-            {/* Red, Yellow, White dining tables/chairs */}
-            {[
-              { pos: [-4, 0.5, -2], color: "#FF3B30" },
-              { pos: [4, 0.5, -2], color: "#FFCC00" },
-              { pos: [0, 0.5, -5], color: "#FFFFFF" }
-            ].map((tbl, i) => (
-              <group key={i} position={tbl.pos}>
-                <mesh position={[0, 0.6, 0]} castShadow>
-                  <cylinderGeometry args={[0.9, 0.9, 0.08]} />
-                  <meshStandardMaterial color={tbl.color} />
-                </mesh>
-                <mesh position={[0, 0.3, 0]}>
-                  <cylinderGeometry args={[0.08, 0.08, 0.6]} />
-                  <meshStandardMaterial color="#222" />
-                </mesh>
-                {[-1, 1].map((sx) => 
-                  [-1, 1].map((sz) => (
-                    <mesh key={`${sx}-${sz}`} position={[sx, 0.25, sz]} castShadow>
-                      <cylinderGeometry args={[0.25, 0.25, 0.5]} />
-                      <meshStandardMaterial color={tbl.color} />
-                    </mesh>
-                  ))
-                )}
-              </group>
-            ))}
+          {/* 🍔 THE MOST HAPPENING PLACE (MHP) */}
+          {/* Relocated to the ground floor inner face of East Wing, facing the courtyard */}
+          <group position={[52.1, 0, 10]} rotation={[0, -Math.PI / 2, 0]}>
+            {/* Main Entrance portal frame */}
+            <mesh position={[0, 2.5, 0.1]} castShadow>
+              <boxGeometry args={[18, 5, 0.5]} />
+              <meshStandardMaterial color="#6E1E1E" />
+            </mesh>
+            {/* Glass facade entrance doors */}
+            <mesh position={[0, 2.2, 0.2]} castShadow>
+              <boxGeometry args={[14, 3.6, 0.1]} />
+              <meshStandardMaterial color="#88ccff" transparent opacity={0.6} roughness={0.1} />
+            </mesh>
+
+            {/* Blue illuminated LED Sign "THE MOST HAPPENING PLACE" */}
+            <group position={[0, 4.4, 0.3]}>
+              {/* Background signboard panel */}
+              <mesh>
+                <boxGeometry args={[16, 0.8, 0.1]} />
+                <meshStandardMaterial color="#111" />
+              </mesh>
+              {/* Blue LED Text */}
+              <Text
+                position={[0, 0, 0.1]}
+                fontSize={0.65}
+                color="#00D2FF"
+                fontWeight="bold"
+                outlineWidth={0.05}
+                outlineColor="#003366"
+              >
+                THE MOST HAPPENING PLACE
+              </Text>
+            </group>
+
+            {/* Interior Food Court (Tables & Chairs inside East Wing ground floor) */}
+            <group position={[0, 0, -4]}>
+              {/* Red, Yellow, White dining tables/chairs */}
+              {[
+                { pos: [-4, 0.5, -2], color: "#FF3B30" },
+                { pos: [4, 0.5, -2], color: "#FFCC00" },
+                { pos: [0, 0.5, -5], color: "#FFFFFF" }
+              ].map((tbl, i) => (
+                <group key={i} position={tbl.pos}>
+                  <mesh position={[0, 0.6, 0]} castShadow>
+                    <cylinderGeometry args={[0.9, 0.9, 0.08]} />
+                    <meshStandardMaterial color={tbl.color} />
+                  </mesh>
+                  <mesh position={[0, 0.3, 0]}>
+                    <cylinderGeometry args={[0.08, 0.08, 0.6]} />
+                    <meshStandardMaterial color="#222" />
+                  </mesh>
+                  {[-1, 1].map((sx) => 
+                    [-1, 1].map((sz) => (
+                      <mesh key={`${sx}-${sz}`} position={[sx, 0.25, sz]} castShadow>
+                        <cylinderGeometry args={[0.25, 0.25, 0.5]} />
+                        <meshStandardMaterial color={tbl.color} />
+                      </mesh>
+                    ))
+                  )}
+                </group>
+              ))}
+            </group>
           </group>
         </group>
-      </group>
-
-      {/* 🏢 U-BLOCK */}
-      <MultiStoryBuilding
-        position={[-141.5, 0, -198.0]}
-        size={[70, 80]}
-        floors={5}
-        baseColor="#fcfcfc"
-        accentColor="#dad20a"
-        label="U - BLOCK"
-      />
-
-      {/* 🏛️ CONVOCATION HALL */}
-      <MultiStoryBuilding
-        position={[-196.5, 0, -197.5]}
-        size={[20, 80]}
-        floors={3}
-        baseColor="#f3f4f6"
-        accentColor="#9f96f7"
-        label="CONVOCATION HALL"
-      />
-
-      {/* 🏡 GUEST HOUSE */}
-      <MultiStoryBuilding
-        position={[-226.5, 0, -171.0]}
-        size={[26, 26]}
-        floors={2}
-        baseColor="#faf5ff"
-        accentColor="#37794b"
-        label="GUEST HOUSE"
-      />
-
-      {/* 🏐 VOLLEY BALL COURTS */}
-      <group position={[-236.5, 0, -214.0]}>
-        {/* Fence/Boundary around courts */}
-        <mesh position={[0, 1.5, 0]} castShadow>
-          <boxGeometry args={[50, 3, 50]} />
-          <meshStandardMaterial color="#a5b65d" transparent opacity={0.1} wireframe />
-        </mesh>
-        
-        {/* Court 1 */}
-        <group position={[0, 0.05, -12]}>
-          <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-            <planeGeometry args={[18, 9]} />
-            <meshStandardMaterial color="#E0A96D" roughness={1.0} />
-          </mesh>
-          <mesh position={[0, 1.5, -5]} castShadow><cylinderGeometry args={[0.08, 0.08, 3]}/><meshStandardMaterial color="#555"/></mesh>
-          <mesh position={[0, 1.5, 5]} castShadow><cylinderGeometry args={[0.08, 0.08, 3]}/><meshStandardMaterial color="#555"/></mesh>
-          <mesh position={[0, 2, 0]}><boxGeometry args={[0.02, 1, 10]}/><meshStandardMaterial color="#ccc" transparent opacity={0.4} wireframe /></mesh>
-        </group>
-
-        {/* Court 2 */}
-        <group position={[0, 0.05, 12]}>
-          <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-            <planeGeometry args={[18, 9]} />
-            <meshStandardMaterial color="#E0A96D" roughness={1.0} />
-          </mesh>
-          <mesh position={[0, 1.5, -5]} castShadow><cylinderGeometry args={[0.08, 0.08, 3]}/><meshStandardMaterial color="#555"/></mesh>
-          <mesh position={[0, 1.5, 5]} castShadow><cylinderGeometry args={[0.08, 0.08, 3]}/><meshStandardMaterial color="#555"/></mesh>
-          <mesh position={[0, 2, 0]}><boxGeometry args={[0.02, 1, 10]}/><meshStandardMaterial color="#ccc" transparent opacity={0.4} wireframe /></mesh>
-        </group>
-        <Text position={[0, 6, 0]} fontSize={2.5} color="white" outlineWidth={0.1} outlineColor="black">
-          VOLLEYBALL COURTS
-        </Text>
-      </group>
+      )}
 
       {/* 🏨 HOSTELS */}
-      {/* Boys Hostel: 3 floors (height = 12), orange accent at [40.0, 0, -165.0] */}
-      <MultiStoryBuilding
-        position={[40.0, 0, -165.0]}
-        size={[52, 22]}
-        floors={3}
-        accentColor="#FF8C00"
-        label="BOYS HOSTEL"
-      />
+      {/* Boys Hostel: 3 floors (height = 12) */}
+      {boyshostelZone.render && (
+        <group rotation={[0, boyshostelZone.rotation, 0]}>
+          <MultiStoryBuilding
+            position={boyshostelZone.pos}
+            size={boyshostelZone.size || [52, 22]}
+            floors={3}
+            accentColor="#FF8C00"
+            label={boyshostelZone.label}
+          />
+        </group>
+      )}
 
-      {/* AC Hostel: 3 floors (height = 12), orange/premium accent at [95.0, 0, -165.0] */}
-      <MultiStoryBuilding
-        position={[95.0, 0, -165.0]}
-        size={[26, 22]}
-        floors={3}
-        accentColor="#E67E22"
-        label="AC HOSTEL"
-      />
+      {/* AC Hostel: 3 floors (height = 12) */}
+      {achostelZone.render && (
+        <group rotation={[0, achostelZone.rotation, 0]}>
+          <MultiStoryBuilding
+            position={achostelZone.pos}
+            size={achostelZone.size || [26, 22]}
+            floors={3}
+            accentColor="#E67E22"
+            label={achostelZone.label}
+          />
+        </group>
+      )}
 
       {/* Hostel Connector Walkway/Bridge */}
-      <group position={[75.0, 0, -180.0]}>
+      {connectorZone.render && (
+        <group position={connectorZone.pos} rotation={[0, connectorZone.rotation, 0]}>
         <mesh position={[0, 6, 0]} castShadow>
           <boxGeometry args={[12, 1, 4]} />
           <meshStandardMaterial color="#e5e7eb" />
@@ -1273,210 +1276,11 @@ export function Buildings() {
           <meshStandardMaterial color="#999" />
         </mesh>
       </group>
-
-      {/* 🏢 TEXTILE TECHNOLOGY BLOCK */}
-      <MultiStoryBuilding
-        position={[49.0, 0, -334.5]}
-        size={[11, 66]}
-        floors={3}
-        baseColor="#fcfcfc"
-        accentColor="#927b5d"
-        label="TEXTILE TECHNOLOGY"
-      />
-
-      {/* 🏢 PHARMACY BLOCK */}
-      <MultiStoryBuilding
-        position={[122.0, 0, -333.5]}
-        size={[26, 66]}
-        floors={4}
-        baseColor="#fcfcfc"
-        accentColor="#847e42"
-        label="PHARMACY BLOCK"
-      />
-
-      {/* 🏸 PHARMACY BADMINTON COURTS */}
-      <group position={[86.0, 0, -317.5]}>
-        {/* Boundary fence */}
-        <mesh position={[0, 1.5, 0]} castShadow>
-          <boxGeometry args={[30, 3, 30]} />
-          <meshStandardMaterial color="#5ae354" transparent opacity={0.1} wireframe />
-        </mesh>
-        
-        {/* Court 1 (Left) */}
-        <group position={[-6, 0.05, 0]}>
-          <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-            <planeGeometry args={[7, 14]} />
-            <meshStandardMaterial color="#0f766e" roughness={0.8} /> {/* Green court */}
-          </mesh>
-          {/* Net posts */}
-          <mesh position={[-3.6, 1, 0]} castShadow><cylinderGeometry args={[0.05, 0.05, 2]}/><meshStandardMaterial color="#555"/></mesh>
-          <mesh position={[3.6, 1, 0]} castShadow><cylinderGeometry args={[0.05, 0.05, 2]}/><meshStandardMaterial color="#555"/></mesh>
-          <mesh position={[0, 1.5, 0]}><boxGeometry args={[7.2, 0.7, 0.02]}/><meshStandardMaterial color="#eee" transparent opacity={0.6} wireframe /></mesh>
-        </group>
-
-        {/* Court 2 (Right) */}
-        <group position={[6, 0.05, 0]}>
-          <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-            <planeGeometry args={[7, 14]} />
-            <meshStandardMaterial color="#0f766e" roughness={0.8} />
-          </mesh>
-          {/* Net posts */}
-          <mesh position={[-3.6, 1, 0]} castShadow><cylinderGeometry args={[0.05, 0.05, 2]}/><meshStandardMaterial color="#555"/></mesh>
-          <mesh position={[3.6, 1, 0]} castShadow><cylinderGeometry args={[0.05, 0.05, 2]}/><meshStandardMaterial color="#555"/></mesh>
-          <mesh position={[0, 1.5, 0]}><boxGeometry args={[7.2, 0.7, 0.02]}/><meshStandardMaterial color="#eee" transparent opacity={0.6} wireframe /></mesh>
-        </group>
-        <Text position={[0, 4.5, 0]} fontSize={2.0} color="white" outlineWidth={0.08} outlineColor="black">
-          BADMINTON COURTS
-        </Text>
-      </group>
-
-      {/* 🏐 PHARMACY VOLLEYBALL COURT */}
-      <group position={[86.0, 0, -351.5]}>
-        {/* Fence */}
-        <mesh position={[0, 1.5, 0]} castShadow>
-          <boxGeometry args={[30, 3, 25]} />
-          <meshStandardMaterial color="#75e391" transparent opacity={0.1} wireframe />
-        </mesh>
-        
-        {/* Sand Court */}
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, 0]} receiveShadow>
-          <planeGeometry args={[18, 9]} />
-          <meshStandardMaterial color="#DFBA9D" roughness={1.0} />
-        </mesh>
-        {/* Net posts */}
-        <mesh position={[0, 1.5, -4.6]} castShadow><cylinderGeometry args={[0.08, 0.08, 3]}/><meshStandardMaterial color="#555"/></mesh>
-        <mesh position={[0, 1.5, 4.6]} castShadow><cylinderGeometry args={[0.08, 0.08, 3]}/><meshStandardMaterial color="#555"/></mesh>
-        <mesh position={[0, 2, 0]}><boxGeometry args={[0.02, 1, 9.2]}/><meshStandardMaterial color="#ccc" transparent opacity={0.4} wireframe /></mesh>
-        
-        <Text position={[0, 4.5, 0]} fontSize={2.0} color="white" outlineWidth={0.08} outlineColor="black">
-          PHARMACY VOLLEYBALL
-        </Text>
-      </group>
-
-      {/* 🏏 CRICKET GROUND */}
-      <group position={[-121.0, 0, -340.5]}>
-        {/* Grass Oval Outfield */}
-        <mesh rotation={[-Math.PI / 2, 0, 0]} scale={[1, 85/235, 1]} position={[0, 0.02, 0]} receiveShadow>
-          <ringGeometry args={[0, 115, 64]} />
-          <meshStandardMaterial color="#3f9b42" roughness={0.9} />
-        </mesh>
-        
-        {/* Pitch (Centered, unscaled) */}
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0]} receiveShadow>
-          <planeGeometry args={[3, 20]} />
-          <meshStandardMaterial color="#c2b280" roughness={1.0} />
-        </mesh>
-        {/* Wickets */}
-        {[-10, 10].map((zPos) => (
-          <group key={zPos} position={[0, 0.05, zPos]}>
-            {[-0.2, 0, 0.2].map((xOffset) => (
-              <mesh key={xOffset} position={[xOffset, 0.4, 0]} castShadow>
-                <cylinderGeometry args={[0.02, 0.02, 0.8]} />
-                <meshStandardMaterial color="#fff" />
-              </mesh>
-            ))}
-            <mesh position={[0, 0.8, 0]} castShadow>
-              <boxGeometry args={[0.5, 0.02, 0.02]} />
-              <meshStandardMaterial color="#fff" />
-            </mesh>
-          </group>
-        ))}
-        <Text position={[0, 8, 0]} fontSize={4.0} color="white" outlineWidth={0.15} outlineColor="black">
-          CRICKET GROUND
-        </Text>
-      </group>
-
-      {/* 🏀 BASKETBALL COURTS */}
-      <group position={[-271.5, 0, -359.5]}>
-        {/* Perimeter fence */}
-        <mesh position={[0, 1.5, 0]} castShadow>
-          <boxGeometry args={[30, 3, 125]} />
-          <meshStandardMaterial color="#b29cd0" transparent opacity={0.1} wireframe />
-        </mesh>
-
-        {/* 3 Courts */}
-        {[-38, 0, 38].map((zOffset, courtIdx) => (
-          <group key={courtIdx} position={[0, 0.05, zOffset]}>
-            {/* Court surface (Blue) */}
-            <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-              <planeGeometry args={[18, 28]} />
-              <meshStandardMaterial color="#2a52be" roughness={0.6} />
-            </mesh>
-            {/* Paint/Key areas */}
-            {[-12.5, 12.5].map((zKey) => (
-              <mesh key={zKey} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, zKey]}>
-                <planeGeometry args={[6, 3]} />
-                <meshStandardMaterial color="#1e3a8a" />
-              </mesh>
-            ))}
-            {/* Hoops */}
-            {[-14, 14].map((zHoop, hoopIdx) => (
-              <group key={hoopIdx} position={[0, 0, zHoop]} rotation={[0, zHoop > 0 ? Math.PI : 0, 0]}>
-                <mesh position={[0, 2, -0.5]} castShadow>
-                  <cylinderGeometry args={[0.1, 0.1, 4]} />
-                  <meshStandardMaterial color="#444" />
-                </mesh>
-                <mesh position={[0, 3.8, 0.1]} castShadow>
-                  <boxGeometry args={[3, 1.8, 0.1]} />
-                  <meshStandardMaterial color="#fff" />
-                </mesh>
-                <mesh position={[0, 3.2, 0.5]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-                  <torusGeometry args={[0.4, 0.04, 8, 16]} />
-                  <meshStandardMaterial color="#ff4500" />
-                </mesh>
-              </group>
-            ))}
-          </group>
-        ))}
-        <Text position={[0, 6, 0]} fontSize={2.5} color="white" outlineWidth={0.1} outlineColor="black">
-          BASKETBALL COURTS
-        </Text>
-      </group>
-
-      {/* 🌊 VIGNAN POND */}
-      <group position={[-322.5, 0, -321.5]}>
-        {/* Pond Water */}
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, 0]} receiveShadow>
-          <circleGeometry args={[20, 32]} />
-          <meshStandardMaterial color="#4ba3c3" roughness={0.1} metalness={0.8} transparent opacity={0.8} />
-        </mesh>
-        {/* Stone Border */}
-        {Array.from({ length: 24 }).map((_, i) => {
-          const angle = (i * Math.PI * 2) / 24;
-          const radius = 20.5;
-          const x = Math.sin(angle) * radius;
-          const z = Math.cos(angle) * radius;
-          return (
-            <mesh key={i} position={[x, 0.4, z]} rotation={[0, angle, 0]} castShadow>
-              <boxGeometry args={[2.5, 0.8, 2.5]} />
-              <meshStandardMaterial color="#708090" roughness={0.9} />
-            </mesh>
-          );
-        })}
-        {/* Lilies */}
-        {[[3, -4], [-6, 8], [8, 4], [-2, -8]].map(([lx, lz], idx) => (
-          <mesh key={idx} rotation={[-Math.PI / 2, 0, 0]} position={[lx, 0.08, lz]}>
-            <circleGeometry args={[1.2, 8]} />
-            <meshStandardMaterial color="#228B22" roughness={0.8} />
-          </mesh>
-        ))}
-        <Text position={[0, 5, 0]} fontSize={2.5} color="white" outlineWidth={0.1} outlineColor="black">
-          VIGNAN POND
-        </Text>
-      </group>
-
-      {/* 🏨 PRIYADARSHINI HOSTEL */}
-      <MultiStoryBuilding
-        position={[-322.5, 0, -379.0]}
-        size={[38, 52]}
-        floors={4}
-        baseColor="#fcfcfc"
-        accentColor="#8add61"
-        label="PRIYADARSHINI HOSTEL"
-      />
+      )}
 
       {/* 🍽️ CANTEEN SHED */}
-      <group position={[90.5, 0, -122.0]}>
+      {canteenZone.render && (
+        <group position={canteenZone.pos} rotation={[0, canteenZone.rotation, 0]}>
         <mesh position={[0, 0.05, 0]} receiveShadow>
           <boxGeometry args={[18, 0.1, 20]} />
           <meshStandardMaterial color="#d1d5db" />
@@ -1507,18 +1311,20 @@ export function Buildings() {
           outlineWidth={0.15}
           outlineColor="black"
         >
-          CANTEEN SHED
+          {canteenZone.label}
         </Text>
       </group>
+      )}
 
       {/* ⚽ SPORTS FIELD */}
-      <group position={[135.0, 0, -93.0]}>
+      {sportsZone.render && (
+        <group position={sportsZone.pos} rotation={[0, sportsZone.rotation, 0]}>
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
-          <planeGeometry args={[66, 90]} />
+          <planeGeometry args={[(sportsZone.size ? sportsZone.size[0] - 4 : 66), (sportsZone.size ? sportsZone.size[1] - 4 : 90)]} />
           <meshStandardMaterial color="#2d8a4e" roughness={0.9} />
         </mesh>
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0]}>
-          <planeGeometry args={[64, 2]} />
+          <planeGeometry args={[(sportsZone.size ? sportsZone.size[0] - 6 : 64), 2]} />
           <meshStandardMaterial color="#ffffff" />
         </mesh>
         <group position={[0, 0, -42]}>
@@ -1539,30 +1345,32 @@ export function Buildings() {
           outlineWidth={0.2}
           outlineColor="black"
         >
-          SPORTS GROUND
+          {sportsZone.label}
         </Text>
       </group>
+      )}
 
       {/* 🚜 FARM ZONE (Walled off with large trees) */}
-      <group position={[-30.0, 0, -93.5]}>
+      {farmZone.render && (
+        <group position={farmZone.pos} rotation={[0, farmZone.rotation, 0]}>
         {/* Ground */}
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
-          <planeGeometry args={[46, 53]} />
+          <planeGeometry args={farmZone.size || [46, 53]} />
           <meshStandardMaterial color="#3E8E41" roughness={0.9} /> {/* Deep grass green */}
         </mesh>
         
         {/* Boundary Walls (No Entry) */}
         {/* Front/Back Walls */}
-        {[-26, 26].map((z, i) => (
+        {[-(farmZone.size ? farmZone.size[1] : 53)/2, (farmZone.size ? farmZone.size[1] : 53)/2].map((z, i) => (
           <mesh key={`fw-${i}`} position={[0, 3, z]} castShadow receiveShadow>
-            <boxGeometry args={[46, 6, 1]} />
+            <boxGeometry args={[(farmZone.size ? farmZone.size[0] : 46), 6, 1]} />
             <meshStandardMaterial color="#888" roughness={0.8} />
           </mesh>
         ))}
         {/* Left/Right Walls */}
-        {[-22.5, 22.5].map((x, i) => (
+        {[-(farmZone.size ? farmZone.size[0] : 46)/2, (farmZone.size ? farmZone.size[0] : 46)/2].map((x, i) => (
           <mesh key={`sw-${i}`} position={[x, 3, 0]} castShadow receiveShadow>
-            <boxGeometry args={[1, 6, 53]} />
+            <boxGeometry args={[1, 6, (farmZone.size ? farmZone.size[1] : 53)]} />
             <meshStandardMaterial color="#888" roughness={0.8} />
           </mesh>
         ))}
@@ -1592,12 +1400,14 @@ export function Buildings() {
           outlineWidth={0.15}
           outlineColor="black"
         >
-          FARM ZONE
+          {farmZone.label}
         </Text>
       </group>
+      )}
 
       {/* 🏬 SMALL ZONE */}
-      <group position={[92.5, 0, -2.0]}>
+      {smallZone.render && (
+        <group position={smallZone.pos} rotation={[0, smallZone.rotation, 0]}>
         {Array.from({ length: 3 }).map((_, i) => {
           const z = -20 + i * 20;
           return (
@@ -1617,15 +1427,17 @@ export function Buildings() {
                 outlineWidth={0.1}
                 outlineColor="black"
               >
-                UTILITY #{i+1}
+                {smallZone.label} #{i+1}
               </Text>
             </group>
           );
         })}
       </group>
+      )}
 
       {/* 3. APPROACH ROAD LEFT ZONE (Shrine & Hoarding) */}
-      <group position={[-10, 0, 25.0]}>
+      {newOutsideZone.render && (
+        <group position={newOutsideZone.pos} rotation={[0, newOutsideZone.rotation, 0]}>
         {/* The Ganesha Shrine (Replacing Store A) */}
         <group position={[0, 0, -8]}>
           {/* Base / Plinth (Red with White border) */}
@@ -1660,7 +1472,7 @@ export function Buildings() {
             <meshStandardMaterial color="#FF6347" /> {/* Orange/Red hue */}
           </mesh>
           <Text position={[0, 5, 0]} fontSize={1.2} color="white" outlineColor="black" outlineWidth={0.05}>
-            SHRINE
+            {newOutsideZone.label}
           </Text>
         </group>
 
@@ -1669,11 +1481,368 @@ export function Buildings() {
           <HoardingBillboard />
         </group>
       </group>
+      )}
 
       {/* MUD GROUND WITH WALKING TRACK (Between H-Block Road and Boys Hostel) */}
-      <group position={[38, 0.05, -126.5]}>
-        <MudGroundWithTrack position={[0, 0, 0]} size={[53, 22]} />
+      <group position={groundZone.pos}>
+        <MudGroundWithTrack position={[0, 0, 0]} size={groundZone.size || [53, 22]} />
       </group>
+
+      {/* 🏢 SECTOR A: SOUTH-WEST ZONE LANDMARKS */}
+      {ublockZone.render && (
+        <group rotation={[0, ublockZone.rotation, 0]}>
+          <UShapeBlock position={ublockZone.pos} size={ublockZone.size || [75, 85]} floors={4} color="#dad20a" label={ublockZone.label} />
+        </group>
+      )}
+
+      {convocationhallZone.render && (
+        <ConvocationHall position={convocationhallZone.pos} size={convocationhallZone.size || [25, 85]} floors={3} color="#9f96f7" label={convocationhallZone.label} />
+      )}
+
+      {guesthouseZone.render && (
+        <group rotation={[0, guesthouseZone.rotation, 0]}>
+          <MultiStoryBuilding position={guesthouseZone.pos} size={guesthouseZone.size || [30, 30]} floors={2} accentColor="#37794b" label={guesthouseZone.label} />
+        </group>
+      )}
+
+      {volleyballcourtsZone.render && (
+        <group position={volleyballcourtsZone.pos} rotation={[0, volleyballcourtsZone.rotation, 0]}>
+          {[-12, 12].map((x) => (
+            <group key={x} position={[x, 0, 0]}>
+              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
+                <planeGeometry args={[18, 28]} />
+                <meshStandardMaterial color="#dfc28d" roughness={0.9} />
+              </mesh>
+              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.025, 0]}>
+                <planeGeometry args={[18.2, 0.2]} />
+                <meshStandardMaterial color="#fff" />
+              </mesh>
+              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.025, 0]}>
+                <planeGeometry args={[0.2, 28.2]} />
+                <meshStandardMaterial color="#fff" />
+              </mesh>
+              {[-10, 10].map((nx) => (
+                <mesh key={nx} position={[nx, 1.5, 0]} castShadow>
+                  <cylinderGeometry args={[0.08, 0.08, 3]} />
+                  <meshStandardMaterial color="#555" />
+                </mesh>
+              ))}
+              <mesh position={[0, 2.2, 0]}>
+                <boxGeometry args={[20, 0.8, 0.02]} />
+                <meshStandardMaterial color="#fff" transparent opacity={0.4} wireframe />
+              </mesh>
+            </group>
+          ))}
+          <Text position={[0, 5, 0]} fontSize={2.5} color="white" outlineColor="black" outlineWidth={0.1}>
+            {volleyballcourtsZone.label}
+          </Text>
+        </group>
+      )}
+
+      {/* 🏢 SECTOR B: NORTH-EAST / PHARMACY ZONE LANDMARKS */}
+      {textileZone.render && (
+        <group rotation={[0, textileZone.rotation, 0]}>
+          <MultiStoryBuilding position={textileZone.pos} size={textileZone.size || [15, 70]} floors={3} accentColor="#927b5d" label={textileZone.label} />
+        </group>
+      )}
+
+      {pharmacyZone.render && (
+        <group rotation={[0, pharmacyZone.rotation, 0]}>
+          <MultiStoryBuilding position={pharmacyZone.pos} size={pharmacyZone.size || [30, 70]} floors={4} accentColor="#847e42" label={pharmacyZone.label} />
+        </group>
+      )}
+
+      {pharmacyBadmintonZone.render && (
+        <group position={pharmacyBadmintonZone.pos} rotation={[0, pharmacyBadmintonZone.rotation, 0]}>
+          {[-6, 6].map((x) => (
+            <group key={x} position={[x, 0, 0]}>
+              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
+                <planeGeometry args={[8, 15]} />
+                <meshStandardMaterial color="#228B22" roughness={0.9} />
+              </mesh>
+              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.025, 0]}>
+                <planeGeometry args={[8.2, 0.15]} />
+                <meshStandardMaterial color="#fff" />
+              </mesh>
+              {[-4.2, 4.2].map((px) => (
+                <mesh key={px} position={[px, 0.8, 0]}><cylinderGeometry args={[0.04, 0.04, 1.65]}/><meshStandardMaterial color="#444"/></mesh>
+              ))}
+              <mesh position={[0, 1.2, 0]}><boxGeometry args={[8.4, 0.4, 0.01]}/><meshStandardMaterial color="#ddd" transparent opacity={0.5} wireframe/></mesh>
+            </group>
+          ))}
+          <Text position={[0, 4, 0]} fontSize={1.8} color="white" outlineColor="black" outlineWidth={0.08}>
+            {pharmacyBadmintonZone.label}
+          </Text>
+        </group>
+      )}
+
+      {pharmacyVolleyballZone.render && (
+        <group position={pharmacyVolleyballZone.pos} rotation={[0, pharmacyVolleyballZone.rotation, 0]}>
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
+            <planeGeometry args={[18, 24]} />
+            <meshStandardMaterial color="#dfc28d" roughness={0.9} />
+          </mesh>
+          {[-10, 10].map((x) => (
+            <mesh key={x} position={[x, 1.5, 0]}><cylinderGeometry args={[0.08, 0.08, 3]}/><meshStandardMaterial color="#555"/></mesh>
+          ))}
+          <mesh position={[0, 2.2, 0]}><boxGeometry args={[20, 0.8, 0.02]}/><meshStandardMaterial color="#fff" transparent opacity={0.4} wireframe/></mesh>
+          <Text position={[0, 4.5, 0]} fontSize={1.8} color="white" outlineColor="black" outlineWidth={0.08}>
+            {pharmacyVolleyballZone.label}
+          </Text>
+        </group>
+      )}
+
+      {/* 🏟️ SECTOR C: NORTH-WEST / SPORTS ZONE LANDMARKS */}
+      {cricketZone.render && (
+        <group position={cricketZone.pos} rotation={[0, cricketZone.rotation, 0]}>
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
+            <ellipseGeometry args={[110, 40, 64]} />
+            <meshStandardMaterial color="#1e5c2f" roughness={0.9} />
+          </mesh>
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.025, 0]}>
+            <ringGeometry args={[107, 108, 64]} />
+            <meshBasicMaterial color="white" />
+          </mesh>
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0]}>
+            <planeGeometry args={[6, 20]} />
+            <meshStandardMaterial color="#c29c6a" roughness={0.8} />
+          </mesh>
+          {[-8, 8].map((z) => (
+            <group key={z} position={[0, 0, z]}>
+              {[-0.2, 0, 0.2].map((x) => (
+                <mesh key={x} position={[x, 0.5, 0]} castShadow>
+                  <cylinderGeometry args={[0.03, 0.03, 1]} />
+                  <meshStandardMaterial color="#e0a96d" />
+                </mesh>
+              ))}
+              <mesh position={[0, 1.02, 0]}>
+                <boxGeometry args={[0.5, 0.03, 0.03]} />
+                <meshStandardMaterial color="#e0a96d" />
+              </mesh>
+            </group>
+          ))}
+          <Text position={[0, 6, 0]} fontSize={4} color="white" outlineColor="black" outlineWidth={0.15}>
+            {cricketZone.label}
+          </Text>
+        </group>
+      )}
+
+      {basketballZone.render && (
+        <group position={basketballZone.pos} rotation={[0, basketballZone.rotation, 0]}>
+          {[-35, 0, 35].map((z) => (
+            <group key={z} position={[0, 0, z]}>
+              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
+                <planeGeometry args={[26, 15]} />
+                <meshStandardMaterial color="#2b5c8f" roughness={0.8} />
+              </mesh>
+              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.025, 0]}>
+                <planeGeometry args={[26.2, 0.15]} />
+                <meshStandardMaterial color="#fff" />
+              </mesh>
+              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.025, 0]}>
+                <planeGeometry args={[0.15, 15.2]} />
+                <meshStandardMaterial color="#fff" />
+              </mesh>
+              {[-13, 13].map((x) => (
+                <group key={x} position={[x, 0, 0]} rotation={[0, x < 0 ? Math.PI/2 : -Math.PI/2, 0]}>
+                  <mesh position={[0, 2.5, 0]} castShadow>
+                    <cylinderGeometry args={[0.1, 0.1, 5]} />
+                    <meshStandardMaterial color="#555" />
+                  </mesh>
+                  <mesh position={[0.4, 4.8, 0]} castShadow>
+                    <boxGeometry args={[0.1, 1.2, 1.8]} />
+                    <meshStandardMaterial color="#fff" />
+                  </mesh>
+                  <mesh position={[0.9, 4.4, 0]} rotation={[Math.PI/2, 0, 0]} castShadow>
+                    <torusGeometry args={[0.3, 0.03, 8, 16]} />
+                    <meshStandardMaterial color="#ff5500" />
+                  </mesh>
+                </group>
+              ))}
+            </group>
+          ))}
+          <Text position={[0, 6, 0]} fontSize={2.8} color="white" outlineColor="black" outlineWidth={0.1}>
+            {basketballZone.label}
+          </Text>
+        </group>
+      )}
+
+      {pondZone.render && (
+        <group position={pondZone.pos} rotation={[0, pondZone.rotation, 0]}>
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0]} receiveShadow>
+            <planeGeometry args={[41, 41]} />
+            <meshStandardMaterial color="#4d88ff" transparent opacity={0.65} roughness={0.1} metalness={0.9} />
+          </mesh>
+          {Array.from({ length: 24 }).map((_, i) => {
+            const angle = (i * Math.PI * 2) / 24;
+            const radius = 20.5;
+            const rx = Math.cos(angle) * radius;
+            const rz = Math.sin(angle) * radius;
+            const scale = 1.2 + Math.random() * 1.5;
+            return (
+              <mesh key={i} position={[rx, 0.3, rz]} castShadow>
+                <dodecahedronGeometry args={[scale]} />
+                <meshStandardMaterial color="#5a5e6b" roughness={0.9} />
+              </mesh>
+            );
+          })}
+          {[
+            [-5, -8], [8, -3], [-3, 6], [7, 5], [-8, 2]
+          ].map(([px, pz], idx) => (
+            <mesh key={idx} position={[px, 0.04, pz]} rotation={[-Math.PI/2, 0, Math.random() * 6]}>
+              <cylinderGeometry args={[1.1, 1.1, 0.02, 16, 1, false, 0, Math.PI * 1.9]} />
+              <meshStandardMaterial color="#1f6b31" roughness={0.8} />
+            </mesh>
+          ))}
+          <Text position={[0, 4, 0]} fontSize={2.2} color="white" outlineColor="black" outlineWidth={0.1}>
+            {pondZone.label}
+          </Text>
+        </group>
+      )}
+
+      {girlsHostelZone.render && (
+        <group rotation={[0, girlsHostelZone.rotation, 0]}>
+          <MultiStoryBuilding
+            position={girlsHostelZone.pos}
+            size={girlsHostelZone.size || [45, 60]}
+            floors={4}
+            accentColor="#8add61"
+            label={girlsHostelZone.label}
+          />
+        </group>
+      )}
+    </group>
+  );
+}
+
+export function UShapeBlock({ position, size = [30, 15, 20], floors = 3, color = '#eaeaea', label }) {
+  const height = floors * 4;
+  const [w, , d] = size;
+  const wallThick = Math.min(w, d) * 0.25;
+  
+  return (
+    <group position={position}>
+      {/* Back connector */}
+      <mesh position={[0, height / 2, -d / 2 + wallThick / 2]} castShadow receiveShadow>
+        <boxGeometry args={[w, height, wallThick]} />
+        <meshStandardMaterial color={color} roughness={0.8} />
+      </mesh>
+      {/* Left Wing */}
+      <mesh position={[-w / 2 + wallThick / 2, height / 2, wallThick / 2]} castShadow receiveShadow>
+        <boxGeometry args={[wallThick, height, d - wallThick]} />
+        <meshStandardMaterial color={color} roughness={0.8} />
+      </mesh>
+      {/* Right Wing */}
+      <mesh position={[w / 2 - wallThick / 2, height / 2, wallThick / 2]} castShadow receiveShadow>
+        <boxGeometry args={[wallThick, height, d - wallThick]} />
+        <meshStandardMaterial color={color} roughness={0.8} />
+      </mesh>
+      {/* Floating Label */}
+      {label && (
+        <Text position={[0, height + 3, 0]} fontSize={2.5} color="white" outlineColor="black" outlineWidth={0.1}>
+          {label}
+        </Text>
+      )}
+    </group>
+  );
+}
+
+export function OShapeBlock({ position, size = [30, 15, 30], floors = 3, color = '#eaeaea', label }) {
+  const height = floors * 4;
+  const [w, , d] = size;
+  const wallThick = Math.min(w, d) * 0.22;
+  
+  return (
+    <group position={position}>
+      {/* Back Wall */}
+      <mesh position={[0, height / 2, -d / 2 + wallThick / 2]} castShadow receiveShadow>
+        <boxGeometry args={[w, height, wallThick]} />
+        <meshStandardMaterial color={color} roughness={0.8} />
+      </mesh>
+      {/* Front Wall */}
+      <mesh position={[0, height / 2, d / 2 - wallThick / 2]} castShadow receiveShadow>
+        <boxGeometry args={[w, height, wallThick]} />
+        <meshStandardMaterial color={color} roughness={0.8} />
+      </mesh>
+      {/* Left Wall */}
+      <mesh position={[-w / 2 + wallThick / 2, height / 2, 0]} castShadow receiveShadow>
+        <boxGeometry args={[wallThick, height, d - wallThick * 2]} />
+        <meshStandardMaterial color={color} roughness={0.8} />
+      </mesh>
+      {/* Right Wall */}
+      <mesh position={[w / 2 - wallThick / 2, height / 2, 0]} castShadow receiveShadow>
+        <boxGeometry args={[wallThick, height, d - wallThick * 2]} />
+        <meshStandardMaterial color={color} roughness={0.8} />
+      </mesh>
+      {/* Floating Label */}
+      {label && (
+        <Text position={[0, height + 3, 0]} fontSize={2.5} color="white" outlineColor="black" outlineWidth={0.1}>
+          {label}
+        </Text>
+      )}
+    </group>
+  );
+}
+
+export function ConvocationHall({ position, size = [24, 24], floors = 3, color = '#eaeaea', label }) {
+  const height = floors * 4;
+  const radius = size[0] / 2;
+  const coneHeight = radius * 0.6;
+  
+  return (
+    <group position={position}>
+      {/* Octagonal Main Structure */}
+      <mesh position={[0, height / 2, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[radius, radius, height, 8]} />
+        <meshStandardMaterial color={color} roughness={0.7} />
+      </mesh>
+      {/* Dome/Cone Roof */}
+      <mesh position={[0, height + coneHeight / 2, 0]} castShadow>
+        <coneGeometry args={[radius * 1.1, coneHeight, 8]} />
+        <meshStandardMaterial color="#DAA520" roughness={0.3} metalness={0.7} />
+      </mesh>
+      {/* Spike top */}
+      <mesh position={[0, height + coneHeight + 1, 0]} castShadow>
+        <cylinderGeometry args={[0.08, 0.08, 2]} />
+        <meshStandardMaterial color="#FFD700" />
+      </mesh>
+      {/* Floating Label */}
+      {label && (
+        <Text position={[0, height + coneHeight + 3, 0]} fontSize={2.5} color="white" outlineColor="black" outlineWidth={0.1}>
+          {label}
+        </Text>
+      )}
+    </group>
+  );
+}
+
+export function SingleTree({ position }) {
+  return (
+    <group position={position}>
+      {/* Trunk */}
+      <mesh position={[0, 1.5, 0]} castShadow>
+        <cylinderGeometry args={[0.15, 0.25, 3]} />
+        <meshStandardMaterial color="#5C4033" roughness={0.9} />
+      </mesh>
+      {/* Foliage */}
+      <mesh position={[0, 3.5, 0]} castShadow>
+        <sphereGeometry args={[1.5, 8, 8]} />
+        <meshStandardMaterial color="#2E8B57" roughness={0.8} />
+      </mesh>
+    </group>
+  );
+}
+
+export function TreeRow({ position, size = [40, 1], rotation = 0 }) {
+  const [length] = size;
+  const numTrees = Math.max(2, Math.floor(length / 8));
+  
+  return (
+    <group position={position} rotation={[0, rotation, 0]}>
+      {Array.from({ length: numTrees }).map((_, i) => {
+        const offset = -length / 2 + (i / (numTrees - 1)) * length;
+        return <SingleTree key={i} position={[offset, 0, 0]} />;
+      })}
     </group>
   );
 }
