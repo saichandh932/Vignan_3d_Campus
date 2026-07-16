@@ -1868,45 +1868,167 @@ export function Buildings({ zones = [] }) {
         );
       })()}
 
-      {basketballZone.render && (
-        <group position={basketballZone.pos} rotation={[0, basketballZone.rotation, 0]}>
-          {[-35, 0, 35].map((z) => (
-            <group key={z} position={[0, 0, z]}>
-              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
-                <planeGeometry args={[26, 15]} />
-                <meshStandardMaterial color="#2b5c8f" roughness={0.8} />
-              </mesh>
-              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.025, 0]}>
-                <planeGeometry args={[26.2, 0.15]} />
-                <meshStandardMaterial color="#fff" />
-              </mesh>
-              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.025, 0]}>
-                <planeGeometry args={[0.15, 15.2]} />
-                <meshStandardMaterial color="#fff" />
-              </mesh>
-              {[-13, 13].map((x) => (
-                <group key={x} position={[x, 0, 0]} rotation={[0, x < 0 ? Math.PI/2 : -Math.PI/2, 0]}>
-                  <mesh position={[0, 2.5, 0]} castShadow>
-                    <cylinderGeometry args={[0.1, 0.1, 5]} />
-                    <meshStandardMaterial color="#555" />
+      {basketballZone.render && (() => {
+        const [w, d] = basketballZone.size || [35, 25];
+        return (
+          <group position={basketballZone.pos} rotation={[0, basketballZone.rotation, 0]}>
+            <group scale={[w / 35, 1, d / 25]}>
+              {/* Render two courts side-by-side horizontally */}
+              {[-9, 9].map((xOffset) => (
+                <group key={xOffset} position={[xOffset, 0, 0]}>
+                  {/* Blue surface */}
+                  <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
+                    <planeGeometry args={[15, 22]} />
+                    <meshStandardMaterial color="#1a5276" roughness={0.8} />
                   </mesh>
-                  <mesh position={[0.4, 4.8, 0]} castShadow>
-                    <boxGeometry args={[0.1, 1.2, 1.8]} />
-                    <meshStandardMaterial color="#fff" />
+                  {/* White boundary lines */}
+                  <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.025, 0]}>
+                    <ringGeometry args={[10.8, 11, 4, 1, Math.PI/4, Math.PI*2]} />
+                    <meshBasicMaterial color="#fff" />
                   </mesh>
-                  <mesh position={[0.9, 4.4, 0]} rotation={[Math.PI/2, 0, 0]} castShadow>
-                    <torusGeometry args={[0.3, 0.03, 8, 16]} />
-                    <meshStandardMaterial color="#ff5500" />
+                  {/* Center Line (horizontal divider) */}
+                  <mesh position={[0, 0.03, 0]}>
+                    <boxGeometry args={[14.8, 0.01, 0.15]} />
+                    <meshBasicMaterial color="#fff" />
                   </mesh>
+                  {/* Center Circle */}
+                  <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.032, 0]}>
+                    <ringGeometry args={[2.0, 2.15, 32]} />
+                    <meshBasicMaterial color="#fff" />
+                  </mesh>
+                  
+                  {/* Hoops at North and South ends */}
+                  {[-11, 11].map((zOffset) => (
+                    <group key={zOffset} position={[0, 0, zOffset]} rotation={[0, zOffset < 0 ? 0 : Math.PI, 0]}>
+                      {/* Post */}
+                      <mesh position={[0, 2.5, -0.5]} castShadow>
+                        <cylinderGeometry args={[0.08, 0.08, 5]} />
+                        <meshStandardMaterial color="#34495e" />
+                      </mesh>
+                      {/* Backboard */}
+                      <mesh position={[0, 4.8, -0.1]} castShadow>
+                        <boxGeometry args={[1.8, 1.2, 0.1]} />
+                        <meshStandardMaterial color="#fff" />
+                      </mesh>
+                      {/* Orange Hoop */}
+                      <mesh position={[0, 4.4, 0.4]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+                        <torusGeometry args={[0.3, 0.03, 8, 16]} />
+                        <meshStandardMaterial color="#ff5500" />
+                      </mesh>
+                    </group>
+                  ))}
                 </group>
               ))}
             </group>
-          ))}
-          <Text position={[0, 6, 0]} fontSize={2.8} color="white" outlineColor="black" outlineWidth={0.1}>
-            {basketballZone.label}
-          </Text>
-        </group>
-      )}
+            <Text position={[0, 6, 0]} fontSize={2.8} color="white" outlineColor="black" outlineWidth={0.1}>
+              {basketballZone.label}
+            </Text>
+          </group>
+        );
+      })()}
+
+      {laraGroundZone.render && (() => {
+        const [w, d] = laraGroundZone.size || [45, 50];
+        return (
+          <group position={laraGroundZone.pos} rotation={[0, laraGroundZone.rotation, 0]}>
+            <group scale={[w / 45, 1, d / 50]}>
+              {/* Green field */}
+              <mesh position={[0, 0.02, 0]} receiveShadow>
+                <boxGeometry args={[45, 0.1, 50]} />
+                <meshStandardMaterial color="#2d7a43" roughness={0.8} />
+              </mesh>
+              {/* White outer boundary line */}
+              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.08, 0]}>
+                <ringGeometry args={[20.5, 21, 4, 1, Math.PI / 4, Math.PI * 2]} />
+                <meshBasicMaterial color="#ffffff" />
+              </mesh>
+              {/* Center Circle */}
+              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.082, 0]}>
+                <ringGeometry args={[6, 6.2, 32]} />
+                <meshBasicMaterial color="#ffffff" />
+              </mesh>
+              {/* Midfield Line */}
+              <mesh position={[0, 0.085, 0]}>
+                <boxGeometry args={[41.8, 0.01, 0.2]} />
+                <meshBasicMaterial color="#ffffff" />
+              </mesh>
+            </group>
+            <Text position={[0, 4, 0]} fontSize={2.5} color="white" outlineColor="black" outlineWidth={0.12}>
+              {laraGroundZone.label}
+            </Text>
+          </group>
+        );
+      })()}
+
+      {pickleballZone.render && (() => {
+        const [w, d] = pickleballZone.size || [30, 25];
+        return (
+          <group position={pickleballZone.pos} rotation={[0, pickleballZone.rotation, 0]}>
+            <group scale={[w / 30, 1, d / 25]}>
+              {/* Outer boundary pad (Green) */}
+              <mesh position={[0, 0.02, 0]} receiveShadow>
+                <boxGeometry args={[24, 0.1, 28]} />
+                <meshStandardMaterial color="#27ae60" roughness={0.8} />
+              </mesh>
+              {/* Inner Court Surface (Light Blue) */}
+              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.025, 0]} receiveShadow>
+                <planeGeometry args={[14, 24]} />
+                <meshStandardMaterial color="#2980b9" roughness={0.7} />
+              </mesh>
+              {/* Non-Volley Zone (Kitchen - Light Green) */}
+              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.028, 0]}>
+                <planeGeometry args={[14, 7.6]} />
+                <meshStandardMaterial color="#1abc9c" roughness={0.7} />
+              </mesh>
+              
+              {/* White lines */}
+              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0]}>
+                <ringGeometry args={[9.8, 10, 4, 1, Math.PI/4, Math.PI*2]} />
+                <meshBasicMaterial color="#fff" />
+              </mesh>
+              <mesh position={[0, 0.032, 0]}>
+                <boxGeometry args={[14.2, 0.01, 0.15]} />
+                <meshBasicMaterial color="#fff" />
+              </mesh>
+              <mesh position={[0, 0.032, -8]}>
+                <boxGeometry args={[0.15, 0.01, 8.2]} />
+                <meshBasicMaterial color="#fff" />
+              </mesh>
+              <mesh position={[0, 0.032, 8]}>
+                <boxGeometry args={[0.15, 0.01, 8.2]} />
+                <meshBasicMaterial color="#fff" />
+              </mesh>
+              {[-3.8, 3.8].map((zVal) => (
+                <mesh key={zVal} position={[0, 0.032, zVal]}>
+                  <boxGeometry args={[14, 0.01, 0.15]} />
+                  <meshBasicMaterial color="#fff" />
+                </mesh>
+              ))}
+
+              {/* Net posts */}
+              {[-7.5, 7.5].map((xVal) => (
+                <mesh key={xVal} position={[xVal, 0.6, 0]} castShadow>
+                  <cylinderGeometry args={[0.08, 0.08, 1.2]} />
+                  <meshStandardMaterial color="#34495e" roughness={0.5} />
+                </mesh>
+              ))}
+              {/* Net mesh */}
+              <mesh position={[0, 0.55, 0]}>
+                <boxGeometry args={[15, 0.9, 0.02]} />
+                <meshStandardMaterial color="#ffffff" transparent opacity={0.4} wireframe />
+              </mesh>
+              {/* Net top tape */}
+              <mesh position={[0, 1.02, 0]}>
+                <boxGeometry args={[15.1, 0.05, 0.04]} />
+                <meshStandardMaterial color="#ffffff" roughness={0.3} />
+              </mesh>
+            </group>
+            <Text position={[0, 4, 0]} fontSize={2.0} color="white" outlineColor="black" outlineWidth={0.1}>
+              {pickleballZone.label}
+            </Text>
+          </group>
+        );
+      })()}
 
       {pondZone.render && (
         <group position={pondZone.pos} rotation={[0, pondZone.rotation, 0]}>
