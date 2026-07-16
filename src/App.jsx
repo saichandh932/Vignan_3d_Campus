@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
-import { Sky, OrbitControls } from '@react-three/drei';
+import { Sky, OrbitControls, Text } from '@react-three/drei';
 import { Buildings } from './components/Buildings';
 import { Roads } from './components/Roads';
 import { Zones } from './components/Zones';
