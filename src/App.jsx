@@ -699,6 +699,46 @@ export default function App() {
           </group>
         ))}
 
+        {/* Render selection helpers for custom landmarks in editor mode */}
+        {isDroneMode && mapItems.filter(item => 
+          item.type.startsWith('custom_') || 
+          ['canteen', 'sportsground', 'farm', 'shrine', 'smallzone', 'hostel_connector', 'ground', 'bus_stop', 'boundary_wall', 'volleyballcourts', 'pharmacy_badminton', 'pharmacy_volleyball', 'cricketground', 'basketballcourts', 'vignanpond', 'convocationhall'].includes(item.id) ||
+          ['boyshostel', 'achostel', 'priyadarshinihostel'].includes(item.id)
+        ).map(item => {
+          const w = item.size ? item.size[0] : 20;
+          const d = item.size ? item.size[1] : 20;
+          const h = item.id === 'cricketground' ? 1 : 
+                    item.id === 'boundary_wall' ? 4 : 
+                    item.id === 'bus_stop' ? 3 :
+                    item.floors ? item.floors * 4 : 12;
+          
+          return (
+            <mesh
+              key={`helper-${item.id}`}
+              position={[item.pos[0], h / 2, item.pos[2]]}
+              rotation={[0, item.rotation || 0, 0]}
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedItemId(item.id);
+              }}
+            >
+              <boxGeometry args={[w, h, d]} />
+              <meshBasicMaterial 
+                color="#60a5fa" 
+                transparent 
+                opacity={selectedItemId === item.id ? 0.15 : 0.0} 
+                depthWrite={false}
+              />
+              {selectedItemId === item.id && (
+                <mesh>
+                  <boxGeometry args={[w + 0.5, h + 0.5, d + 0.5]} />
+                  <meshBasicMaterial color="#ffffff" wireframe />
+                </mesh>
+              )}
+            </mesh>
+          );
+        })}
+
         {/* Render dynamic road segments, crossroads and corners */}
         {mapItems.filter(item => ['road', 'road_cross', 'road_corner', 'road_highway', 'road_circle'].includes(item.type)).map(item => {
           if (item.type === 'road') {
