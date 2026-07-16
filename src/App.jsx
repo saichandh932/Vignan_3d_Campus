@@ -194,16 +194,16 @@ const DEFAULT_MAP_ITEMS = [
   { id: 'ublock', type: 'building', label: 'U BLOCK', pos: [-141.5, 0, -198.0], size: [75, 85], floors: 4, color: '#dad20a', rotation: 0 },
   { id: 'convocationhall', type: 'convocation', label: 'CONVOCATION HALL', pos: [-196.5, 0, -197.5], size: [25, 85], floors: 3, color: '#9f96f7', rotation: 0 },
   { id: 'guesthouse', type: 'building', label: 'GUEST HOUSE', pos: [-226.5, 0, -171.0], size: [30, 30], floors: 2, color: '#37794b', rotation: 0 },
-  { id: 'volleyballcourts', type: 'building', label: 'VOLLEY BALL COURTS', pos: [-236.5, 0, -214.0], size: [50, 50], rotation: 0 },
+  { id: 'volleyballcourts', type: 'volleyballcourts', label: 'VOLLEY BALL COURTS', pos: [-236.5, 0, -214.0], size: [50, 50], rotation: 0 },
   
   { id: 'textile', type: 'building', label: 'TEXTILE TECHNOLOGY', pos: [49.0, 0, -334.5], size: [15, 70], floors: 3, color: '#927b5d', rotation: 0 },
   { id: 'pharmacy', type: 'building', label: 'PHARMACY BLOCK', pos: [122.0, 0, -333.5], size: [30, 70], floors: 4, color: '#847e42', rotation: 0 },
-  { id: 'pharmacy_badminton', type: 'building', label: 'PHARMACY BADMINTON COURT', pos: [86.0, 0, -317.5], size: [30, 30], rotation: 0 },
-  { id: 'pharmacy_volleyball', type: 'building', label: 'PHARMACY VOLLEYBALL COURT', pos: [86.0, 0, -351.5], size: [30, 25], rotation: 0 },
+  { id: 'pharmacy_badminton', type: 'pharmacy_badminton', label: 'PHARMACY BADMINTON COURT', pos: [86.0, 0, -317.5], size: [30, 30], rotation: 0 },
+  { id: 'pharmacy_volleyball', type: 'pharmacy_volleyball', label: 'PHARMACY VOLLEYBALL COURT', pos: [86.0, 0, -351.5], size: [30, 25], rotation: 0 },
   
-  { id: 'cricketground', type: 'building', label: 'CRICKET GROUND', pos: [-121.0, 0, -340.5], size: [235, 85], rotation: 0 },
-  { id: 'basketballcourts', type: 'building', label: 'BASKETBALL COURTS', pos: [-271.5, 0, -359.5], size: [30, 125], rotation: 0 },
-  { id: 'vignanpond', type: 'building', label: 'VIGNAN POND', pos: [-322.5, 0, -321.5], size: [45, 45], rotation: 0 },
+  { id: 'cricketground', type: 'cricketground', label: 'CRICKET GROUND', pos: [-121.0, 0, -340.5], size: [235, 85], rotation: 0 },
+  { id: 'basketballcourts', type: 'basketballcourts', label: 'BASKETBALL COURTS', pos: [-271.5, 0, -359.5], size: [30, 125], rotation: 0 },
+  { id: 'vignanpond', type: 'vignanpond', label: 'VIGNAN POND', pos: [-322.5, 0, -321.5], size: [45, 45], rotation: 0 },
   { id: 'priyadarshinihostel', type: 'building', label: 'PRIYADARSHINI HOSTEL', pos: [-322.5, 0, -379.0], size: [45, 60], floors: 4, color: '#8add61', rotation: 0 },
 
   // 🗺️ Zones (grounds)
@@ -357,6 +357,9 @@ export default function App() {
         parsed = parsed.map(item => {
           if (item.id === 'convocationhall') {
             return { ...item, type: 'convocation', size: item.size || defaultSizes[item.id] };
+          }
+          if (['volleyballcourts', 'pharmacy_badminton', 'pharmacy_volleyball', 'cricketground', 'basketballcourts', 'vignanpond'].includes(item.id)) {
+            return { ...item, type: item.id, size: item.size || defaultSizes[item.id] };
           }
           if (!item.size && defaultSizes[item.id]) {
             return { ...item, size: defaultSizes[item.id] };

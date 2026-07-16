@@ -2054,6 +2054,12 @@ export function ConvocationHall({ position, size = [25, 85], floors = 3, color =
         <meshStandardMaterial color="#c0c0c0" roughness={0.9} />
       </mesh>
 
+      {/* Solid Wall facing the highway (West/Left side) */}
+      <mesh position={[-halfW + 0.15, height / 2, 0]} castShadow receiveShadow>
+        <boxGeometry args={[0.3, height, d]} />
+        <meshStandardMaterial color={color} roughness={0.8} />
+      </mesh>
+
       {/* Columns / Pillars */}
       {pillarPositions.map(([px, pz], idx) => (
         <mesh key={idx} position={[px, height / 2, pz]} castShadow receiveShadow>
