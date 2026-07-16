@@ -337,10 +337,10 @@ export function Buildings({ zones = [] }) {
     };
   };
 
-  const gateMain = getZone('gate_main', "VIGNAN'S FOUNDATION", [0, 0, 0], null, 0);
-  const gateLibrary = getZone('gate_library', "LIBRARY ENTRANCE GATE", [-110, 0, -60], null, Math.PI / 2);
-  const boundaryWall = getZone('boundary_wall', "WALL", [10, 0, 15], null, -Math.PI / 2);
-  const busStopZone = getZone('bus_stop', 'BUS STOP', [-81.8, 0.01, 124.1], null, Math.atan2(110, 130));
+  const gateMain = getZone('gate_main', "VIGNAN'S FOUNDATION", [0, 0, 0], [18, 5], 0);
+  const gateLibrary = getZone('gate_library', "LIBRARY ENTRANCE GATE", [-110, 0, -60], [18, 5], Math.PI / 2);
+  const boundaryWall = getZone('boundary_wall', "WALL", [10, 0, 15], [25, 4], -Math.PI / 2);
+  const busStopZone = getZone('bus_stop', 'BUS STOP', [-81.8, 0.01, 124.1], [42, 8], Math.atan2(110, 130));
 
   const libZone = getZone('library', 'LIBRARY', [-25.0, 0, -40.0], null, Math.PI / 6);
   const ablockZone = getZone('ablock', 'A-BLOCK', [52, 0, -12.0], null, Math.PI);

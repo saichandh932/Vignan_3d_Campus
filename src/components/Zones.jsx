@@ -77,9 +77,9 @@ export function Zones({ zones = ZONES, isDroneMode = false, selectedZoneId = nul
         >
           {/* Main Ground Plane */}
           <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
-            <planeGeometry args={z.size} />
+            <planeGeometry args={z.size || [20, 20]} />
             <meshStandardMaterial 
-              color={z.color} 
+              color={z.color || '#444444'} 
               opacity={selectedZoneId === z.id ? 0.55 : 0.25} 
               transparent 
             />
@@ -88,7 +88,7 @@ export function Zones({ zones = ZONES, isDroneMode = false, selectedZoneId = nul
           {/* Active selection outline helper */}
           {selectedZoneId === z.id && (
             <mesh position={[0, 0.1, 0]}>
-              <boxGeometry args={[z.size[0], 0.25, z.size[1]]} />
+              <boxGeometry args={[z.size ? z.size[0] : 20, 0.25, z.size ? z.size[1] : 20]} />
               <meshBasicMaterial color="#ffffff" wireframe />
             </mesh>
           )}
@@ -98,7 +98,7 @@ export function Zones({ zones = ZONES, isDroneMode = false, selectedZoneId = nul
             <Text
               position={[0, 0.15, 0]}
               rotation={[-Math.PI / 2, 0, 0]}
-              fontSize={Math.min(z.size[0], z.size[1]) * 0.12 + 1.2}
+              fontSize={Math.min(z.size ? z.size[0] : 20, z.size ? z.size[1] : 20) * 0.12 + 1.2}
               color={selectedZoneId === z.id ? "#ffffff" : "#cccccc"}
               fontWeight="bold"
               outlineWidth={0.1}
