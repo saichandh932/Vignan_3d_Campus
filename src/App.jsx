@@ -201,7 +201,11 @@ const DEFAULT_MAP_ITEMS = [
   { id: 'pharmacy_badminton', type: 'pharmacy_badminton', label: 'PHARMACY BADMINTON COURT', pos: [86.0, 0, -317.5], size: [30, 30], rotation: 0 },
   { id: 'pharmacy_volleyball', type: 'pharmacy_volleyball', label: 'PHARMACY VOLLEYBALL COURT', pos: [86.0, 0, -351.5], size: [30, 25], rotation: 0 },
   
-  { id: 'cricketground', type: 'cricketground', label: 'CRICKET GROUND', pos: [-121.0, 0, -340.5], size: [235, 85], rotation: 0 },
+  { id: 'cricketground', type: 'cricketground', label: 'CRICKET GROUND', pos: [-158.5, 0, -340.5], size: [150, 85], rotation: 0 },
+  { id: 'open_gym', type: 'open_gym', label: 'OPEN GYM', pos: [-23.5, 0, -360.5], size: [30, 30], rotation: 0 },
+  { id: 'kabaddi_courts', type: 'kabaddi_courts', label: 'KABADDI COURTS', pos: [-58.5, 0, -360.5], size: [30, 30], rotation: 0 },
+  { id: 'khokho_courts', type: 'khokho_courts', label: 'KHO-KHO COURTS', pos: [-58.5, 0, -320.5], size: [30, 30], rotation: 0 },
+  { id: 'lamp_pole_sports', type: 'lamp_pole_sports', label: 'SPORTS FLOODLIGHT', pos: [-41, 0, -360.5], size: [2, 2], rotation: 0 },
   { id: 'basketballcourts', type: 'basketballcourts', label: 'BASKETBALL COURTS', pos: [-271.5, 0, -359.5], size: [30, 125], rotation: 0 },
   { id: 'vignanpond', type: 'vignanpond', label: 'VIGNAN POND', pos: [-322.5, 0, -321.5], size: [45, 45], rotation: 0 },
   { id: 'priyadarshinihostel', type: 'building', label: 'PRIYADARSHINI HOSTEL', pos: [-322.5, 0, -379.0], size: [45, 60], floors: 4, color: '#8add61', rotation: 0 },
@@ -347,7 +351,11 @@ export default function App() {
       'ablock': [75, 64],
       'hblock': [90, 53],
       'nblock': [62, 140],
-      'cricketground': [235, 85],
+      'cricketground': [150, 85],
+      'open_gym': [30, 30],
+      'kabaddi_courts': [30, 30],
+      'khokho_courts': [30, 30],
+      'lamp_pole_sports': [2, 2]
     };
     if (saved) {
       try {
@@ -358,7 +366,11 @@ export default function App() {
           if (item.id === 'convocationhall') {
             return { ...item, type: 'convocation', size: item.size || defaultSizes[item.id] };
           }
-          if (['volleyballcourts', 'pharmacy_badminton', 'pharmacy_volleyball', 'cricketground', 'basketballcourts', 'vignanpond'].includes(item.id)) {
+          if (['volleyballcourts', 'pharmacy_badminton', 'pharmacy_volleyball', 'cricketground', 'basketballcourts', 'vignanpond', 'open_gym', 'kabaddi_courts', 'khokho_courts', 'lamp_pole_sports'].includes(item.id)) {
+            // Also force-migrate the position of cricketground to its new centered pos if it has its old default pos
+            if (item.id === 'cricketground' && item.pos[0] === -121.0) {
+              item.pos = [-158.5, 0, -340.5];
+            }
             return { ...item, type: item.id, size: item.size || defaultSizes[item.id] };
           }
           if (!item.size && defaultSizes[item.id]) {
@@ -371,7 +383,8 @@ export default function App() {
         const essentialIds = [
           'pharmacy', 'pharmacy_badminton', 'pharmacy_volleyball', 'textile',
           'ublock', 'convocationhall', 'guesthouse', 'volleyballcourts',
-          'cricketground', 'basketballcourts', 'vignanpond', 'priyadarshinihostel'
+          'cricketground', 'basketballcourts', 'vignanpond', 'priyadarshinihostel',
+          'open_gym', 'kabaddi_courts', 'khokho_courts', 'lamp_pole_sports'
         ];
         
         essentialIds.forEach(id => {
@@ -526,7 +539,7 @@ export default function App() {
     } else if (type === 'tree_row') {
       newItem.label = 'TREE ROW';
       newItem.size = [40, 1];
-    } else if (type.startsWith('custom_') || ['canteen', 'sportsground', 'farm', 'shrine', 'smallzone', 'hostel_connector', 'ground', 'bus_stop', 'boundary_wall'].includes(type)) {
+    } else if (type.startsWith('custom_') || ['canteen', 'sportsground', 'farm', 'shrine', 'smallzone', 'hostel_connector', 'ground', 'bus_stop', 'boundary_wall', 'volleyballcourts', 'pharmacy_badminton', 'pharmacy_volleyball', 'cricketground', 'basketballcourts', 'vignanpond', 'open_gym', 'kabaddi_courts', 'khokho_courts', 'lamp_pole_sports'].includes(type)) {
       const labelMap = {
         'custom_library': 'LIBRARY',
         'custom_ablock': 'A-BLOCK',
@@ -540,13 +553,28 @@ export default function App() {
         'hostel_connector': 'CONNECTOR BRIDGE',
         'ground': 'GROUND',
         'bus_stop': 'BUS STOP',
-        'boundary_wall': 'WALL'
+        'boundary_wall': 'WALL',
+        'volleyballcourts': 'VOLLEY BALL COURTS',
+        'pharmacy_badminton': 'PHARMACY BADMINTON COURT',
+        'pharmacy_volleyball': 'PHARMACY VOLLEYBALL COURT',
+        'cricketground': 'CRICKET GROUND',
+        'basketballcourts': 'BASKETBALL COURTS',
+        'vignanpond': 'VIGNAN POND',
+        'open_gym': 'OPEN GYM',
+        'kabaddi_courts': 'KABADDI COURTS',
+        'khokho_courts': 'KHO-KHO COURTS',
+        'lamp_pole_sports': 'SPORTS FLOODLIGHT'
       };
       const sizeMap = {
         'sportsground': [70, 94],
         'farm': [46, 53],
         'ground': [53, 22],
-        'canteen': [19, 22]
+        'canteen': [19, 22],
+        'cricketground': [150, 85],
+        'open_gym': [30, 30],
+        'kabaddi_courts': [30, 30],
+        'khokho_courts': [30, 30],
+        'lamp_pole_sports': [2, 2]
       };
       newItem.type = type;
       newItem.id = type; // Keep predictable ID to bind properly in Buildings.jsx
@@ -702,7 +730,7 @@ export default function App() {
         {/* Render selection helpers for custom landmarks in editor mode */}
         {isDroneMode && mapItems.filter(item => 
           item.type.startsWith('custom_') || 
-          ['canteen', 'sportsground', 'farm', 'shrine', 'smallzone', 'hostel_connector', 'ground', 'bus_stop', 'boundary_wall', 'volleyballcourts', 'pharmacy_badminton', 'pharmacy_volleyball', 'cricketground', 'basketballcourts', 'vignanpond', 'convocationhall'].includes(item.id) ||
+          ['canteen', 'sportsground', 'farm', 'shrine', 'smallzone', 'hostel_connector', 'ground', 'bus_stop', 'boundary_wall', 'volleyballcourts', 'pharmacy_badminton', 'pharmacy_volleyball', 'cricketground', 'basketballcourts', 'vignanpond', 'convocationhall', 'open_gym', 'kabaddi_courts', 'khokho_courts', 'lamp_pole_sports'].includes(item.id) ||
           ['boyshostel', 'achostel', 'priyadarshinihostel'].includes(item.id)
         ).map(item => {
           const w = item.size ? item.size[0] : 20;

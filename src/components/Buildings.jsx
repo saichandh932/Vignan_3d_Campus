@@ -366,7 +366,11 @@ export function Buildings({ zones = [] }) {
   const pharmacyBadmintonZone = getZone('pharmacy_badminton', 'PHARMACY BADMINTON COURT', [86.0, 0, -317.5], [30, 30], 0);
   const pharmacyVolleyballZone = getZone('pharmacy_volleyball', 'PHARMACY VOLLEYBALL COURT', [86.0, 0, -351.5], [30, 25], 0);
 
-  const cricketZone = getZone('cricketground', 'CRICKET GROUND', [-121.0, 0, -340.5], [235, 85], 0);
+  const cricketZone = getZone('cricketground', 'CRICKET GROUND', [-158.5, 0, -340.5], [150, 85], 0);
+  const openGymZone = getZone('open_gym', 'OPEN GYM', [-23.5, 0, -360.5], [30, 30], 0);
+  const kabaddiZone = getZone('kabaddi_courts', 'KABADDI COURTS', [-58.5, 0, -360.5], [30, 30], 0);
+  const khokhoZone = getZone('khokho_courts', 'KHO-KHO COURTS', [-58.5, 0, -320.5], [30, 30], 0);
+  const lampPoleZone = getZone('lamp_pole_sports', 'SPORTS FLOODLIGHT', [-41, 0, -360.5], [2, 2], 0);
   const basketballZone = getZone('basketballcourts', 'BASKETBALL COURTS', [-271.5, 0, -359.5], [30, 125], 0);
   const pondZone = getZone('vignanpond', 'VIGNAN POND', [-322.5, 0, -321.5], [45, 45], 0);
   const girlsHostelZone = getZone('priyadarshinihostel', 'PRIYADARSHINI HOSTEL', [-322.5, 0, -379.0], [45, 60], 0);
@@ -1624,245 +1628,241 @@ export function Buildings({ zones = [] }) {
       )}
 
       {/* 🏟️ SECTOR C: NORTH-WEST / SPORTS ZONE LANDMARKS */}
+      {/* 🏟️ SECTOR C: NORTH-WEST / SPORTS ZONE LANDMARKS */}
       {cricketZone.render && (() => {
-        const [w, d] = cricketZone.size || [235, 85];
+        const [w, d] = cricketZone.size || [150, 85];
         return (
           <group position={cricketZone.pos} rotation={[0, cricketZone.rotation, 0]}>
-            <group scale={[w / 235, 1, d / 85]}>
-              {/* ==================================================== */}
-              {/* 1. LEFT AREA: ATHLETICS RUNNING TRACK & FIELD       */}
-              {/* ==================================================== */}
-              <group position={[-37.5, 0, 0]}>
-                {/* Oval/Elliptical Group */}
-                <group scale={[1, 1, 35 / 75]}>
-                  {/* Reddish-brown Cinder Running Track */}
-                  <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
-                    <circleGeometry args={[75, 64]} />
-                    <meshStandardMaterial color="#b25329" roughness={0.9} />
-                  </mesh>
-                  
-                  {/* Concentric white lane rings */}
-                  {[71, 67, 63].map((r, idx) => (
-                    <mesh key={idx} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.025, 0]}>
-                      <ringGeometry args={[r, r + 0.3, 64]} />
-                      <meshBasicMaterial color="#ffffff" />
-                    </mesh>
-                  ))}
-                  
-                  {/* Central grass infield */}
-                  <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0]} receiveShadow>
-                    <circleGeometry args={[59, 64]} />
-                    <meshStandardMaterial color="#1e5c2f" roughness={0.8} />
-                  </mesh>
-                </group>
-                
-                {/* Cricket Pitch (Centered on the grass field) */}
-                <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, 0]}>
-                  <planeGeometry args={[6, 20]} />
-                  <meshStandardMaterial color="#c29c6a" roughness={0.8} />
+            <group scale={[w / 150, 1, d / 85]}>
+              {/* Oval/Elliptical Group */}
+              <group scale={[1, 1, 35 / 75]}>
+                {/* Reddish-brown Cinder Running Track */}
+                <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
+                  <circleGeometry args={[75, 64]} />
+                  <meshStandardMaterial color="#b25329" roughness={0.9} />
                 </mesh>
                 
-                {/* Wickets at each end of the pitch */}
-                {[-8, 8].map((zVal) => (
-                  <group key={zVal} position={[0, 0.04, zVal]}>
-                    {[-0.2, 0, 0.2].map((xVal) => (
-                      <mesh key={xVal} position={[xVal, 0.5, 0]} castShadow>
-                        <cylinderGeometry args={[0.03, 0.03, 1, 8]} />
-                        <meshStandardMaterial color="#e0a96d" />
-                      </mesh>
-                    ))}
-                    <mesh position={[0, 1.02, 0]}>
-                      <boxGeometry args={[0.5, 0.03, 0.03]} />
-                      <meshStandardMaterial color="#e0a96d" />
-                    </mesh>
-                  </group>
-                ))}
-              </group>
-
-              {/* ==================================================== */}
-              {/* 2. RIGHT AREA: SPORTS COURTS & OPEN GYM              */}
-              {/* ==================================================== */}
-              
-              {/* A. Open Gym (Closest to the road) */}
-              <group position={[97.5, 0, -20]}>
-                {/* Concrete Pad */}
-                <mesh position={[0, 0.02, 0]} receiveShadow>
-                  <boxGeometry args={[30, 0.1, 30]} />
-                  <meshStandardMaterial color="#7f8c8d" roughness={0.7} />
-                </mesh>
-                {/* Border Line */}
-                <mesh position={[0, 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-                  <ringGeometry args={[14.5, 15, 4, 1, 0, Math.PI * 2]} />
-                  <meshBasicMaterial color="#fff" />
-                </mesh>
-                {/* Gym Equipment (Procedural shapes) */}
-                {/* Pull-up Rig */}
-                <group position={[-5, 0, -5]}>
-                  <mesh position={[-2, 2.5, 0]} castShadow>
-                    <cylinderGeometry args={[0.1, 0.1, 5, 8]} />
-                    <meshStandardMaterial color="#2c3e50" metalness={0.8} />
-                  </mesh>
-                  <mesh position={[2, 2.5, 0]} castShadow>
-                    <cylinderGeometry args={[0.1, 0.1, 5, 8]} />
-                    <meshStandardMaterial color="#2c3e50" metalness={0.8} />
-                  </mesh>
-                  <mesh position={[0, 4.9, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
-                    <cylinderGeometry args={[0.07, 0.07, 4, 8]} />
-                    <meshStandardMaterial color="#bdc3c7" metalness={0.9} />
-                  </mesh>
-                </group>
-                {/* Situp Bench */}
-                <group position={[5, 0, 5]} rotation={[0, Math.PI / 4, 0]}>
-                  <mesh position={[0, 0.5, 0]} rotation={[0.2, 0, 0]} castShadow>
-                    <boxGeometry args={[1.5, 0.2, 3]} />
-                    <meshStandardMaterial color="#e74c3c" roughness={0.6} />
-                  </mesh>
-                  <mesh position={[0, 0.2, -1]} castShadow>
-                    <boxGeometry args={[0.2, 0.4, 0.2]} />
-                    <meshStandardMaterial color="#2c3e50" metalness={0.8} />
-                  </mesh>
-                  <mesh position={[0, 0.5, 1]} castShadow>
-                    <boxGeometry args={[0.2, 1.0, 0.2]} />
-                    <meshStandardMaterial color="#2c3e50" metalness={0.8} />
-                  </mesh>
-                </group>
-                {/* Parallel Bars */}
-                <group position={[-6, 0, 6]}>
-                  {[-0.6, 0.6].map((xOffset) => (
-                    <group key={xOffset} position={[xOffset, 0, 0]}>
-                      <mesh position={[0, 1.2, -1.5]} castShadow>
-                        <cylinderGeometry args={[0.08, 0.08, 2.4, 8]} />
-                        <meshStandardMaterial color="#2c3e50" />
-                      </mesh>
-                      <mesh position={[0, 1.2, 1.5]} castShadow>
-                        <cylinderGeometry args={[0.08, 0.08, 2.4, 8]} />
-                        <meshStandardMaterial color="#2c3e50" />
-                      </mesh>
-                      <mesh position={[0, 2.3, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-                        <cylinderGeometry args={[0.06, 0.06, 3, 8]} />
-                        <meshStandardMaterial color="#bdc3c7" metalness={0.9} />
-                      </mesh>
-                    </group>
-                  ))}
-                </group>
-                {/* Label */}
-                <Text position={[0, 4, 0]} fontSize={2.0} color="white" outlineColor="black" outlineWidth={0.1}>
-                  OPEN GYM
-                </Text>
-              </group>
-
-              {/* B. 2 Kabaddi Courts (Next to Gym horizontally, further from the road) */}
-              <group position={[62.5, 0, -20]}>
-                {/* Clay Base Pad */}
-                <mesh position={[0, 0.02, 0]} receiveShadow>
-                  <boxGeometry args={[30, 0.1, 30]} />
-                  <meshStandardMaterial color="#d35400" roughness={0.9} />
-                </mesh>
-                {/* Boundary Line */}
-                <mesh position={[0, 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-                  <ringGeometry args={[14.4, 14.7, 4, 1, Math.PI / 4, Math.PI * 2]} />
-                  <meshBasicMaterial color="#ffffff" />
-                </mesh>
-                {/* Mid Line */}
-                <mesh position={[0, 0.085, 0]}>
-                  <boxGeometry args={[0.2, 0.01, 29]} />
-                  <meshBasicMaterial color="#ffffff" />
-                </mesh>
-                {/* Baulk Lines */}
-                {[-6, 6].map((zOffset) => (
-                  <mesh key={zOffset} position={[zOffset, 0.085, 0]}>
-                    <boxGeometry args={[0.15, 0.01, 29]} />
-                    <meshBasicMaterial color="#f1c40f" />
-                  </mesh>
-                ))}
-                {/* Bonus Lines */}
-                {[-10, 10].map((zOffset) => (
-                  <mesh key={zOffset} position={[zOffset, 0.085, 0]}>
-                    <boxGeometry args={[0.15, 0.01, 29]} />
-                    <meshBasicMaterial color="#f1c40f" />
-                  </mesh>
-                ))}
-                {/* Label */}
-                <Text position={[0, 4, 0]} fontSize={2.0} color="white" outlineColor="black" outlineWidth={0.1}>
-                  KABADDI COURTS
-                </Text>
-              </group>
-
-              {/* C. Long Floodlight Lamp Pole (between Gym and Kabaddi) */}
-              <group position={[80, 0, -20]}>
-                {/* Pole Base */}
-                <mesh position={[0, 0.4, 0]} castShadow>
-                  <cylinderGeometry args={[0.8, 1.2, 0.8, 8]} />
-                  <meshStandardMaterial color="#34495e" roughness={0.6} />
-                </mesh>
-                {/* Vertical Mast */}
-                <mesh position={[0, 12, 0]} castShadow>
-                  <cylinderGeometry args={[0.2, 0.35, 24, 8]} />
-                  <meshStandardMaterial color="#7f8c8d" metalness={0.8} roughness={0.2} />
-                </mesh>
-                {/* Crossbar at top */}
-                <mesh position={[0, 23.8, 0]} castShadow>
-                  <boxGeometry args={[6, 0.3, 0.3]} />
-                  <meshStandardMaterial color="#7f8c8d" metalness={0.8} />
-                </mesh>
-                {/* Floodlight Fixtures */}
-                {[-2.2, -0.8, 0.8, 2.2].map((xOffset) => (
-                  <group key={xOffset} position={[xOffset, 23.5, 0]} rotation={[0.4, 0, 0]}>
-                    {/* Fixture box */}
-                    <mesh castShadow>
-                      <boxGeometry args={[0.8, 0.4, 0.6]} />
-                      <meshStandardMaterial color="#2c3e50" />
-                    </mesh>
-                    {/* Glowing light face */}
-                    <mesh position={[0, -0.21, 0.1]}>
-                      <boxGeometry args={[0.7, 0.02, 0.5]} />
-                      <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={3.0} />
-                    </mesh>
-                  </group>
-                ))}
-              </group>
-
-              {/* D. 2 Kho-Kho Courts (Vertical alignment next to/below Kabaddi) */}
-              <group position={[62.5, 0, 20]}>
-                {/* Clay Base Pad */}
-                <mesh position={[0, 0.02, 0]} receiveShadow>
-                  <boxGeometry args={[30, 0.1, 30]} />
-                  <meshStandardMaterial color="#d35400" roughness={0.9} />
-                </mesh>
-                {/* Boundary lines */}
-                <mesh position={[0, 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-                  <planeGeometry args={[28, 28]} />
-                  <meshBasicMaterial color="#ffffff" wireframe />
-                </mesh>
-                {/* Central Long Lane (Vertically aligned along Z-axis) */}
-                <mesh position={[0, 0.085, 0]}>
-                  <boxGeometry args={[0.3, 0.01, 26]} />
-                  <meshBasicMaterial color="#ffffff" />
-                </mesh>
-                {/* Wooden Posts (Vertically aligned) */}
-                {[-13, 13].map((zOffset) => (
-                  <mesh key={zOffset} position={[0, 1.0, zOffset]} castShadow>
-                    <cylinderGeometry args={[0.15, 0.15, 2, 8]} />
-                    <meshStandardMaterial color="#8e44ad" roughness={0.7} />
-                  </mesh>
-                ))}
-                {/* 8 Cross Lanes (Horizontally aligned, spaced vertically) */}
-                {[-11, -8, -5, -2, 2, 5, 8, 11].map((zOffset) => (
-                  <mesh key={zOffset} position={[0, 0.082, zOffset]}>
-                    <boxGeometry args={[26, 0.01, 0.2]} />
+                {/* Concentric white lane rings */}
+                {[71, 67, 63].map((r, idx) => (
+                  <mesh key={idx} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.025, 0]}>
+                    <ringGeometry args={[r, r + 0.3, 64]} />
                     <meshBasicMaterial color="#ffffff" />
                   </mesh>
                 ))}
-                {/* Label */}
-                <Text position={[0, 4, 0]} fontSize={2.0} color="white" outlineColor="black" outlineWidth={0.1}>
-                  KHO-KHO COURTS
-                </Text>
+                
+                {/* Central grass infield */}
+                <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0]} receiveShadow>
+                  <circleGeometry args={[59, 64]} />
+                  <meshStandardMaterial color="#1e5c2f" roughness={0.8} />
+                </mesh>
               </group>
+              
+              {/* Cricket Pitch (Horizontal direction!) */}
+              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, 0]}>
+                <planeGeometry args={[20, 6]} /> {/* Rotated: Width 20, Depth 6 */}
+                <meshStandardMaterial color="#c29c6a" roughness={0.8} />
+              </mesh>
+              
+              {/* Wickets at each end of the pitch (Rotated: placed along X axis, aligned along Z axis) */}
+              {[-8, 8].map((xVal) => (
+                <group key={xVal} position={[xVal, 0.04, 0]}>
+                  {[-0.2, 0, 0.2].map((zVal) => (
+                    <mesh key={zVal} position={[0, 0.5, zVal]} castShadow>
+                      <cylinderGeometry args={[0.03, 0.03, 1, 8]} />
+                      <meshStandardMaterial color="#e0a96d" />
+                    </mesh>
+                  ))}
+                  <mesh position={[0, 1.02, 0]}>
+                    <boxGeometry args={[0.03, 0.03, 0.5]} /> {/* Rotated crossbar */}
+                    <meshStandardMaterial color="#e0a96d" />
+                  </mesh>
+                </group>
+              ))}
             </group>
-
-            {/* Floating Zone Label */}
+            
             <Text position={[0, 8, 0]} fontSize={3.2} color="white" outlineColor="black" outlineWidth={0.15}>
               {cricketZone.label}
+            </Text>
+          </group>
+        );
+      })()}
+
+      {openGymZone.render && (() => {
+        const [w, d] = openGymZone.size || [30, 30];
+        return (
+          <group position={openGymZone.pos} rotation={[0, openGymZone.rotation, 0]}>
+            <group scale={[w / 30, 1, d / 30]}>
+              {/* Concrete Pad */}
+              <mesh position={[0, 0.02, 0]} receiveShadow>
+                <boxGeometry args={[30, 0.1, 30]} />
+                <meshStandardMaterial color="#7f8c8d" roughness={0.7} />
+              </mesh>
+              {/* Border Line */}
+              <mesh position={[0, 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                <ringGeometry args={[14.5, 15, 4, 1, 0, Math.PI * 2]} />
+                <meshBasicMaterial color="#fff" />
+              </mesh>
+              {/* Gym Equipment */}
+              <group position={[-5, 0, -5]}>
+                <mesh position={[-2, 2.5, 0]} castShadow>
+                  <cylinderGeometry args={[0.1, 0.1, 5, 8]} />
+                  <meshStandardMaterial color="#2c3e50" metalness={0.8} />
+                </mesh>
+                <mesh position={[2, 2.5, 0]} castShadow>
+                  <cylinderGeometry args={[0.1, 0.1, 5, 8]} />
+                  <meshStandardMaterial color="#2c3e50" metalness={0.8} />
+                </mesh>
+                <mesh position={[0, 4.9, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
+                  <cylinderGeometry args={[0.07, 0.07, 4, 8]} />
+                  <meshStandardMaterial color="#bdc3c7" metalness={0.9} />
+                </mesh>
+              </group>
+              <group position={[5, 0, 5]} rotation={[0, Math.PI / 4, 0]}>
+                <mesh position={[0, 0.5, 0]} rotation={[0.2, 0, 0]} castShadow>
+                  <boxGeometry args={[1.5, 0.2, 3]} />
+                  <meshStandardMaterial color="#e74c3c" roughness={0.6} />
+                </mesh>
+                <mesh position={[0, 0.2, -1]} castShadow>
+                  <boxGeometry args={[0.2, 0.4, 0.2]} />
+                  <meshStandardMaterial color="#2c3e50" metalness={0.8} />
+                </mesh>
+                <mesh position={[0, 0.5, 1]} castShadow>
+                  <boxGeometry args={[0.2, 1.0, 0.2]} />
+                  <meshStandardMaterial color="#2c3e50" metalness={0.8} />
+                </mesh>
+              </group>
+              <group position={[-6, 0, 6]}>
+                {[-0.6, 0.6].map((xOffset) => (
+                  <group key={xOffset} position={[xOffset, 0, 0]}>
+                    <mesh position={[0, 1.2, -1.5]} castShadow>
+                      <cylinderGeometry args={[0.08, 0.08, 2.4, 8]} />
+                      <meshStandardMaterial color="#2c3e50" />
+                    </mesh>
+                    <mesh position={[0, 1.2, 1.5]} castShadow>
+                      <cylinderGeometry args={[0.08, 0.08, 2.4, 8]} />
+                      <meshStandardMaterial color="#2c3e50" />
+                    </mesh>
+                    <mesh position={[0, 2.3, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+                      <cylinderGeometry args={[0.06, 0.06, 3, 8]} />
+                      <meshStandardMaterial color="#bdc3c7" metalness={0.9} />
+                    </mesh>
+                  </group>
+                ))}
+              </group>
+            </group>
+            <Text position={[0, 4, 0]} fontSize={2.0} color="white" outlineColor="black" outlineWidth={0.1}>
+              {openGymZone.label}
+            </Text>
+          </group>
+        );
+      })()}
+
+      {kabaddiZone.render && (() => {
+        const [w, d] = kabaddiZone.size || [30, 30];
+        return (
+          <group position={kabaddiZone.pos} rotation={[0, kabaddiZone.rotation, 0]}>
+            <group scale={[w / 30, 1, d / 30]}>
+              <mesh position={[0, 0.02, 0]} receiveShadow>
+                <boxGeometry args={[30, 0.1, 30]} />
+                <meshStandardMaterial color="#d35400" roughness={0.9} />
+              </mesh>
+              <mesh position={[0, 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                <ringGeometry args={[14.4, 14.7, 4, 1, Math.PI / 4, Math.PI * 2]} />
+                <meshBasicMaterial color="#ffffff" />
+              </mesh>
+              <mesh position={[0, 0.085, 0]}>
+                <boxGeometry args={[0.2, 0.01, 29]} />
+                <meshBasicMaterial color="#ffffff" />
+              </mesh>
+              {[-6, 6].map((zOffset) => (
+                <mesh key={zOffset} position={[zOffset, 0.085, 0]}>
+                  <boxGeometry args={[0.15, 0.01, 29]} />
+                  <meshBasicMaterial color="#f1c40f" />
+                </mesh>
+              ))}
+              {[-10, 10].map((zOffset) => (
+                <mesh key={zOffset} position={[zOffset, 0.085, 0]}>
+                  <boxGeometry args={[0.15, 0.01, 29]} />
+                  <meshBasicMaterial color="#f1c40f" />
+                </mesh>
+              ))}
+            </group>
+            <Text position={[0, 4, 0]} fontSize={2.0} color="white" outlineColor="black" outlineWidth={0.1}>
+              {kabaddiZone.label}
+            </Text>
+          </group>
+        );
+      })()}
+
+      {lampPoleZone.render && (() => {
+        const [w, d] = lampPoleZone.size || [2, 2];
+        return (
+          <group position={lampPoleZone.pos} rotation={[0, lampPoleZone.rotation, 0]}>
+            <group scale={[w / 2, 1, d / 2]}>
+              <mesh position={[0, 0.4, 0]} castShadow>
+                <cylinderGeometry args={[0.8, 1.2, 0.8, 8]} />
+                <meshStandardMaterial color="#34495e" roughness={0.6} />
+              </mesh>
+              <mesh position={[0, 12, 0]} castShadow>
+                <cylinderGeometry args={[0.2, 0.35, 24, 8]} />
+                <meshStandardMaterial color="#7f8c8d" metalness={0.8} roughness={0.2} />
+              </mesh>
+              <mesh position={[0, 23.8, 0]} castShadow>
+                <boxGeometry args={[6, 0.3, 0.3]} />
+                <meshStandardMaterial color="#7f8c8d" metalness={0.8} />
+              </mesh>
+              {[-2.2, -0.8, 0.8, 2.2].map((xOffset) => (
+                <group key={xOffset} position={[xOffset, 23.5, 0]} rotation={[0.4, 0, 0]}>
+                  <mesh castShadow>
+                    <boxGeometry args={[0.8, 0.4, 0.6]} />
+                    <meshStandardMaterial color="#2c3e50" />
+                  </mesh>
+                  <mesh position={[0, -0.21, 0.1]}>
+                    <boxGeometry args={[0.7, 0.02, 0.5]} />
+                    <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={3.0} />
+                  </mesh>
+                </group>
+              ))}
+            </group>
+            <Text position={[0, 25.5, 0]} fontSize={1.8} color="white" outlineColor="black" outlineWidth={0.1}>
+              {lampPoleZone.label}
+            </Text>
+          </group>
+        );
+      })()}
+
+      {khokhoZone.render && (() => {
+        const [w, d] = khokhoZone.size || [30, 30];
+        return (
+          <group position={khokhoZone.pos} rotation={[0, khokhoZone.rotation, 0]}>
+            <group scale={[w / 30, 1, d / 30]}>
+              <mesh position={[0, 0.02, 0]} receiveShadow>
+                <boxGeometry args={[30, 0.1, 30]} />
+                <meshStandardMaterial color="#d35400" roughness={0.9} />
+              </mesh>
+              <mesh position={[0, 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                <planeGeometry args={[28, 28]} />
+                <meshBasicMaterial color="#ffffff" wireframe />
+              </mesh>
+              <mesh position={[0, 0.085, 0]}>
+                <boxGeometry args={[0.3, 0.01, 26]} />
+                <meshBasicMaterial color="#ffffff" />
+              </mesh>
+              {[-13, 13].map((zOffset) => (
+                <mesh key={zOffset} position={[0, 1.0, zOffset]} castShadow>
+                  <cylinderGeometry args={[0.15, 0.15, 2, 8]} />
+                  <meshStandardMaterial color="#8e44ad" roughness={0.7} />
+                </mesh>
+              ))}
+              {[-11, -8, -5, -2, 2, 5, 8, 11].map((zOffset) => (
+                <mesh key={zOffset} position={[0, 0.082, zOffset]}>
+                  <boxGeometry args={[26, 0.01, 0.2]} />
+                  <meshBasicMaterial color="#ffffff" />
+                </mesh>
+              ))}
+            </group>
+            <Text position={[0, 4, 0]} fontSize={2.0} color="white" outlineColor="black" outlineWidth={0.1}>
+              {khokhoZone.label}
             </Text>
           </group>
         );
