@@ -894,29 +894,29 @@ export function Buildings() {
       </group>
 
       {/* 🏢 N-BLOCK (Nagarjuna Block) & MHP (The Most Happening Place) */}
-      {/* Position: [-53.5, 0, -167.0]. Size [62, 93]. 6 floors, red/maroon brick facade, MHP on ground floor */}
-      <group position={[-53.5, 0, -167.0]} rotation={[0, Math.PI / 2, 0]}>
+      {/* Position: [-53.5, 0, -192.0]. Size [62, 140]. 6 floors, red/maroon brick facade, MHP on ground floor */}
+      <group position={[-53.5, 0, -192.0]} rotation={[0, Math.PI / 2, 0]}>
         {/* Courtyard Concrete Pavement */}
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
-          <planeGeometry args={[54, 58]} />
+          <planeGeometry args={[104, 58]} />
           <meshStandardMaterial color="#a0a0a0" roughness={0.9} />
         </mesh>
 
-        {/* 🏢 WEST WING */}
-        <mesh position={[-35, 12, -2]} castShadow receiveShadow>
+        {/* 🏢 WEST WING (North side in rotated frame) */}
+        <mesh position={[-60, 12, -2]} castShadow receiveShadow>
           <boxGeometry args={[16, 24, 58]} />
           <meshStandardMaterial color="#fcfcfc" roughness={0.9} />
         </mesh>
         
-        {/* 🏢 EAST WING */}
-        <mesh position={[35, 12, -2]} castShadow receiveShadow>
+        {/* 🏢 EAST WING (South side in rotated frame) */}
+        <mesh position={[60, 12, -2]} castShadow receiveShadow>
           <boxGeometry args={[16, 24, 58]} />
           <meshStandardMaterial color="#fcfcfc" roughness={0.9} />
         </mesh>
 
-        {/* 🏢 NORTH WING (Connector) */}
+        {/* 🏢 NORTH WING (Connector - West side in rotated frame) */}
         <mesh position={[0, 12, -23]} castShadow receiveShadow>
-          <boxGeometry args={[54, 24, 16]} />
+          <boxGeometry args={[104, 24, 16]} />
           <meshStandardMaterial color="#fcfcfc" roughness={0.9} />
         </mesh>
 
@@ -940,7 +940,7 @@ export function Buildings() {
           ))}
         </group>
 
-        {/* 🎢 ZIG-ZAG RAMPS (West Wing Outer Face) */}
+        {/* 🎢 ZIG-ZAG RAMPS (West Wing Outer Face - North side of courtyard) */}
         {Array.from({ length: 6 }).map((_, f) => {
           const isForward = f % 2 === 0;
           const startZ = isForward ? 20 : -20;
@@ -955,7 +955,7 @@ export function Buildings() {
             <group key={`ramp-${f}`}>
               {/* Sloped ramp deck */}
               <mesh 
-                position={[-46, centerY, centerZ]} 
+                position={[-71, centerY, centerZ]} 
                 rotation={[isForward ? angle : -angle, 0, 0]}
                 castShadow 
                 receiveShadow
@@ -965,7 +965,7 @@ export function Buildings() {
               </mesh>
               {/* Outer wall/railing for ramp */}
               <mesh 
-                position={[-48, centerY + 0.5, centerZ]} 
+                position={[-73, centerY + 0.5, centerZ]} 
                 rotation={[isForward ? angle : -angle, 0, 0]}
                 castShadow
               >
@@ -980,22 +980,22 @@ export function Buildings() {
         {[-25, -15, -5, 5, 15, 25].map((z) => (
           <group key={`pillars-${z}`}>
             {/* West Wing Inner Pillar */}
-            <mesh position={[-27.1, 12, z]} castShadow>
+            <mesh position={[-52.1, 12, z]} castShadow>
               <boxGeometry args={[0.4, 24, 1.2]} />
               <meshStandardMaterial color="#C26D38" roughness={0.5} />
             </mesh>
             {/* West Wing Outer Pillar */}
-            <mesh position={[-42.9, 12, z]} castShadow>
+            <mesh position={[-67.9, 12, z]} castShadow>
               <boxGeometry args={[0.4, 24, 1.2]} />
               <meshStandardMaterial color="#C26D38" roughness={0.5} />
             </mesh>
             {/* East Wing Inner Pillar */}
-            <mesh position={[27.1, 12, z]} castShadow>
+            <mesh position={[52.1, 12, z]} castShadow>
               <boxGeometry args={[0.4, 24, 1.2]} />
               <meshStandardMaterial color="#C26D38" roughness={0.5} />
             </mesh>
             {/* East Wing Outer Pillar */}
-            <mesh position={[42.9, 12, z]} castShadow>
+            <mesh position={[67.9, 12, z]} castShadow>
               <boxGeometry args={[0.4, 24, 1.2]} />
               <meshStandardMaterial color="#C26D38" roughness={0.5} />
             </mesh>
@@ -1008,18 +1008,18 @@ export function Buildings() {
           return (
             <group key={`floor-ledges-${f}`}>
               {/* West Wing Ledges */}
-              <mesh position={[-35, y, -2]} castShadow>
+              <mesh position={[-60, y, -2]} castShadow>
                 <boxGeometry args={[16.2, 0.3, 58.2]} />
                 <meshStandardMaterial color="#ffffff" roughness={0.7} />
               </mesh>
               {/* East Wing Ledges */}
-              <mesh position={[35, y, -2]} castShadow>
+              <mesh position={[60, y, -2]} castShadow>
                 <boxGeometry args={[16.2, 0.3, 58.2]} />
                 <meshStandardMaterial color="#ffffff" roughness={0.7} />
               </mesh>
               {/* North Wing Ledges */}
               <mesh position={[0, y, -23]} castShadow>
-                <boxGeometry args={[54.2, 0.3, 16.2]} />
+                <boxGeometry args={[104.2, 0.3, 16.2]} />
                 <meshStandardMaterial color="#ffffff" roughness={0.7} />
               </mesh>
             </group>
@@ -1027,7 +1027,7 @@ export function Buildings() {
         })}
 
         {/* ⛺ TENSILE CANOPY TENTS (North Wing Roof) */}
-        {[-20, -10, 0, 10, 20].map((x) => (
+        {[-45, -30, -15, 0, 15, 30, 45].map((x) => (
           <group key={`tent-${x}`} position={[x, 24, -23]}>
             {/* Tent Membrane */}
             <mesh position={[0, 2.5, 0]} castShadow>
@@ -1048,16 +1048,16 @@ export function Buildings() {
 
         {/* 🖼️ WINDOWS GRIDS (Inner faces facing Courtyard) */}
         {/* West Wing Windows (facing +X) */}
-        <group position={[-27.05, 0, -2]} rotation={[0, Math.PI / 2, 0]}>
+        <group position={[-52.05, 0, -2]} rotation={[0, Math.PI / 2, 0]}>
           <WindowGrid width={58} height={24} floors={6} floorHeight={4} />
         </group>
         {/* East Wing Windows (facing -X) */}
-        <group position={[27.05, 0, -2]} rotation={[0, -Math.PI / 2, 0]}>
+        <group position={[52.05, 0, -2]} rotation={[0, -Math.PI / 2, 0]}>
           <WindowGrid width={58} height={24} floors={6} floorHeight={4} />
         </group>
         {/* North Wing Windows (facing +Z) */}
         <group position={[0, 0, -15.05]}>
-          <WindowGrid width={54} height={24} floors={6} floorHeight={4} />
+          <WindowGrid width={104} height={24} floors={6} floorHeight={4} />
         </group>
 
         {/* NAGARJUNA BLOCK sign at top of North Wing (facing south/courtyard) */}
@@ -1072,8 +1072,8 @@ export function Buildings() {
 
         {/* 🍔 THE MOST HAPPENING PLACE (MHP) */}
         {/* Relocated to the ground floor inner face of East Wing, facing the courtyard */}
-        <group position={[27.1, 0, 10]} rotation={[0, -Math.PI / 2, 0]}>
-          {/* Main Entrance portal frame (red brick/maroon facade) */}
+        <group position={[52.1, 0, 10]} rotation={[0, -Math.PI / 2, 0]}>
+          {/* Main Entrance portal frame */}
           <mesh position={[0, 2.5, 0.1]} castShadow>
             <boxGeometry args={[18, 5, 0.5]} />
             <meshStandardMaterial color="#6E1E1E" />
