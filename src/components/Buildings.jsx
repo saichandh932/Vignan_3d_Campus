@@ -1683,8 +1683,8 @@ export function Buildings({ zones = [] }) {
               {/* 2. RIGHT AREA: SPORTS COURTS & OPEN GYM              */}
               {/* ==================================================== */}
               
-              {/* A. Open Gym */}
-              <group position={[62.5, 0, -20]}>
+              {/* A. Open Gym (Closest to the road) */}
+              <group position={[97.5, 0, -20]}>
                 {/* Concrete Pad */}
                 <mesh position={[0, 0.02, 0]} receiveShadow>
                   <boxGeometry args={[30, 0.1, 30]} />
@@ -1751,8 +1751,8 @@ export function Buildings({ zones = [] }) {
                 </Text>
               </group>
 
-              {/* B. 2 Kabaddi Courts */}
-              <group position={[97.5, 0, -20]}>
+              {/* B. 2 Kabaddi Courts (Next to Gym horizontally, further from the road) */}
+              <group position={[62.5, 0, -20]}>
                 {/* Clay Base Pad */}
                 <mesh position={[0, 0.02, 0]} receiveShadow>
                   <boxGeometry args={[30, 0.1, 30]} />
@@ -1822,34 +1822,34 @@ export function Buildings({ zones = [] }) {
                 ))}
               </group>
 
-              {/* D. 2 Kho-Kho Courts (Vertical alignment next to Kabaddi) */}
-              <group position={[80, 0, 20]}>
+              {/* D. 2 Kho-Kho Courts (Vertical alignment next to/below Kabaddi) */}
+              <group position={[62.5, 0, 20]}>
                 {/* Clay Base Pad */}
                 <mesh position={[0, 0.02, 0]} receiveShadow>
-                  <boxGeometry args={[70, 0.1, 30]} />
+                  <boxGeometry args={[30, 0.1, 30]} />
                   <meshStandardMaterial color="#d35400" roughness={0.9} />
                 </mesh>
                 {/* Boundary lines */}
                 <mesh position={[0, 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-                  <planeGeometry args={[68, 28]} />
+                  <planeGeometry args={[28, 28]} />
                   <meshBasicMaterial color="#ffffff" wireframe />
                 </mesh>
-                {/* Central Long Lane */}
+                {/* Central Long Lane (Vertically aligned along Z-axis) */}
                 <mesh position={[0, 0.085, 0]}>
-                  <boxGeometry args={[60, 0.01, 0.3]} />
+                  <boxGeometry args={[0.3, 0.01, 26]} />
                   <meshBasicMaterial color="#ffffff" />
                 </mesh>
-                {/* Wooden Posts */}
-                {[-30, 30].map((xOffset) => (
-                  <mesh key={xOffset} position={[xOffset, 1.0, 0]} castShadow>
+                {/* Wooden Posts (Vertically aligned) */}
+                {[-13, 13].map((zOffset) => (
+                  <mesh key={zOffset} position={[0, 1.0, zOffset]} castShadow>
                     <cylinderGeometry args={[0.15, 0.15, 2, 8]} />
                     <meshStandardMaterial color="#8e44ad" roughness={0.7} />
                   </mesh>
                 ))}
-                {/* 8 Cross Lanes */}
-                {[-25, -18, -11, -4, 4, 11, 18, 25].map((xOffset) => (
-                  <mesh key={xOffset} position={[xOffset, 0.082, 0]}>
-                    <boxGeometry args={[0.2, 0.01, 26]} />
+                {/* 8 Cross Lanes (Horizontally aligned, spaced vertically) */}
+                {[-11, -8, -5, -2, 2, 5, 8, 11].map((zOffset) => (
+                  <mesh key={zOffset} position={[0, 0.082, zOffset]}>
+                    <boxGeometry args={[26, 0.01, 0.2]} />
                     <meshBasicMaterial color="#ffffff" />
                   </mesh>
                 ))}
