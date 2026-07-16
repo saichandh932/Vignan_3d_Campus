@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/Vignan_3d_Campus/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>vignan-3d-campus</title>
+    <script type="module" crossorigin src="/Vignan_3d_Campus/assets/index-CDTii4-h.js"></script>
+    <link rel="stylesheet" crossorigin href="/Vignan_3d_Campus/assets/index-QVFyPPkc.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <div id="error-display" style="position:fixed; top:10px; left:10px; background:rgba(255,0,0,0.9); color:white; padding:20px; border-radius:8px; font-family:monospace; font-size:14px; z-index:999999; display:none; max-width:90%; overflow-x:auto;"></div>
+    <script>
+      window.addEventListener('error', function(event) {
+        var display = document.getElementById('error-display');
+        if (display) {
+          display.style.display = 'block';
+          display.innerText = 'Error: ' + event.message + '\nAt: ' + event.filename + ':' + event.lineno;
+        }
+      });
+      window.addEventListener('unhandledrejection', function(event) {
+        var display = document.getElementById('error-display');
+        if (display) {
+          display.style.display = 'block';
+          display.innerText = 'Promise Rejection: ' + event.reason;
+        }
+      });
+    </script>
+  </body>
+</html>
