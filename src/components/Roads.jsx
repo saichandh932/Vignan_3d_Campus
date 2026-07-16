@@ -180,8 +180,7 @@ export function Roads() {
       {/* 8. Right Road (to A-Block & H-Block, opposite circle end) */}
       <RoadSegment length={94} position={[53, 0, -40]} rotation={[0, Math.PI / 2, 0]} hasTreesLeft={false} />
 
-      {/* 9. Left Road (Between Farm and N-Block) */}
-      <RoadSegment length={94} position={[-53, 0, -130]} rotation={[0, Math.PI / 2, 0]} hasTreesLeft={false} />
+
 
       {/* 10. Right Road (Between H-Block and Ground) */}
       <RoadSegment length={94} position={[53, 0, -105]} rotation={[0, Math.PI / 2, 0]} hasTreesLeft={false} holesLeft={[{start: 16, end: 28}]} />
