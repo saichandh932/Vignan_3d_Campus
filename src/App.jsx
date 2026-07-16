@@ -223,8 +223,15 @@ export default function App() {
           <OrbitControls 
             makeDefault 
             enablePan={true}
-            maxDistance={500}
+            enableRotate={false} // Lock to 2D flat view
+            maxDistance={1000}
+            minDistance={20}
             target={[0, 0, 0]}
+            mouseButtons={{
+              LEFT: THREE.MOUSE.PAN, // Left click to drag/pan the map
+              MIDDLE: THREE.MOUSE.DOLLY,
+              RIGHT: THREE.MOUSE.ROTATE // Allow right click to rotate if they want a slight tilt
+            }}
           />
         ) : (
           <OrbitControls 
