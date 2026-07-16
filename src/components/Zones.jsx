@@ -11,7 +11,7 @@ const ZONES = [
   { id: 'canteen', label: 'CANTEEN & TT', size: [19, 22], color: '#00FFFF', pos: [90.5, 0, -122.0] },
   { id: 'sportsground', label: 'HOCKEY & FOOTBALL GROUND', size: [70, 94], color: '#3CB371', pos: [135.0, 0, -93.0] },
   { id: 'mhp', label: 'MHP (Ground Floor)', size: [20, 20], color: '#DC143C', pos: [-20.0, 0, -165.0] },
-  { id: 'nblock', label: 'N-BLOCK', size: [93, 62], color: '#800000', pos: [-53.5, 0, -167.0] },
+  { id: 'nblock', label: 'N-BLOCK', size: [62, 93], color: '#800000', pos: [-53.5, 0, -167.0] },
   { id: 'ublock', label: 'U-BLOCK', size: [75, 85], color: '#dad20a', pos: [-141.5, 0, -198.0] },
   { id: 'convocationhall', label: 'CONVOCATION HALL', size: [25, 85], color: '#9f96f7', pos: [-196.5, 0, -197.5] },
   { id: 'guesthouse', label: 'GUEST HOUSE', size: [30, 30], color: '#37794b', pos: [-226.5, 0, -171.0] },

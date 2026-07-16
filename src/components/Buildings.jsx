@@ -894,8 +894,8 @@ export function Buildings() {
       </group>
 
       {/* 🏢 N-BLOCK (Nagarjuna Block) & MHP (The Most Happening Place) */}
-      {/* Position: [-53.5, 0, -167.0]. Size [93, 62]. 6 floors, red/maroon brick facade, MHP on ground floor */}
-      <group position={[-53.5, 0, -167.0]}>
+      {/* Position: [-53.5, 0, -167.0]. Size [62, 93]. 6 floors, red/maroon brick facade, MHP on ground floor */}
+      <group position={[-53.5, 0, -167.0]} rotation={[0, Math.PI / 2, 0]}>
         {/* Courtyard Concrete Pavement */}
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
           <planeGeometry args={[54, 58]} />
