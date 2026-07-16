@@ -894,29 +894,29 @@ export function Buildings() {
       </group>
 
       {/* 🏢 N-BLOCK (Nagarjuna Block) & MHP (The Most Happening Place) */}
-      {/* Position: [-53.5, 0, -161.0]. Size [93, 50]. 6 floors, red/maroon brick facade, MHP on ground floor */}
-      <group position={[-53.5, 0, -161.0]}>
+      {/* Position: [-53.5, 0, -167.0]. Size [93, 62]. 6 floors, red/maroon brick facade, MHP on ground floor */}
+      <group position={[-53.5, 0, -167.0]}>
         {/* Main Block (N-Block) */}
-        <mesh position={[0, 12, 0]} castShadow receiveShadow>
-          <boxGeometry args={[88, 24, 26]} />
+        <mesh position={[0, 12, 6]} castShadow receiveShadow>
+          <boxGeometry args={[88, 24, 50]} />
           <meshStandardMaterial color="#7A2222" roughness={0.8} /> {/* Red/maroon brick tone */}
         </mesh>
 
         {/* Floor separators */}
         {[4, 8, 12, 16, 20, 24].map((y) => (
-          <mesh key={y} position={[0, y - 0.2, 13.05]}>
+          <mesh key={y} position={[0, y - 0.2, 31.05]}>
             <boxGeometry args={[88.2, 0.2, 0.1]} />
             <meshStandardMaterial color="#551A1A" />
           </mesh>
         ))}
 
         {/* Window grid for upper floors (floors 2-6) */}
-        <group position={[0, 0, 13]}>
+        <group position={[0, 0, 31]}>
           <WindowGrid width={88} height={20} floors={5} floorHeight={4} yOffset={4} />
         </group>
 
         {/* NAGARJUNA BLOCK sign at top */}
-        <group position={[0, 21, 13.1]}>
+        <group position={[0, 21, 31.1]}>
           <Text fontSize={1.4} color="white" outlineColor="black" outlineWidth={0.1}>
             N - BLOCK
           </Text>
@@ -927,7 +927,7 @@ export function Buildings() {
 
         {/* 🍔 THE MOST HAPPENING PLACE (MHP) */}
         {/* Integrated Ground Floor Food Court Entrance, facing the spine road (right side of N-block) */}
-        <group position={[22, 0, 13]}>
+        <group position={[22, 0, 31]}>
           {/* Main Entrance portal frame (red brick/maroon facade) */}
           <mesh position={[0, 2.5, 1.1]} castShadow>
             <boxGeometry args={[26, 5, 2.2]} />
