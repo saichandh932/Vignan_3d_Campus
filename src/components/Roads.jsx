@@ -186,8 +186,11 @@ export function Roads() {
       {/* 10. Right Road (Between H-Block and Ground) */}
       <RoadSegment length={94} position={[53, 0, -105]} rotation={[0, Math.PI / 2, 0]} hasTreesLeft={false} holesLeft={[{start: 16, end: 28}]} />
 
-      {/* 11. Further spine road past N-Block / Hostel */}
-      <RoadSegment length={120} position={[0, 0, -200]} rotation={[0, 0, 0]} />
+      {/* 11. Further spine road past N-Block / Hostel (Extended to Z=-340 to connect new western sectors) */}
+      <RoadSegment length={200} position={[0, 0, -240]} rotation={[0, 0, 0]} holesLeft={[{start: -36, end: -24}]} />
+
+      {/* 14. New West Road (Between U-Block and Cricket Ground) */}
+      <RoadSegment length={270} position={[-135, 0, -270]} rotation={[0, Math.PI / 2, 0]} />
 
       {/* 12. Vertical Road from Hostel Gate to H-Block Road (Z=-111 edge) */}
       <RoadSegment length={59} position={[75, 0, -140.5]} rotation={[0, 0, 0]} hasTreesRight={false} holesRight={[{start: 0.5, end: 7.5}]} />
