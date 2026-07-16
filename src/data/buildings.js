@@ -1,0 +1,36 @@
+// Current scene-space coordinates. X is lateral, Y is vertical, Z is campus depth.
+// Reference certainty is recorded so unverified assets are not treated as survey data.
+export const buildingRegistry = [
+  { id: 'main-gate', name: "Vignan's Foundation Main Gate", category: 'entrance', position: [0, 0, 0], rotation: [0, 0, 0], status: 'Needs Improvement', reference: 'schematic' },
+  { id: 'library-gate', name: 'NTR Library Entrance Gate', category: 'entrance', position: [-110, 0, -60], rotation: [0, Math.PI / 2, 0], status: 'Needs Improvement', reference: 'schematic' },
+  { id: 'bus-stop', name: 'Vignan Bus Stop', category: 'transport', position: [-55, 0.01, 5], rotation: [0, Math.atan2(110, 130), 0], status: 'Needs Improvement', reference: 'satellite' },
+  { id: 'ntr-library', name: 'NTR Vignan Library', category: 'academic', position: [-25, 0, -40], rotation: [0, Math.PI / 6, 0], status: 'Needs Improvement', reference: 'schematic' },
+  { id: 'a-block', name: 'A-Block', category: 'academic', position: [52, 0, -12], rotation: [0, Math.PI, 0], status: 'Needs Improvement', reference: 'schematic' },
+  { id: 'h-block', name: 'H-Block (Sri Visweswaraya Bhavan)', category: 'academic', position: [55, 0, -72.5], rotation: [0, 0, 0], status: 'Needs Improvement', reference: 'satellite-and-schematic' },
+  { id: 'n-block', name: 'N-Block (Nagarjuna Block)', category: 'academic', position: [-53.5, 0, -161], rotation: [0, 0, 0], status: 'Needs Improvement', reference: 'schematic' },
+  { id: 'mhp', name: 'The Most Happening Place', category: 'student-life', position: [-31.5, 0, -148], rotation: [0, 0, 0], status: 'Needs Improvement', reference: 'schematic' },
+  { id: 'boys-hostel', name: 'Boys Hostel', category: 'residential', position: [40, 0, -165], rotation: [0, 0, 0], status: 'Needs Improvement', reference: 'schematic' },
+  { id: 'ac-hostel', name: 'AC Hostel', category: 'residential', position: [95, 0, -165], rotation: [0, 0, 0], status: 'Needs Improvement', reference: 'prototype-only' },
+  { id: 'canteen-shed', name: 'Canteen Shed', category: 'dining', position: [90.5, 0, -122], rotation: [0, 0, 0], status: 'Needs Improvement', reference: 'prototype-only' },
+  { id: 'sports-ground', name: 'Cricket & Hockey Field', category: 'sports', position: [135, 0, -93], rotation: [0, 0, 0], status: 'Needs Improvement', reference: 'schematic' },
+  { id: 'farm-zone', name: 'Farm Zone', category: 'landscape', position: [-30, 0, -93.5], rotation: [0, 0, 0], status: 'Needs Improvement', reference: 'prototype-only' },
+  { id: 'utility-zone', name: 'Utility Buildings', category: 'service', position: [92.5, 0, -2], rotation: [0, 0, 0], status: 'Needs Improvement', reference: 'prototype-only' },
+  { id: 'ganesha-shrine', name: 'Ganesha Shrine', category: 'landmark', position: [-10, 0, 17], rotation: [0, 0, 0], status: 'Needs Improvement', reference: 'prototype-only' },
+  { id: 'mud-ground', name: 'Walking Track Ground', category: 'sports', position: [38, 0.05, -126.5], rotation: [0, 0, 0], status: 'Needs Improvement', reference: 'prototype-only' },
+  { id: 'vignan-lara', name: 'Vignan LARA Institute of Technology & Science', category: 'academic', position: null, rotation: null, status: 'Missing', reference: 'satellite-and-schematic' },
+  { id: 'vignan-pharmacy-college', name: 'Vignan Pharmacy College', category: 'academic', position: null, rotation: null, status: 'Missing', reference: 'satellite' },
+  { id: 'convocation-hall', name: 'Convocation Hall', category: 'event', position: null, rotation: null, status: 'Missing', reference: 'schematic' },
+  { id: 'u-block', name: 'U-Block', category: 'academic', position: null, rotation: null, status: 'Missing', reference: 'schematic' },
+  { id: 'sports-arena-1', name: 'Sports Arena 1', category: 'sports', position: null, rotation: null, status: 'Missing', reference: 'schematic' },
+  { id: 'sports-arena-2', name: 'Sports Arena 2', category: 'sports', position: null, rotation: null, status: 'Missing', reference: 'schematic' },
+  { id: 'amusement-arena', name: 'Amusement Arena / Flea Market', category: 'event', position: null, rotation: null, status: 'Missing', reference: 'schematic' },
+  { id: 'vignan-pond', name: 'Vignan Pond', category: 'landscape', position: null, rotation: null, status: 'Missing', reference: 'schematic' },
+  { id: 'girls-hostel', name: 'Girls Hostel', category: 'residential', position: null, rotation: null, status: 'Missing', reference: 'schematic' },
+  { id: 'volleyball-courts', name: 'Volleyball Courts', category: 'sports', position: null, rotation: null, status: 'Missing', reference: 'schematic' },
+  { id: 'basketball-courts', name: 'Basketball Courts', category: 'sports', position: null, rotation: null, status: 'Missing', reference: 'schematic' },
+  { id: 'throwball-courts', name: 'Throwball Courts', category: 'sports', position: null, rotation: null, status: 'Missing', reference: 'schematic' },
+  { id: 'badminton-courts', name: 'Badminton Courts', category: 'sports', position: null, rotation: null, status: 'Missing', reference: 'schematic' },
+  { id: 'tennikoit-court', name: 'Tennikoit Court', category: 'sports', position: null, rotation: null, status: 'Missing', reference: 'schematic' },
+];
+
+export const buildingById = Object.fromEntries(buildingRegistry.map((building) => [building.id, building]));

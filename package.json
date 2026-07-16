@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "check:buildings": "node scripts/verify-building-registry.mjs",
     "lint": "oxlint",
     "preview": "vite preview"
   },

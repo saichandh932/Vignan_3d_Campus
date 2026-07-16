@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Text } from '@react-three/drei';
 import { useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
+import { buildingById } from '../data/buildings';
 
 // Helper component for loading hoarding texture
 function HoardingBillboard() {
@@ -30,9 +31,9 @@ function HoardingBillboard() {
 }
 
 // Vignan Bus Stop (Placed across the highway, aligned parallel to the diagonal road)
-function VignanBusStop() {
+function VignanBusStop({ position, rotation }) {
   return (
-    <group position={[-55, 0.01, 5]} rotation={[0, Math.atan2(110, 130), 0]}>
+    <group position={position} rotation={rotation}>
       {/* Shift left (-35) across the highway, slide down Z (100) to align with Main Gate, face +X towards road */}
       <group position={[-35, 0, 100]} rotation={[0, Math.PI / 2, 0]}>
         {/* Concrete Base */}
@@ -327,14 +328,32 @@ function CampusGate({ position, rotation = [0, 0, 0], label = "VIGNAN'S FOUNDATI
 }
 
 export function Buildings() {
+  const mainGate = buildingById['main-gate'];
+  const libraryGate = buildingById['library-gate'];
+  const busStop = buildingById['bus-stop'];
+  const library = buildingById['ntr-library'];
+  const aBlock = buildingById['a-block'];
+  const hBlock = buildingById['h-block'];
+  const nBlock = buildingById['n-block'];
+  const mhp = buildingById.mhp;
+  const boysHostel = buildingById['boys-hostel'];
+  const acHostel = buildingById['ac-hostel'];
+  const canteen = buildingById['canteen-shed'];
+  const sportsGround = buildingById['sports-ground'];
+  const farm = buildingById['farm-zone'];
+  const utilities = buildingById['utility-zone'];
+  const ganeshaShrine = buildingById['ganesha-shrine'];
+  const mudGround = buildingById['mud-ground'];
+  const mhpPosition = mhp.position.map((coordinate, index) => coordinate - nBlock.position[index]);
+
   return (
     <group>
       {/* ⛩️ MAIN GATE AREA LANDMARKS */}
       {/* 1. Main Gate Architecture (Scaled up to 3rd floor height ~ 16 units) */}
-      <CampusGate position={[0, 0, 0]} rotation={[0, 0, 0]} label="VIGNAN'S FOUNDATION" />
+      <CampusGate {...mainGate} label="VIGNAN'S FOUNDATION" />
 
       {/* 2. Library Gate */}
-      <CampusGate position={[-110, 0, -60]} rotation={[0, Math.PI / 2, 0]} label="LIBRARY ENTRANCE GATE" />
+      <CampusGate {...libraryGate} label="LIBRARY ENTRANCE GATE" />
 
 
       {/* 2. Boundary Wall & VIGNAN'S FOUNDATION Signboard */}
@@ -357,10 +376,10 @@ export function Buildings() {
       {/* (Hoarding moved to the left side near the shrine) */}
 
       {/* 3. Vignan Bus Stop (Across the Highway) */}
-      <VignanBusStop />
+      <VignanBusStop {...busStop} />
       {/* 🏛️ NTR VIGNAN CENTRAL LIBRARY */}
       {/* Position: [-25.0, 0, -40.0]. Rotated to face the center circle */}
-      <group position={[-25.0, 0, -40.0]} rotation={[0, Math.PI / 6, 0]}>
+      <group position={library.position} rotation={library.rotation}>
         
         {/* MAIN OCTAGONAL STRUCTURE */}
         {/* 3 Floors of Octagon with Windows */}
@@ -461,7 +480,7 @@ export function Buildings() {
 
       {/* 🏢 A-BLOCK (Administrative Block) */}
       {/* Position: [52, 0, -12.0]. Rotated 180deg to face inward towards H-Block */}
-      <group position={[52, 0, -12.0]} rotation={[0, Math.PI, 0]}>
+      <group position={aBlock.position} rotation={aBlock.rotation}>
         {/* --- Back Wing --- */}
         {/* Upper Floors */}
         <mesh position={[0, 14, -6]} castShadow receiveShadow>
@@ -596,7 +615,7 @@ export function Buildings() {
 
       {/* 🏢 H-BLOCK (Sri Visweswaraya Bhavan) */}
       {/* Position: [55.0, 0, -72.5]. 4 floors, H-shaped, pure white, large dome, curved balconies */}
-      <group position={[55.0, 0, -72.5]}>
+      <group position={hBlock.position} rotation={hBlock.rotation}>
         {/* --- Central Bar --- */}
         <mesh position={[0, 10, -5]} castShadow receiveShadow>
           <boxGeometry args={[80, 12, 12]} />
@@ -895,7 +914,7 @@ export function Buildings() {
 
       {/* 🏢 N-BLOCK (Nagarjuna Block) & MHP (The Most Happening Place) */}
       {/* Position: [-53.5, 0, -161.0]. Size [93, 50]. 6 floors, red/maroon brick facade, MHP on ground floor */}
-      <group position={[-53.5, 0, -161.0]}>
+      <group position={nBlock.position} rotation={nBlock.rotation}>
         {/* Main Block (N-Block) */}
         <mesh position={[0, 12, 0]} castShadow receiveShadow>
           <boxGeometry args={[88, 24, 26]} />
@@ -927,7 +946,7 @@ export function Buildings() {
 
         {/* 🍔 THE MOST HAPPENING PLACE (MHP) */}
         {/* Integrated Ground Floor Food Court Entrance, facing the spine road (right side of N-block) */}
-        <group position={[22, 0, 13]}>
+        <group position={mhpPosition} rotation={mhp.rotation}>
           {/* Main Entrance portal frame (red brick/maroon facade) */}
           <mesh position={[0, 2.5, 1.1]} castShadow>
             <boxGeometry args={[26, 5, 2.2]} />
@@ -1011,7 +1030,7 @@ export function Buildings() {
       {/* 🏨 HOSTELS */}
       {/* Boys Hostel: 3 floors (height = 12), orange accent at [40.0, 0, -165.0] */}
       <MultiStoryBuilding
-        position={[40.0, 0, -165.0]}
+        position={boysHostel.position}
         size={[52, 22]}
         floors={3}
         accentColor="#FF8C00"
@@ -1020,7 +1039,7 @@ export function Buildings() {
 
       {/* AC Hostel: 3 floors (height = 12), orange/premium accent at [95.0, 0, -165.0] */}
       <MultiStoryBuilding
-        position={[95.0, 0, -165.0]}
+        position={acHostel.position}
         size={[26, 22]}
         floors={3}
         accentColor="#E67E22"
@@ -1052,7 +1071,7 @@ export function Buildings() {
       </group>
 
       {/* 🍽️ CANTEEN SHED */}
-      <group position={[90.5, 0, -122.0]}>
+      <group position={canteen.position} rotation={canteen.rotation}>
         <mesh position={[0, 0.05, 0]} receiveShadow>
           <boxGeometry args={[18, 0.1, 20]} />
           <meshStandardMaterial color="#d1d5db" />
@@ -1088,7 +1107,7 @@ export function Buildings() {
       </group>
 
       {/* ⚽ SPORTS FIELD */}
-      <group position={[135.0, 0, -93.0]}>
+      <group position={sportsGround.position} rotation={sportsGround.rotation}>
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
           <planeGeometry args={[66, 90]} />
           <meshStandardMaterial color="#2d8a4e" roughness={0.9} />
@@ -1120,7 +1139,7 @@ export function Buildings() {
       </group>
 
       {/* 🚜 FARM ZONE (Walled off with large trees) */}
-      <group position={[-30.0, 0, -93.5]}>
+      <group position={farm.position} rotation={farm.rotation}>
         {/* Ground */}
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
           <planeGeometry args={[46, 53]} />
@@ -1173,7 +1192,7 @@ export function Buildings() {
       </group>
 
       {/* 🏬 SMALL ZONE */}
-      <group position={[92.5, 0, -2.0]}>
+      <group position={utilities.position} rotation={utilities.rotation}>
         {Array.from({ length: 3 }).map((_, i) => {
           const z = -20 + i * 20;
           return (
@@ -1201,9 +1220,9 @@ export function Buildings() {
       </group>
 
       {/* 3. APPROACH ROAD LEFT ZONE (Shrine & Hoarding) */}
-      <group position={[-10, 0, 25.0]}>
+      <group>
         {/* The Ganesha Shrine (Replacing Store A) */}
-        <group position={[0, 0, -8]}>
+        <group position={ganeshaShrine.position} rotation={ganeshaShrine.rotation}>
           {/* Base / Plinth (Red with White border) */}
           <mesh position={[0, 0.5, 0]} castShadow>
             <boxGeometry args={[6, 1, 6]} />
@@ -1241,13 +1260,13 @@ export function Buildings() {
         </group>
 
         {/* Huge Hoarding Billboard (Placed near the shrine, facing the highway at +Z, shifted left to avoid road) */}
-        <group position={[-5, 0, 8]} rotation={[0, 0, 0]}>
+        <group position={[-15, 0, 33]} rotation={[0, 0, 0]}>
           <HoardingBillboard />
         </group>
       </group>
 
       {/* MUD GROUND WITH WALKING TRACK (Between H-Block Road and Boys Hostel) */}
-      <group position={[38, 0.05, -126.5]}>
+      <group position={mudGround.position} rotation={mudGround.rotation}>
         <MudGroundWithTrack position={[0, 0, 0]} size={[53, 22]} />
       </group>
     </group>

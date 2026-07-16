@@ -16,7 +16,8 @@
 
 ## M1 — Data Layer Live
 
-- [ ] Create structured building, zone, road, and point-of-interest data.
+- [x] Create the initial structured building registry and asset inventory.
+- [ ] Create structured zone, road, and point-of-interest data.
 - [ ] Move scene coordinates from JSX literals into the shared data model without visual regression.
 - [ ] Split `Buildings.jsx` into focused landmark components after the data shape is agreed.
 - [ ] Add small validation tests for data shape and road-hole segment logic.
