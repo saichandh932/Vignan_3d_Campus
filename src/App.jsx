@@ -1,10 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import { Sky, OrbitControls, Text } from '@react-three/drei';
-import { Buildings } from './components/Buildings';
-import { Roads } from './components/Roads';
-import { Zones } from './components/Zones';
-import { Joystick } from './components/Joystick';
+import { Buildings, MultiStoryBuilding, CampusGate, UShapeBlock, OShapeBlock, ConvocationHall, SingleTree, TreeRow } from './components/Buildings';
+import { RoadSegment, RoadCross, RoadCorner } from './components/Roads';
 import * as THREE from 'three';
 
 // Player Avatar controller with Road Constraints
@@ -14,6 +12,13 @@ function PlayerController({ joystick }) {
   const playerRef = useRef();
   const speed = 25; // Movement speed
   const shieldTexture = useLoader(THREE.TextureLoader, '/shield.jpg');
+
+  // Reset camera position to third-person view when Walk Mode mounts
+  useEffect(() => {
+    if (playerRef.current) {
+      camera.position.copy(playerRef.current.position).add(new THREE.Vector3(0, 10, 20));
+    }
+  }, [camera]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -164,46 +169,398 @@ function PlayerController({ joystick }) {
   );
 }
 
+const DEFAULT_MAP_ITEMS = [
+  // ⛩️ Gates
+  { id: 'gate_main', type: 'gate', label: "VIGNAN'S FOUNDATION", pos: [0, 0, 0], rotation: 0 },
+  { id: 'gate_library', type: 'gate', label: "LIBRARY ENTRANCE GATE", pos: [-110, 0, -60], rotation: Math.PI / 2 },
+  { id: 'boundary_wall', type: 'boundary_wall', label: "WALL", pos: [10, 0, 15], rotation: -Math.PI / 2 },
+  { id: 'bus_stop', type: 'bus_stop', label: 'BUS STOP', pos: [-55, 0.01, 5], rotation: Math.atan2(110, 130) },
+
+  // 🏛️ Landmark Buildings
+  { id: 'library', type: 'custom_library', label: 'LIBRARY', pos: [-25.0, 0, -40.0], rotation: Math.PI / 6 },
+  { id: 'ablock', type: 'custom_ablock', label: 'A-BLOCK', pos: [52, 0, -12.0], rotation: Math.PI },
+  { id: 'hblock', type: 'custom_hblock', label: 'H-BLOCK', pos: [55.0, 0, -72.5], rotation: 0 },
+  { id: 'nblock', type: 'custom_nblock', label: 'N-BLOCK', pos: [-53.5, 0, -192.0], rotation: Math.PI / 2 },
+  { id: 'boyshostel', type: 'building', label: 'BOYS HOSTEL', pos: [40.0, 0, -165.0], size: [52, 22], floors: 3, color: '#FF8C00', rotation: 0 },
+  { id: 'achostel', type: 'building', label: 'AC HOSTEL', pos: [95.0, 0, -165.0], size: [26, 22], floors: 3, color: '#E67E22', rotation: 0 },
+  { id: 'hostel_connector', type: 'hostel_connector', label: 'CONNECTOR BRIDGE', pos: [75.0, 0, -180.0], rotation: 0 },
+  { id: 'canteen', type: 'canteen', label: 'CANTEEN & TT', pos: [90.5, 0, -122.0], size: [19, 22], rotation: 0 },
+  { id: 'sportsground', type: 'sportsground', label: 'HOCKEY & FOOTBALL GROUND', pos: [135.0, 0, -93.0], size: [70, 94], rotation: 0 },
+  { id: 'farm', type: 'farm', label: 'FARM ZONE', pos: [-30.0, 0, -93.5], size: [46, 53], rotation: 0 },
+  { id: 'smallzone', type: 'smallzone', label: 'SMALL ZONE', pos: [92.5, 0, -2.0], rotation: 0 },
+  { id: 'new_outside_zone', type: 'shrine', label: 'SHRINE', pos: [-10, 0, 25.0], rotation: 0 },
+  { id: 'ground', type: 'ground', label: 'GROUND', pos: [38, 0.05, -126.5], size: [53, 22], rotation: 0 },
+  
+  { id: 'ublock', type: 'building', label: 'U BLOCK', pos: [-141.5, 0, -198.0], size: [75, 85], floors: 4, color: '#dad20a', rotation: 0 },
+  { id: 'convocationhall', type: 'building', label: 'CONVOCATION HALL', pos: [-196.5, 0, -197.5], size: [25, 85], floors: 3, color: '#9f96f7', rotation: 0 },
+  { id: 'guesthouse', type: 'building', label: 'GUEST HOUSE', pos: [-226.5, 0, -171.0], size: [30, 30], floors: 2, color: '#37794b', rotation: 0 },
+  { id: 'volleyballcourts', type: 'building', label: 'VOLLEY BALL COURTS', pos: [-236.5, 0, -214.0], size: [50, 50], rotation: 0 },
+  
+  { id: 'textile', type: 'building', label: 'TEXTILE TECHNOLOGY', pos: [49.0, 0, -334.5], size: [15, 70], floors: 3, color: '#927b5d', rotation: 0 },
+  { id: 'pharmacy', type: 'building', label: 'PHARMACY BLOCK', pos: [122.0, 0, -333.5], size: [30, 70], floors: 4, color: '#847e42', rotation: 0 },
+  { id: 'pharmacy_badminton', type: 'building', label: 'PHARMACY BADMINTON COURT', pos: [86.0, 0, -317.5], size: [30, 30], rotation: 0 },
+  { id: 'pharmacy_volleyball', type: 'building', label: 'PHARMACY VOLLEYBALL COURT', pos: [86.0, 0, -351.5], size: [30, 25], rotation: 0 },
+  
+  { id: 'cricketground', type: 'building', label: 'CRICKET GROUND', pos: [-121.0, 0, -340.5], size: [235, 85], rotation: 0 },
+  { id: 'basketballcourts', type: 'building', label: 'BASKETBALL COURTS', pos: [-271.5, 0, -359.5], size: [30, 125], rotation: 0 },
+  { id: 'vignanpond', type: 'building', label: 'VIGNAN POND', pos: [-322.5, 0, -321.5], size: [45, 45], rotation: 0 },
+  { id: 'priyadarshinihostel', type: 'building', label: 'PRIYADARSHINI HOSTEL', pos: [-322.5, 0, -379.0], size: [45, 60], floors: 4, color: '#8add61', rotation: 0 },
+
+  // 🗺️ Zones (grounds)
+  { id: 'z_library', type: 'zone', label: 'LIBRARY', size: [21, 21], color: '#8B4513', pos: [-25.0, 0, -40.0] },
+  { id: 'z_farm', type: 'zone', label: 'FARM ZONE', size: [46, 53], color: '#228B22', pos: [-30.0, 0, -93.5] },
+  { id: 'z_ablock', type: 'zone', label: 'A-BLOCK', size: [75, 64], color: '#0000FF', pos: [47.5, 0, -2.0] },
+  { id: 'z_smallzone', type: 'zone', label: 'SMALL ZONE', size: [15, 64], color: '#FF1493', pos: [92.5, 0, -2.0] },
+  { id: 'z_new_outside_zone', type: 'zone', label: 'NEW ZONE', size: [21, 30], color: '#DAA520', pos: [-16.5, 0, 15.0] },
+  { id: 'z_hblock', type: 'zone', label: 'H-BLOCK', size: [90, 53], color: '#4B0082', pos: [55.0, 0, -72.5] },
+  { id: 'z_canteen', type: 'zone', label: 'CANTEEN & TT', size: [19, 22], color: '#00FFFF', pos: [90.5, 0, -122.0] },
+  { id: 'z_sportsground', type: 'zone', label: 'HOCKEY & FOOTBALL GROUND', size: [70, 94], color: '#3CB371', pos: [135.0, 0, -93.0] },
+  { id: 'z_mhp', type: 'zone', label: 'MHP (Ground Floor)', size: [20, 20], color: '#DC143C', pos: [-20.0, 0, -165.0] },
+  { id: 'z_nblock', type: 'zone', label: 'N-BLOCK', size: [62, 140], color: '#800000', pos: [-53.5, 0, -192.0], rotation: Math.PI / 2 },
+  { id: 'z_boyshostel', type: 'zone', label: 'BOYS HOSTEL', size: [60, 50], color: '#FF8C00', pos: [40.0, 0, -165.0] },
+  { id: 'z_achostel', type: 'zone', label: 'AC HOSTEL', size: [30, 50], color: '#FF8C00', pos: [95.0, 0, -165.0] },
+  { id: 'z_hostel_connector', type: 'zone', label: '', size: [10, 20], color: '#FF8C00', pos: [75.0, 0, -180.0] },
+  { id: 'z_ground', type: 'zone', label: 'GROUND', size: [60, 25], color: '#FFFF00', pos: [40.0, 0, -125.0] },
+  
+  { id: 'z_ublock', type: 'zone', label: 'U-BLOCK', size: [75, 85], color: '#dad20a', pos: [-141.5, 0, -198.0] },
+  { id: 'z_convocationhall', type: 'zone', label: 'CONVOCATION HALL', size: [25, 85], color: '#9f96f7', pos: [-196.5, 0, -197.5] },
+  { id: 'z_guesthouse', type: 'zone', label: 'GUEST HOUSE', size: [30, 30], color: '#37794b', pos: [-226.5, 0, -171.0] },
+  { id: 'z_volleyballcourts', type: 'zone', label: 'VOLLEY BALL COURTS', size: [50, 50], color: '#a5b65d', pos: [-236.5, 0, -214.0] },
+  
+  { id: 'z_textile', type: 'zone', label: 'TEXTILE TECHNOLOGY', size: [15, 70], color: '#927b5d', pos: [49.0, 0, -334.5] },
+  { id: 'z_pharmacy', type: 'zone', label: 'PHARMACY BLOCK', size: [30, 70], color: '#847e42', pos: [122.0, 0, -333.5] },
+  { id: 'z_pharmacy_badminton', type: 'zone', label: 'PHARMACY BADMINTON COURT', size: [30, 30], color: '#5ae354', pos: [86.0, 0, -317.5] },
+  { id: 'z_pharmacy_volleyball', type: 'zone', label: 'PHARMACY VOLLEYBALL COURT', size: [30, 25], color: '#75e391', pos: [86.0, 0, -351.5] },
+  
+  { id: 'z_cricketground', type: 'zone', label: 'CRICKET GROUND', size: [235, 85], color: '#223269', pos: [-121.0, 0, -340.5] },
+  { id: 'z_basketballcourts', type: 'zone', label: 'BASKETBALL COURTS', size: [30, 125], color: '#b29cd0', pos: [-271.5, 0, -359.5] },
+  { id: 'z_vignanpond', type: 'zone', label: 'VIGNAN POND', size: [45, 45], color: '#7fb0c9', pos: [-322.5, 0, -321.5] },
+  { id: 'z_priyadarshinihostel', type: 'zone', label: 'PRIYADARSHINI HOSTEL', size: [45, 60], color: '#8add61', pos: [-322.5, 0, -379.0] },
+
+  // 🚗 Roads
+  { id: 'road_highway', type: 'road_highway', label: 'Diagonal Highway (SH 261)', pos: [-55, 0.01, 5], size: [20, 600], rotation: Math.atan2(110, 130) },
+  { id: 'road_approach', type: 'road', label: 'Approach Road', pos: [0, 0, 45], size: [12, 90], rotation: 0, hasTrees: false, hasWalls: false },
+  { id: 'road_spine_1', type: 'road', label: 'Spine Road Seg 1', pos: [0, 0, -17], size: [12, 34], rotation: 0, hasTreesRight: false },
+  { id: 'road_spine_1b', type: 'road', label: 'Spine Road Seg 1b', pos: [0, 0, -40], size: [12, 12], rotation: 0, hasTrees: false, hasWalls: false },
+  { id: 'road_spine_2', type: 'road', label: 'Spine Road Seg 2', pos: [0, 0, -50], size: [12, 8], rotation: 0, hasTreesRight: false },
+  { id: 'road_spine_2b', type: 'road', label: 'Spine Road Seg 2b', pos: [0, 0, -60], size: [12, 12], rotation: 0, hasTrees: false, hasWalls: false },
+  { id: 'road_spine_3', type: 'road', label: 'Spine Road Seg 3', pos: [0, 0, -82.5], size: [12, 33], rotation: 0, hasTreesLeft: false },
+  { id: 'road_spine_3b', type: 'road', label: 'Spine Road Seg 3b', pos: [0, 0, -105], size: [12, 12], rotation: 0, hasTrees: false, hasWalls: false },
+  { id: 'road_spine_4', type: 'road', label: 'Spine Road Seg 4', pos: [0, 0, -117.5], size: [12, 13], rotation: 0, hasTreesLeft: false },
+  { id: 'road_spine_4b', type: 'road', label: 'Spine Road Seg 4b', pos: [0, 0, -130], size: [12, 12], rotation: 0, hasTrees: false, hasWalls: false },
+  { id: 'road_spine_5', type: 'road', label: 'Spine Road Seg 5', pos: [0, 0, -138], size: [12, 4], rotation: 0 },
+  { id: 'road_lib_circle', type: 'road_circle', label: 'Library Circle', pos: [-25, 0, -40], size: [15, 27], rotation: 0 },
+  { id: 'road_lib_gate', type: 'road', label: 'Library Gate Road', pos: [-58, 0, -60], size: [12, 104], rotation: Math.PI / 2, hasWalls: false, hasTreesRight: false },
+  { id: 'road_right_a_h', type: 'road', label: 'Right Road (A/H-Block)', pos: [53, 0, -40], size: [12, 94], rotation: Math.PI / 2, hasTreesLeft: false },
+  { id: 'road_left_farm_n', type: 'road', label: 'Left Road (Farm/N-Block)', pos: [-53, 0, -130], size: [12, 94], rotation: Math.PI / 2, hasTreesLeft: false },
+  { id: 'road_right_h_gr', type: 'road', label: 'Right Road (H/Ground)', pos: [53, 0, -105], size: [12, 94], rotation: Math.PI / 2, hasTreesLeft: false, holesLeft: [{start: 16, end: 28}] },
+  { id: 'road_spine_deep', type: 'road', label: 'Spine Road Deep', pos: [0, 0, -200], size: [12, 120], rotation: 0 },
+  { id: 'road_hostel_h', type: 'road', label: 'Hostel to H-Block Road', pos: [75, 0, -140.5], size: [12, 59], rotation: 0, hasTreesRight: false, holesRight: [{start: 0.5, end: 7.5}] },
+  { id: 'road_ac_canteen', type: 'road', label: 'AC Hostel to Canteen Road', pos: [90.5, 0, -136.5], size: [7, 19], rotation: Math.PI / 2, hasTreesLeft: false }
+];
+
+const ADD_TEMPLATES = [
+  // Modular components
+  { type: 'building', label: 'Building Block', icon: '🏢', category: 'building' },
+  { type: 'ushape', label: 'U - Shape Block', icon: '🏢', category: 'building' },
+  { type: 'oshape', label: 'O - Shape Block', icon: '🏢', category: 'building' },
+  { type: 'convocation', label: 'Convocation Hall', icon: '🏛️', category: 'building' },
+  { type: 'road', label: 'Road Segment', icon: '🚗', category: 'road' },
+  { type: 'road_cross', label: 'Crossroads (+)', icon: '🚗', category: 'road' },
+  { type: 'road_corner', label: 'Corner Road (L)', icon: '🚗', category: 'road' },
+  { type: 'road_highway', label: 'Highway Road', icon: '🛣️', category: 'road' },
+  { type: 'road_circle', label: 'Circle Road', icon: '🔄', category: 'road' },
+  { type: 'gate', label: 'Campus Gate', icon: '⛩️', category: 'gate' },
+  { type: 'zone', label: 'Ground Zone', icon: '🟩', category: 'zone' },
+  { type: 'tree_single', label: 'Single Tree', icon: '🌲', category: 'zone' },
+  { type: 'tree_row', label: 'Row of Trees', icon: '🌳', category: 'zone' },
+  // Landmarks
+  { type: 'custom_library', label: 'NTR Library', icon: '🏛️', category: 'landmark' },
+  { type: 'custom_ablock', label: 'A - Block', icon: '🏛️', category: 'landmark' },
+  { type: 'custom_hblock', label: 'H - Block', icon: '🏛️', category: 'landmark' },
+  { type: 'custom_nblock', label: 'N - Block', icon: '🏛️', category: 'landmark' },
+  { type: 'canteen', label: 'Canteen Shed', icon: '🍽️', category: 'landmark' },
+  { type: 'sportsground', label: 'Sports Ground', icon: '⚽', category: 'landmark' },
+  { type: 'farm', label: 'Farm Zone', icon: '🚜', category: 'landmark' },
+  { type: 'shrine', label: 'Ganesha Shrine', icon: '🛕', category: 'landmark' },
+  { type: 'smallzone', label: 'Utility Block', icon: '🏬', category: 'landmark' },
+  { type: 'hostel_connector', label: 'Walkway Bridge', icon: '🌉', category: 'landmark' },
+  { type: 'ground', label: 'Mud Ground', icon: '🟫', category: 'landmark' },
+  { type: 'bus_stop', label: 'Bus Stop', icon: '🚌', category: 'landmark' }
+];
+
+function DroneCameraController({ active, selectedItemPos }) {
+  const { camera } = useThree();
+  const controls = useThree((state) => state.controls);
+
+  useEffect(() => {
+    if (active && controls) {
+      camera.position.set(30, 240, 60);
+      controls.target.set(30, 0, -80);
+      controls.update();
+    }
+  }, [active, controls, camera]);
+
+  // Focus and pan to the selected item
+  useEffect(() => {
+    if (active && selectedItemPos && controls) {
+      const targetX = selectedItemPos[0];
+      const targetZ = selectedItemPos[2];
+      controls.target.set(targetX, 0, targetZ);
+      camera.position.set(targetX, 140, targetZ + 40);
+      controls.update();
+    }
+  }, [selectedItemPos, active, controls, camera]);
+
+  return null;
+}
+
 export default function App() {
   const joystick = useRef({ x: 0, y: 0 });
-  
-  // Set this to true to view the campus from top-down for layout planning
-  const isLayoutMode = true;
+  const [isDroneMode, setIsDroneMode] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState(null);
+  const [editorTab, setEditorTab] = useState('add'); // 'add', 'list', 'edit'
+  const [filterCategory, setFilterCategory] = useState('all'); // 'all', 'building', 'road', 'gate', 'zone', 'landmark'
 
-  // Interactive Layout Editor State
-  const [draftZones, setDraftZones] = useState([]);
-  const [selectedZoneId, setSelectedZoneId] = useState(null);
+  // Auto switch tab when selecting/deselecting items
+  useEffect(() => {
+    if (selectedItemId) {
+      setEditorTab('edit');
+    }
+  }, [selectedItemId]);
 
-  const addDraftZone = () => {
-    const newId = `draft_${Date.now()}`;
-    const newZone = {
-      id: newId,
-      label: `NEW ZONE ${draftZones.length + 1}`,
-      size: [30, 30],
-      pos: [0, 0, 0],
-      color: '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')
+  // Load items from localStorage or fallback to defaults
+  const [mapItems, setMapItems] = useState(() => {
+    const saved = localStorage.getItem('vignan_3d_campus_map_items');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error("Failed to parse stored map items", e);
+      }
+    }
+    return DEFAULT_MAP_ITEMS;
+  });
+
+  // Persist layout items when updated
+  useEffect(() => {
+    localStorage.setItem('vignan_3d_campus_map_items', JSON.stringify(mapItems));
+  }, [mapItems]);
+
+  const selectedItem = mapItems.find(item => item.id === selectedItemId);
+
+  const updateSelectedItem = (updates) => {
+    if (!selectedItemId) return;
+    setMapItems(prev => prev.map(item => item.id === selectedItemId ? { ...item, ...updates } : item));
+  };
+
+  // Keyboard nudging and shortcuts in Editor Mode
+  useEffect(() => {
+    if (!isDroneMode || !selectedItem) return;
+    
+    const handleKeyDown = (e) => {
+      // Skip shortcuts if the user is typing in a text field
+      if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'SELECT') {
+        return;
+      }
+
+      const nudgeAmt = e.shiftKey ? 10 : 2;
+      let moved = false;
+      let newPos = [...selectedItem.pos];
+      let newRot = selectedItem.rotation || 0;
+
+      switch (e.key) {
+        case 'ArrowLeft':
+        case 'a':
+        case 'A':
+          newPos[0] -= nudgeAmt;
+          moved = true;
+          break;
+        case 'ArrowRight':
+        case 'd':
+        case 'D':
+          newPos[0] += nudgeAmt;
+          moved = true;
+          break;
+        case 'ArrowUp':
+        case 'w':
+        case 'W':
+          newPos[2] -= nudgeAmt;
+          moved = true;
+          break;
+        case 'ArrowDown':
+        case 's':
+        case 'S':
+          newPos[2] += nudgeAmt;
+          moved = true;
+          break;
+        case 'q':
+        case 'Q':
+          newRot -= Math.PI / 12; // Rotate 15 degrees CCW
+          updateSelectedItem({ rotation: newRot });
+          break;
+        case 'e':
+        case 'E':
+          newRot += Math.PI / 12; // Rotate 15 degrees CW
+          updateSelectedItem({ rotation: newRot });
+          break;
+        case 'r':
+        case 'R':
+          newRot = (newRot + Math.PI / 2) % (Math.PI * 2); // Rotate 90 degrees
+          updateSelectedItem({ rotation: newRot });
+          break;
+        case 'Delete':
+        case 'Backspace':
+          e.preventDefault();
+          deleteSelectedItem();
+          break;
+        default:
+          break;
+      }
+
+      if (moved) {
+        e.preventDefault();
+        updateSelectedItem({ pos: [parseFloat(newPos[0].toFixed(1)), newPos[1], parseFloat(newPos[2].toFixed(1))] });
+      }
     };
-    setDraftZones([...draftZones, newZone]);
-    setSelectedZoneId(newId);
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isDroneMode, selectedItemId, selectedItem]);
+
+  const addItem = (type, landmarkId = null) => {
+    const id = landmarkId || `item_${Date.now()}`;
+    let newItem = { id, type, pos: [0, 0, -50], rotation: 0, label: '' };
+
+    if (type === 'building') {
+      newItem.label = 'NEW BLOCK';
+      newItem.size = [40, 20];
+      newItem.floors = 3;
+      newItem.color = '#FF8C00';
+    } else if (type === 'ushape') {
+      newItem.label = 'U-SHAPE BLOCK';
+      newItem.size = [30, 15, 20];
+      newItem.floors = 3;
+      newItem.color = '#eaeaea';
+    } else if (type === 'oshape') {
+      newItem.label = 'O-SHAPE BLOCK';
+      newItem.size = [30, 15, 30];
+      newItem.floors = 3;
+      newItem.color = '#eaeaea';
+    } else if (type === 'convocation') {
+      newItem.label = 'CONVOCATION HALL';
+      newItem.size = [24, 24];
+      newItem.floors = 3;
+      newItem.color = '#eaeaea';
+    } else if (type === 'road') {
+      newItem.label = 'NEW ROAD';
+      newItem.size = [12, 50];
+    } else if (type === 'road_cross') {
+      newItem.label = 'CROSSROAD';
+      newItem.size = [12, 12];
+    } else if (type === 'road_corner') {
+      newItem.label = 'CORNER ROAD';
+      newItem.size = [12, 12];
+    } else if (type === 'road_highway') {
+      newItem.label = 'HIGHWAY ROAD';
+      newItem.size = [20, 200];
+    } else if (type === 'road_circle') {
+      newItem.label = 'CIRCLE ROAD';
+      newItem.size = [12, 22];
+    } else if (type === 'gate') {
+      newItem.label = 'NEW GATE';
+    } else if (type === 'zone') {
+      newItem.label = 'NEW ZONE';
+      newItem.size = [30, 30];
+      newItem.color = '#DAA520';
+    } else if (type === 'tree_single') {
+      newItem.label = 'SINGLE TREE';
+    } else if (type === 'tree_row') {
+      newItem.label = 'TREE ROW';
+      newItem.size = [40, 1];
+    } else if (type.startsWith('custom_') || ['canteen', 'sportsground', 'farm', 'shrine', 'smallzone', 'hostel_connector', 'ground', 'bus_stop', 'boundary_wall'].includes(type)) {
+      const labelMap = {
+        'custom_library': 'LIBRARY',
+        'custom_ablock': 'A-BLOCK',
+        'custom_hblock': 'H-BLOCK',
+        'custom_nblock': 'N-BLOCK',
+        'canteen': 'CANTEEN & TT',
+        'sportsground': 'HOCKEY & FOOTBALL GROUND',
+        'farm': 'FARM ZONE',
+        'shrine': 'SHRINE',
+        'smallzone': 'SMALL ZONE',
+        'hostel_connector': 'CONNECTOR BRIDGE',
+        'ground': 'GROUND',
+        'bus_stop': 'BUS STOP',
+        'boundary_wall': 'WALL'
+      };
+      const sizeMap = {
+        'sportsground': [70, 94],
+        'farm': [46, 53],
+        'ground': [53, 22],
+        'canteen': [19, 22]
+      };
+      newItem.type = type;
+      newItem.id = type; // Keep predictable ID to bind properly in Buildings.jsx
+      newItem.label = labelMap[type] || 'LANDMARK';
+      if (sizeMap[type]) newItem.size = sizeMap[type];
+    }
+
+    setMapItems(prev => {
+      // Prevent duplicate landmark IDs
+      const filtered = prev.filter(item => item.id !== newItem.id);
+      return [...filtered, newItem];
+    });
+    setSelectedItemId(newItem.id);
   };
 
-  const updateSelectedZone = (fields) => {
-    setDraftZones(prev => prev.map(z => z.id === selectedZoneId ? { ...z, ...fields } : z));
+  const deleteSelectedItem = () => {
+    if (!selectedItemId) return;
+    const name = selectedItem?.label || selectedItemId;
+    if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
+      setMapItems(prev => prev.filter(item => item.id !== selectedItemId));
+      setSelectedItemId(null);
+    }
   };
 
-  const selectedZone = draftZones.find(z => z.id === selectedZoneId);
+  const clearMap = () => {
+    if (window.confirm("Are you sure you want to clear the entire map layout down to dynamic land?")) {
+      setMapItems([]);
+      setSelectedItemId(null);
+    }
+  };
+
+  const resetLayout = () => {
+    if (window.confirm("Are you sure you want to reset the entire map layout back to default campus coordinates?")) {
+      setMapItems(DEFAULT_MAP_ITEMS);
+      setSelectedItemId(null);
+    }
+  };
+
+  const rotationDeg = selectedItem ? Math.round(((selectedItem.rotation || 0) * 180) / Math.PI) : 0;
 
   return (
     <>
-      <Canvas 
-        shadows 
-        camera={{ 
-          fov: 60, 
-          near: 0.1, 
-          far: 1000, 
-          position: isLayoutMode ? [0, 400, 0] : [0, 15, 75] 
-        }}
-      >
+      {/* Top bar mode toggle */}
+      <div className="mode-toggle-bar">
+        <button 
+          className={`mode-btn ${!isDroneMode ? 'active' : ''}`}
+          onClick={() => {
+            setIsDroneMode(false);
+            setSelectedItemId(null);
+          }}
+        >
+          🧑 Walk Mode
+        </button>
+        <button 
+          className={`mode-btn ${isDroneMode ? 'active' : ''}`}
+          onClick={() => setIsDroneMode(true)}
+        >
+          🚁 Drone / Editor Mode
+        </button>
+      </div>
+
+      <Canvas shadows camera={{ fov: 60, near: 0.1, far: 1000, position: [0, 15, 75] }}>
         {/* Sky, lighting and fog */}
         <ambientLight intensity={0.7} />
         <directionalLight 
@@ -217,193 +574,682 @@ export default function App() {
         <fog attach="fog" args={['#87CEEB', 150, 600]} />
 
         {/* Custom Third-Person Controller + Orbit Controls */}
-        {!isLayoutMode && <PlayerController joystick={joystick} />}
-        
-        {isLayoutMode ? (
-          <OrbitControls 
-            makeDefault 
-            enablePan={true}
-            enableRotate={false} // Lock to 2D flat view
-            maxDistance={1000}
-            minDistance={20}
-            target={[0, 0, 0]}
-            mouseButtons={{
-              LEFT: THREE.MOUSE.PAN, // Left click to drag/pan the map
-              MIDDLE: THREE.MOUSE.DOLLY,
-              RIGHT: THREE.MOUSE.ROTATE // Allow right click to rotate if they want a slight tilt
+        {!isDroneMode && <PlayerController joystick={joystick} />}
+        <OrbitControls 
+          makeDefault 
+          enablePan={isDroneMode}
+          minPolarAngle={0} 
+          maxPolarAngle={Math.PI / 2 - 0.05} // Prevent camera from going under ground
+          minDistance={isDroneMode ? 5 : 2}
+          maxDistance={isDroneMode ? 600 : 15} // Restrict zoom out to keep third person view tight
+        />
+
+        {/* Drone Camera manager */}
+        <DroneCameraController active={isDroneMode} selectedItemPos={selectedItem?.pos} />
+
+        {/* Dynamic Map Item Rendering */}
+        {/* Renders Custom landmarks dynamically */}
+        <Buildings zones={mapItems} />
+
+        {/* Render dynamic modular buildings & custom shapes */}
+        {mapItems.filter(item => ['building', 'ushape', 'oshape', 'convocation'].includes(item.type) && !['boyshostel', 'achostel'].includes(item.id)).map(item => (
+          <group 
+            key={item.id} 
+            position={item.pos} 
+            rotation={[0, item.rotation || 0, 0]}
+            onClick={(e) => {
+              if (isDroneMode) {
+                e.stopPropagation();
+                setSelectedItemId(item.id);
+              }
             }}
-          />
-        ) : (
-          <OrbitControls 
-            makeDefault 
-            enablePan={false}
-            minPolarAngle={0} 
-            maxPolarAngle={Math.PI / 2 - 0.05} // Prevent camera from going under ground
-            minDistance={2}
-            maxDistance={15} // Restrict zoom out to keep third person view tight
-          />
+          >
+            {item.type === 'ushape' && (
+              <UShapeBlock
+                position={[0, 0, 0]}
+                size={item.size || [30, 15, 20]}
+                floors={item.floors || 3}
+                color={item.color || '#eaeaea'}
+                label={item.label}
+              />
+            )}
+            {item.type === 'oshape' && (
+              <OShapeBlock
+                position={[0, 0, 0]}
+                size={item.size || [30, 15, 30]}
+                floors={item.floors || 3}
+                color={item.color || '#eaeaea'}
+                label={item.label}
+              />
+            )}
+            {item.type === 'convocation' && (
+              <ConvocationHall
+                position={[0, 0, 0]}
+                size={item.size || [24, 24]}
+                floors={item.floors || 3}
+                color={item.color || '#eaeaea'}
+                label={item.label}
+              />
+            )}
+            {item.type === 'building' && (
+              <MultiStoryBuilding
+                position={[0, 0, 0]}
+                size={item.size || [40, 20]}
+                floors={item.floors || 3}
+                accentColor={item.color || '#FF8C00'}
+                label={item.label}
+              />
+            )}
+            {selectedItemId === item.id && (
+              <mesh position={[0, ((item.floors || 3) * 4)/2, 0]}>
+                <boxGeometry args={[(item.size ? item.size[0] : 40) + 2, (item.floors || 3) * 4 + 2, (item.size ? item.size[1] : 20) + 2]} />
+                <meshBasicMaterial color="#ffffff" wireframe />
+              </mesh>
+            )}
+          </group>
+        ))}
+
+        {/* Render dynamic road segments, crossroads and corners */}
+        {mapItems.filter(item => ['road', 'road_cross', 'road_corner', 'road_highway', 'road_circle'].includes(item.type)).map(item => {
+          if (item.type === 'road') {
+            return (
+              <group 
+                key={item.id} 
+                position={item.pos} 
+                rotation={[0, item.rotation || 0, 0]}
+                onClick={(e) => {
+                  if (isDroneMode) {
+                    e.stopPropagation();
+                    setSelectedItemId(item.id);
+                  }
+                }}
+              >
+                <RoadSegment 
+                  length={item.size[1]} 
+                  width={item.size[0]}
+                  position={[0, 0, 0]} 
+                  rotation={[0, 0, 0]} 
+                  hasTrees={item.hasTrees ?? true} 
+                  hasWalls={item.hasWalls ?? true}
+                  hasTreesLeft={item.hasTreesLeft ?? true}
+                  hasTreesRight={item.hasTreesRight ?? true}
+                  holesLeft={item.holesLeft || []}
+                  holesRight={item.holesRight || []}
+                />
+                {selectedItemId === item.id && (
+                  <mesh position={[0, 0.5, 0]}>
+                    <boxGeometry args={[item.size[0] + 1, 1, item.size[1] + 1]} />
+                    <meshBasicMaterial color="#ffffff" wireframe />
+                  </mesh>
+                )}
+              </group>
+            );
+          }
+          if (item.type === 'road_cross') {
+            return (
+              <group 
+                key={item.id} 
+                position={item.pos} 
+                rotation={[0, item.rotation || 0, 0]}
+                onClick={(e) => {
+                  if (isDroneMode) {
+                    e.stopPropagation();
+                    setSelectedItemId(item.id);
+                  }
+                }}
+              >
+                <RoadCross
+                  size={item.size || [12, 12]}
+                />
+                {selectedItemId === item.id && (
+                  <mesh position={[0, 0.5, 0]}>
+                    <boxGeometry args={[item.size[0] + 1, 1, item.size[0] + 1]} />
+                    <meshBasicMaterial color="#ffffff" wireframe />
+                  </mesh>
+                )}
+              </group>
+            );
+          }
+          if (item.type === 'road_corner') {
+            return (
+              <group 
+                key={item.id} 
+                position={item.pos} 
+                rotation={[0, item.rotation || 0, 0]}
+                onClick={(e) => {
+                  if (isDroneMode) {
+                    e.stopPropagation();
+                    setSelectedItemId(item.id);
+                  }
+                }}
+              >
+                <RoadCorner
+                  size={item.size || [12, 12]}
+                />
+                {selectedItemId === item.id && (
+                  <mesh position={[0, 0.5, 0]}>
+                    <boxGeometry args={[item.size[0] + 1, 1, item.size[0] + 1]} />
+                    <meshBasicMaterial color="#ffffff" wireframe />
+                  </mesh>
+                )}
+              </group>
+            );
+          }
+          if (item.type === 'road_highway') {
+            return (
+              <group 
+                key={item.id} 
+                position={item.pos} 
+                rotation={[0, item.rotation || 0, 0]}
+                onClick={(e) => {
+                  if (isDroneMode) {
+                    e.stopPropagation();
+                    setSelectedItemId(item.id);
+                  }
+                }}
+              >
+                <mesh position={[-15, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} name="RoadMesh">
+                  <planeGeometry args={item.size} />
+                  <meshStandardMaterial color="#222" /> 
+                </mesh>
+                {selectedItemId === item.id && (
+                  <mesh position={[-15, 0.5, 0]}>
+                    <boxGeometry args={[item.size[0] + 2, 1, item.size[1] + 2]} />
+                    <meshBasicMaterial color="#ffffff" wireframe />
+                  </mesh>
+                )}
+              </group>
+            );
+          }
+          if (item.type === 'road_circle') {
+            return (
+              <group 
+                key={item.id} 
+                position={item.pos}
+                onClick={(e) => {
+                  if (isDroneMode) {
+                    e.stopPropagation();
+                    setSelectedItemId(item.id);
+                  }
+                }}
+              >
+                <mesh position={[0, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]} name="RoadMesh">
+                  <ringGeometry args={[item.size[0], item.size[1], 32]} />
+                  <meshStandardMaterial color="#333" />
+                </mesh>
+                {selectedItemId === item.id && (
+                  <mesh position={[0, 0.1, 0]}>
+                    <cylinderGeometry args={[item.size[1] + 1, item.size[1] + 1, 0.5, 32, 1, true]} />
+                    <meshBasicMaterial color="#ffffff" wireframe />
+                  </mesh>
+                )}
+              </group>
+            );
+          }
+          return null;
+        })}
+
+        {/* Render dynamic tree assets */}
+        {mapItems.filter(item => ['tree_single', 'tree_row'].includes(item.type)).map(item => (
+          <group 
+            key={item.id} 
+            position={item.pos}
+            rotation={[0, item.rotation || 0, 0]}
+            onClick={(e) => {
+              if (isDroneMode) {
+                e.stopPropagation();
+                setSelectedItemId(item.id);
+              }
+            }}
+          >
+            {item.type === 'tree_single' && <SingleTree position={[0, 0, 0]} />}
+            {item.type === 'tree_row' && (
+              <TreeRow 
+                position={[0, 0, 0]} 
+                size={item.size || [40, 1]} 
+                rotation={0} 
+              />
+            )}
+            {selectedItemId === item.id && (
+              <mesh position={[0, 2.5, 0]}>
+                <boxGeometry args={[4, 6, 4]} />
+                <meshBasicMaterial color="#ffffff" wireframe />
+              </mesh>
+            )}
+          </group>
+        ))}
+
+        {/* Render dynamic custom gates */}
+        {mapItems.filter(item => item.type === 'gate' && !['gate_main', 'gate_library'].includes(item.id)).map(item => (
+          <group 
+            key={item.id} 
+            position={item.pos} 
+            rotation={[0, item.rotation || 0, 0]}
+            onClick={(e) => {
+              if (isDroneMode) {
+                e.stopPropagation();
+                setSelectedItemId(item.id);
+              }
+            }}
+          >
+            <CampusGate position={[0, 0, 0]} rotation={[0, 0, 0]} label={item.label} />
+            {selectedItemId === item.id && (
+              <mesh position={[0, 8, 0]}>
+                <boxGeometry args={[30, 18, 10]} />
+                <meshBasicMaterial color="#ffffff" wireframe />
+              </mesh>
+            )}
+          </group>
+        ))}
+
+        {/* Render dynamic zones (blueprint grounds) */}
+        {mapItems.filter(item => item.type === 'zone').map(item => (
+          <group 
+            key={item.id} 
+            position={item.pos}
+            onClick={(e) => {
+              if (isDroneMode) {
+                e.stopPropagation();
+                setSelectedItemId(item.id);
+              }
+            }}
+            onPointerOver={(e) => {
+              if (isDroneMode) {
+                e.stopPropagation();
+                document.body.style.cursor = 'pointer';
+              }
+            }}
+            onPointerOut={(e) => {
+              if (isDroneMode) {
+                document.body.style.cursor = 'default';
+              }
+            }}
+          >
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
+              <planeGeometry args={item.size} />
+              <meshStandardMaterial color={item.color} opacity={selectedItemId === item.id ? 0.6 : 0.25} transparent />
+            </mesh>
+            {selectedItemId === item.id && (
+              <mesh position={[0, 0.1, 0]}>
+                <boxGeometry args={[item.size[0], 0.25, item.size[1]]} />
+                <meshBasicMaterial color="#ffffff" wireframe />
+              </mesh>
+            )}
+            {isDroneMode && item.label && (
+              <Text
+                position={[0, 0.15, 0]}
+                rotation={[-Math.PI / 2, 0, 0]}
+                fontSize={Math.min(item.size[0], item.size[1]) * 0.12 + 1.2}
+                color={selectedItemId === item.id ? "#ffffff" : "#cccccc"}
+                fontWeight="bold"
+                outlineWidth={0.1}
+                outlineColor="#000000"
+              >
+                {item.label}
+              </Text>
+            )}
+          </group>
+        ))}
+        
+        {/* Grid Helper to help align items in editor mode */}
+        {isDroneMode && (
+          <gridHelper args={[1000, 100, '#60a5fa', '#3b82f6']} position={[0, 0.05, 0]} />
         )}
 
-        {/* Scene Objects (Physics removed to avoid WASM/Rapier load failure crashes) */}
-        <Buildings />
-        <Roads />
-        <Zones />
-        
-        {/* Ground */}
+        {/* Ground with Click-to-Position behavior */}
         <mesh 
           rotation={[-Math.PI / 2, 0, 0]} 
           position={[0, -0.1, 0]} 
           receiveShadow
-          onPointerDown={(e) => {
-            if (isLayoutMode && selectedZoneId) {
+          onClick={(e) => {
+            if (isDroneMode && selectedItem) {
               e.stopPropagation();
-              const x = Math.round(e.point.x * 2) / 2;
-              const z = Math.round(e.point.z * 2) / 2;
-              updateSelectedZone({ pos: [x, 0, z] });
+              // Snap selected item to the clicked point on the ground
+              updateSelectedItem({ pos: [parseFloat(e.point.x.toFixed(1)), selectedItem.pos[1], parseFloat(e.point.z.toFixed(1))] });
             }
           }}
         >
           <planeGeometry args={[2000, 2000]} />
           <meshStandardMaterial color="#2E8B57" roughness={0.9} /> {/* Grass */}
         </mesh>
-
-        {/* Draft Zones rendering for layout editor */}
-        {isLayoutMode && draftZones.map((z) => (
-          <group key={z.id} position={z.pos}>
-            <mesh position={[0, 0.5, 0]}>
-              <boxGeometry args={[z.size[0], 1, z.size[1]]} />
-              <meshStandardMaterial 
-                color={z.color} 
-                transparent 
-                opacity={selectedZoneId === z.id ? 0.7 : 0.4} 
-                wireframe={selectedZoneId === z.id}
-              />
-            </mesh>
-            {/* Outline box for selected zone */}
-            {selectedZoneId === z.id && (
-              <mesh position={[0, 0.5, 0]}>
-                <boxGeometry args={[z.size[0] + 0.5, 1.1, z.size[1] + 0.5]} />
-                <meshBasicMaterial color="#ffffff" wireframe />
-              </mesh>
-            )}
-            <Text
-              position={[0, 8, 0]}
-              fontSize={4}
-              color="white"
-              outlineWidth={0.2}
-              outlineColor="black"
-            >
-              {z.label}
-            </Text>
-          </group>
-        ))}
       </Canvas>
 
-      <Joystick joystickRef={joystick} />
-
       <div className="ui-container">
-        {/* Floating Layout Editor Panel (HTML Overlay) */}
-        {isLayoutMode && (
-          <div className="layout-editor-panel">
-            <h3>📐 Campus Layout Editor</h3>
-            <p className="help-text">Click on the ground to move the selected zone</p>
+        {!isDroneMode && (
+          <div className="instructions">
+            <h3>Vignan University - 3D Walkthrough Tour</h3>
+            <p>⌨️ **WASD / Arrow Keys** to move / walk around</p>
+            <p>鼠标 **Left Click & Drag** to look around | **Right Click & Drag** to pan camera</p>
+            <p>🔍 **Scroll Mouse** to zoom in/out</p>
+          </div>
+        )}
+      </div>
+
+      {/* Sandbox Editor Sidebar */}
+      {isDroneMode && (
+        <div className="editor-sidebar">
+          <div className="editor-header">
+            <h2>🗺️ Sandbox Builder</h2>
+          </div>
+          
+          {/* Tabs header */}
+          <div className="editor-tabs">
+            <button 
+              className={`tab-btn ${editorTab === 'add' ? 'active' : ''}`}
+              onClick={() => setEditorTab('add')}
+            >
+              ➕ Add
+            </button>
+            <button 
+              className={`tab-btn ${editorTab === 'list' ? 'active' : ''}`}
+              onClick={() => setEditorTab('list')}
+            >
+              📋 Items ({mapItems.length})
+            </button>
+            <button 
+              className={`tab-btn ${editorTab === 'edit' ? 'active' : ''}`}
+              onClick={() => setEditorTab('edit')}
+              disabled={!selectedItem}
+            >
+              ✏️ Edit
+            </button>
+          </div>
+
+          <div className="editor-body" style={{ paddingTop: '0px' }}>
             
-            <button className="add-btn" onClick={addDraftZone}>+ Add Draft Zone</button>
-            
-            {selectedZone && (
-              <div className="zone-details">
-                <h4>Editing: <span style={{color: selectedZone.color}}>{selectedZone.label}</span></h4>
-                <div className="input-row">
-                  <label>Label:</label>
-                  <input 
-                    type="text" 
-                    value={selectedZone.label} 
-                    onChange={(e) => updateSelectedZone({ label: e.target.value.toUpperCase() })} 
-                  />
-                </div>
-                <div className="slider-group">
-                  <div className="control-row">
-                    <label>Width: {selectedZone.size[0]}m</label>
-                    <input 
-                      type="range" min="5" max="300" step="5"
-                      value={selectedZone.size[0]} 
-                      onChange={(e) => updateSelectedZone({ size: [parseInt(e.target.value), selectedZone.size[1]] })} 
-                    />
-                  </div>
-                  <div className="control-row">
-                    <label>Depth: {selectedZone.size[1]}m</label>
-                    <input 
-                      type="range" min="5" max="300" step="5"
-                      value={selectedZone.size[1]} 
-                      onChange={(e) => updateSelectedZone({ size: [selectedZone.size[0], parseInt(e.target.value)] })} 
-                    />
-                  </div>
-                  <div className="control-row">
-                    <label>Position X: {selectedZone.pos[0]}</label>
-                    <input 
-                      type="number" step="1"
-                      value={selectedZone.pos[0]} 
-                      onChange={(e) => updateSelectedZone({ pos: [parseFloat(e.target.value) || 0, 0, selectedZone.pos[2]] })} 
-                    />
-                  </div>
-                  <div className="control-row">
-                    <label>Position Z: {selectedZone.pos[2]}</label>
-                    <input 
-                      type="number" step="1"
-                      value={selectedZone.pos[2]} 
-                      onChange={(e) => updateSelectedZone({ pos: [selectedZone.pos[0], 0, parseFloat(e.target.value) || 0] })} 
-                    />
-                  </div>
-                </div>
-                <button className="delete-btn" onClick={() => {
-                  setDraftZones(prev => prev.filter(z => z.id !== selectedZoneId));
-                  setSelectedZoneId(null);
-                }}>Delete Zone</button>
+            {/* Quick Actions (Keep reset/clear maps globally accessible at top of body) */}
+            {editorTab !== 'edit' && (
+              <div className="editor-actions" style={{ marginBottom: '12px', gap: '8px' }}>
+                <button className="btn-secondary" style={{ flexGrow: 1, padding: '6px 10px', fontSize: '0.75rem' }} onClick={resetLayout}>Reset All</button>
+                <button className="btn-danger" style={{ flexGrow: 1, padding: '6px 10px', fontSize: '0.75rem' }} onClick={clearMap}>Clear Map</button>
               </div>
             )}
 
-            <div className="zones-list">
-              <h4>Drafts List:</h4>
-              {draftZones.length === 0 ? (
-                <p className="empty-text">No draft zones added yet.</p>
-              ) : (
-                <ul>
-                  {draftZones.map(z => (
-                    <li 
-                      key={z.id} 
-                      className={selectedZoneId === z.id ? 'active' : ''}
-                      onClick={() => setSelectedZoneId(z.id)}
+            {/* TAB 1: ADD ENTITIES */}
+            {editorTab === 'add' && (
+              <div>
+                <div style={{ fontSize: '0.75rem', background: 'rgba(59, 130, 246, 0.15)', border: '1px solid rgba(59, 130, 246, 0.3)', padding: '8px 10px', borderRadius: '6px', marginBottom: '12px', color: '#93c5fd', lineHeight: '1.4' }}>
+                  💡 Click any block card below to add it directly to the 3D map workspace!
+                </div>
+                <div className="add-grid">
+                  {ADD_TEMPLATES.map(item => (
+                    <div 
+                      key={item.type} 
+                      className="add-card"
+                      onClick={() => addItem(item.type)}
                     >
-                      <span className="color-dot" style={{backgroundColor: z.color}}></span>
-                      <span className="zone-label-text">{z.label}</span>
-                      <span className="zone-coords">[{z.pos[0]}, {z.pos[2]}]</span>
-                    </li>
+                      <span className="icon">{item.icon}</span>
+                      <span>{item.label}</span>
+                    </div>
                   ))}
-                </ul>
-              )}
-            </div>
+                </div>
+              </div>
+            )}
 
-            {draftZones.length > 0 && (
-              <div className="output-box">
-                <h4>Copy Configuration:</h4>
-                <textarea 
-                  readOnly 
-                  onClick={(e) => e.target.select()}
-                  value={draftZones.map(z => `{ id: '${z.id}', label: '${z.label}', size: [${z.size[0]}, ${z.size[1]}], color: '${z.color}', pos: [${z.pos[0]}, 0, ${z.pos[2]}] }`).join(',\n')}
-                />
-                <span className="copy-tip">Click to select all, then Ctrl+C</span>
+            {/* TAB 2: ACTIVE ITEMS LIST */}
+            {editorTab === 'list' && (
+              <div>
+                <div className="filter-pills">
+                  {['all', 'building', 'road', 'gate', 'zone', 'landmark'].map(cat => (
+                    <button 
+                      key={cat} 
+                      className={`filter-pill ${filterCategory === cat ? 'active' : ''}`}
+                      onClick={() => setFilterCategory(cat)}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+                <div className="zone-list" style={{ maxHeight: '400px' }}>
+                  {mapItems.filter(item => {
+                    if (filterCategory === 'all') return true;
+                    if (filterCategory === 'building') return ['building', 'ushape', 'oshape', 'convocation'].includes(item.type);
+                    if (filterCategory === 'road') return ['road', 'road_cross', 'road_corner', 'road_highway', 'road_circle'].includes(item.type);
+                    if (filterCategory === 'zone') return ['zone', 'tree_single', 'tree_row'].includes(item.type);
+                    if (filterCategory === 'landmark') return item.type.startsWith('custom_') || ['canteen', 'sportsground', 'farm', 'shrine', 'smallzone', 'hostel_connector', 'ground', 'bus_stop', 'boundary_wall'].includes(item.type);
+                    return item.type === filterCategory;
+                  }).map(item => (
+                    <div 
+                      key={item.id} 
+                      className={`zone-list-item ${selectedItemId === item.id ? 'selected' : ''}`}
+                      onClick={() => {
+                        setSelectedItemId(item.id);
+                        setEditorTab('edit');
+                      }}
+                    >
+                      <span>
+                        <span 
+                          className="zone-color-indicator" 
+                          style={{ backgroundColor: item.color || (item.type.startsWith('road') ? '#444' : '#6b7280') }}
+                        />
+                        {item.label || item.type.toUpperCase()}
+                      </span>
+                      <span style={{ opacity: 0.6, fontSize: '0.75rem' }}>
+                        [{Math.round(item.pos[0])}, {Math.round(item.pos[2])}]
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* TAB 3: PROPERTIES & POSITION EDITING */}
+            {editorTab === 'edit' && selectedItem && (
+              <div className="editor-details-section" style={{ borderTop: 'none', paddingTop: '0px' }}>
+                {/* Advanced Shortcut helper */}
+                <div style={{ fontSize: '0.75rem', background: 'rgba(59, 130, 246, 0.15)', border: '1px solid rgba(59, 130, 246, 0.3)', padding: '8px 10px', borderRadius: '6px', marginBottom: '10px', color: '#93c5fd', lineHeight: '1.4' }}>
+                  💡 <b>Advanced controls:</b> Click grass to teleport block. Move with <b>WASD/Arrows</b>, rotate with <b>Q/E/R</b>, delete with <b>Delete/Backspace</b>.
+                </div>
+
+                <div className="input-group">
+                  <label className="input-label">Entity Label/Name</label>
+                  <input 
+                    type="text" 
+                    className="editor-input" 
+                    value={selectedItem.label} 
+                    onChange={(e) => updateSelectedItem({ label: e.target.value })} 
+                  />
+                </div>
+
+                {/* 🎯 Nudge Positioning Grid */}
+                <div style={{ marginTop: '4px', textAlign: 'center' }}>
+                  <span className="input-label" style={{ display: 'block', marginBottom: '6px', textAlign: 'left' }}>🎯 Nudge Position</span>
+                  <div className="nudge-grid">
+                    <button className="nudge-btn" onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0] - 2, selectedItem.pos[1], selectedItem.pos[2] - 2] })}>↖️</button>
+                    <button className="nudge-btn" onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0], selectedItem.pos[1], selectedItem.pos[2] - 2] })}>▲</button>
+                    <button className="nudge-btn" onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0] + 2, selectedItem.pos[1], selectedItem.pos[2] - 2] })}>↗️</button>
+                    <button className="nudge-btn" onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0] - 2, selectedItem.pos[1], selectedItem.pos[2]] })}>◀</button>
+                    <button className="nudge-btn" style={{ background: '#3b82f6', borderColor: '#3b82f6' }} onClick={() => updateSelectedItem({ pos: [0, selectedItem.pos[1], -50] })}>⌖</button>
+                    <button className="nudge-btn" onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0] + 2, selectedItem.pos[1], selectedItem.pos[2]] })}>▶</button>
+                    <button className="nudge-btn" onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0] - 2, selectedItem.pos[1], selectedItem.pos[2] + 2] })}>↙️</button>
+                    <button className="nudge-btn" onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0], selectedItem.pos[1], selectedItem.pos[2] + 2] })}>▼</button>
+                    <button className="nudge-btn" onClick={() => updateSelectedItem({ pos: [selectedItem.pos[0] + 2, selectedItem.pos[1], selectedItem.pos[2] + 2] })}>↘️</button>
+                  </div>
+                </div>
+
+                <div className="input-group">
+                  <div className="input-label">
+                    <span>Position X (Left-Right)</span>
+                    <span className="slider-val">{Math.round(selectedItem.pos[0])}</span>
+                  </div>
+                  <div className="slider-container">
+                    <input 
+                      type="range" 
+                      className="editor-slider" 
+                      min="-200" 
+                      max="200" 
+                      value={selectedItem.pos[0]} 
+                      onChange={(e) => {
+                        const val = parseFloat(e.target.value);
+                        updateSelectedItem({ pos: [val, selectedItem.pos[1], selectedItem.pos[2]] });
+                      }} 
+                    />
+                  </div>
+                </div>
+
+                <div className="input-group">
+                  <div className="input-label">
+                    <span>Position Z (Forward-Back)</span>
+                    <span className="slider-val">{Math.round(selectedItem.pos[2])}</span>
+                  </div>
+                  <div className="slider-container">
+                    <input 
+                      type="range" 
+                      className="editor-slider" 
+                      min="-250" 
+                      max="50" 
+                      value={selectedItem.pos[2]} 
+                      onChange={(e) => {
+                        const val = parseFloat(e.target.value);
+                        updateSelectedItem({ pos: [selectedItem.pos[0], selectedItem.pos[1], val] });
+                      }} 
+                    />
+                  </div>
+                </div>
+
+                {/* ↺ Rotation Quick Controls */}
+                <div className="input-group">
+                  <span className="input-label">Rotate Block</span>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button className="btn-secondary" style={{ flexGrow: 1, padding: '6px' }} onClick={() => updateSelectedItem({ rotation: (selectedItem.rotation || 0) - Math.PI / 12 })}>↺ 15°</button>
+                    <button className="btn-secondary" style={{ flexGrow: 1, padding: '6px' }} onClick={() => updateSelectedItem({ rotation: (selectedItem.rotation || 0) + Math.PI / 12 })}>↻ 15°</button>
+                    <button className="btn-secondary" style={{ flexGrow: 1, padding: '6px' }} onClick={() => updateSelectedItem({ rotation: ((selectedItem.rotation || 0) + Math.PI / 2) % (Math.PI * 2) })}>↻ 90°</button>
+                  </div>
+                </div>
+
+                <div className="input-group">
+                  <div className="input-label">
+                    <span>Rotation Angle</span>
+                    <span className="slider-val">{rotationDeg}°</span>
+                  </div>
+                  <div className="slider-container">
+                    <input 
+                      type="range" 
+                      className="editor-slider" 
+                      min="0" 
+                      max="360" 
+                      value={rotationDeg} 
+                      onChange={(e) => {
+                        const rad = (parseFloat(e.target.value) * Math.PI) / 180;
+                        updateSelectedItem({ rotation: rad });
+                      }} 
+                    />
+                  </div>
+                </div>
+
+                {selectedItem.size && (
+                  <>
+                    <div className="input-group">
+                      <div className="input-label">
+                        <span>Width Size (X)</span>
+                        <span className="slider-val">{Math.round(selectedItem.size[0])}</span>
+                      </div>
+                      <div className="slider-container">
+                        <input 
+                          type="range" 
+                          className="editor-slider" 
+                          min="5" 
+                          max="150" 
+                          value={selectedItem.size[0]} 
+                          onChange={(e) => {
+                            const val = parseFloat(e.target.value);
+                            updateSelectedItem({ size: [val, selectedItem.size[1]] });
+                          }} 
+                        />
+                      </div>
+                    </div>
+
+                    <div className="input-group">
+                      <div className="input-label">
+                        <span>Depth / Length Size (Z)</span>
+                        <span className="slider-val">{Math.round(selectedItem.size[1])}</span>
+                      </div>
+                      <div className="slider-container">
+                        <input 
+                          type="range" 
+                          className="editor-slider" 
+                          min="5" 
+                          max="600" 
+                          value={selectedItem.size[1]} 
+                          onChange={(e) => {
+                            const val = parseFloat(e.target.value);
+                            updateSelectedItem({ size: [selectedItem.size[0], val] });
+                          }} 
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {selectedItem.type === 'building' && (
+                  <div className="input-group">
+                    <div className="input-label">
+                      <span>Floors (Height)</span>
+                      <span className="slider-val">{selectedItem.floors || 3}</span>
+                    </div>
+                    <div className="slider-container">
+                      <input 
+                        type="range" 
+                        className="editor-slider" 
+                        min="1" 
+                        max="10" 
+                        value={selectedItem.floors || 3} 
+                        onChange={(e) => {
+                          updateSelectedItem({ floors: parseInt(e.target.value) });
+                        }} 
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {(selectedItem.type === 'building' || selectedItem.type === 'zone') && (
+                  <div className="input-group">
+                    <label className="input-label">Theme Color</label>
+                    <div className="color-palette">
+                      {['#8B4513', '#228B22', '#0000FF', '#FF1493', '#DAA520', '#4B0082', '#00FFFF', '#3CB371', '#DC143C', '#800000', '#FF8C00', '#FFFF00', '#A9A9A9', '#4682B4'].map(c => (
+                        <div 
+                          key={c} 
+                          className={`color-choice ${selectedItem.color === c ? 'selected' : ''}`}
+                          style={{ backgroundColor: c }}
+                          onClick={() => updateSelectedItem({ color: c })}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="editor-actions" style={{ gap: '8px', display: 'flex', marginTop: '10px' }}>
+                  <button 
+                    className="btn-secondary" 
+                    style={{ flexGrow: 1 }} 
+                    onClick={() => {
+                      if (!selectedItem) return;
+                      const id = `item_${Date.now()}`;
+                      const newItem = {
+                        ...selectedItem,
+                        id,
+                        label: `${selectedItem.label} (Copy)`,
+                        pos: [selectedItem.pos[0] + 15, selectedItem.pos[1], selectedItem.pos[2] + 15]
+                      };
+                      setMapItems(prev => [...prev, newItem]);
+                      setSelectedItemId(id);
+                    }}
+                  >
+                    👯 Clone Block
+                  </button>
+                  <button className="btn-danger" style={{ flexGrow: 1 }} onClick={deleteSelectedItem}>🗑️ Delete</button>
+                </div>
+              </div>
+            )}
+            
+            {editorTab === 'edit' && !selectedItem && (
+              <div style={{ textAlign: 'center', color: '#888', marginTop: '40px', fontSize: '0.85rem' }}>
+                🫵 Click on any block in the 3D map view or select from the "Items" tab to start editing its properties.
               </div>
             )}
           </div>
-        )}
-
-        <div className="instructions">
-          <h3>Vignan University - 3D Walkthrough Tour</h3>
-          <p>⌨️ **WASD / Arrow Keys** to move / walk around</p>
-          <p>鼠标 **Left Click & Drag** to look around | **Right Click & Drag** to pan camera</p>
-          <p>🔍 **Scroll Mouse** to zoom in/out</p>
         </div>
-      </div>
+      )}
     </>
   );
 }
