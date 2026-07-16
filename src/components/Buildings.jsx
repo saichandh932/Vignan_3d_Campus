@@ -2275,15 +2275,21 @@ export function ConvocationHall({ position, size = [25, 85], floors = 3, color =
   const panelWidth = Math.sqrt(halfW * halfW + roofHeight * roofHeight);
   const angle = Math.atan2(roofHeight, halfW);
 
-  // Generate pillar positions along the long edges
+  // Generate pillar positions along the long edges (front open side only — skip back 2 positions)
   const spacing = 12;
   const pillarsCount = Math.max(2, Math.floor(d / spacing));
   const pillarPositions = [];
-  for (let i = 0; i <= pillarsCount; i++) {
+  for (let i = 0; i < pillarsCount; i++) {   // < not <= so last row is omitted (back wall covers it)
     const z = -halfD + (i * d) / pillarsCount;
     pillarPositions.push([-halfW + 0.5, z]);
     pillarPositions.push([halfW - 0.5, z]);
   }
+
+  // Stage dimensions
+  const stageW = w * 0.75;
+  const stageD = 10;
+  const stageH = 1.2;
+  const stageZ = halfD - stageD / 2 - 1.5;  // near back wall
 
   return (
     <group position={position}>
@@ -2293,10 +2299,33 @@ export function ConvocationHall({ position, size = [25, 85], floors = 3, color =
         <meshStandardMaterial color="#c0c0c0" roughness={0.9} />
       </mesh>
 
-      {/* Solid Wall facing the highway (West/Left side) */}
+      {/* Interior floor (slightly lighter) */}
+      <mesh position={[0, 0.21, 0]} receiveShadow>
+        <boxGeometry args={[w - 0.4, 0.02, d - 0.4]} />
+        <meshStandardMaterial color="#d8d0c8" roughness={0.7} />
+      </mesh>
+
+      {/* Solid Wall — West/Left side */}
       <mesh position={[-halfW + 0.15, height / 2, 0]} castShadow receiveShadow>
         <boxGeometry args={[0.3, height, d]} />
         <meshStandardMaterial color={color} roughness={0.8} />
+      </mesh>
+
+      {/* ✅ Solid Back Wall (closed rear end, +Z direction) */}
+      <mesh position={[0, height / 2, halfD - 0.15]} castShadow receiveShadow>
+        <boxGeometry args={[w, height, 0.3]} />
+        <meshStandardMaterial color={color} roughness={0.8} />
+      </mesh>
+
+      {/* Back wall accent strip / dado rail */}
+      <mesh position={[0, 1.5, halfD - 0.3]}>
+        <boxGeometry args={[w - 0.1, 0.12, 0.1]} />
+        <meshStandardMaterial color="#a09080" roughness={0.6} />
+      </mesh>
+      {/* Back wall upper accent strip */}
+      <mesh position={[0, height - 1, halfD - 0.3]}>
+        <boxGeometry args={[w - 0.1, 0.12, 0.1]} />
+        <meshStandardMaterial color="#a09080" roughness={0.6} />
       </mesh>
 
       {/* Columns / Pillars */}
@@ -2307,6 +2336,90 @@ export function ConvocationHall({ position, size = [25, 85], floors = 3, color =
         </mesh>
       ))}
 
+      {/* ====== 🎭 INTERIOR STAGE ====== */}
+
+      {/* Stage lower step */}
+      <mesh position={[0, stageH * 0.35, stageZ + stageD / 2 + 0.8]} castShadow receiveShadow>
+        <boxGeometry args={[stageW + 2, stageH * 0.7, 1.6]} />
+        <meshStandardMaterial color="#8a7a6a" roughness={0.7} />
+      </mesh>
+
+      {/* Stage main platform */}
+      <mesh position={[0, stageH / 2, stageZ]} castShadow receiveShadow>
+        <boxGeometry args={[stageW, stageH, stageD]} />
+        <meshStandardMaterial color="#7a6a5a" roughness={0.7} />
+      </mesh>
+
+      {/* Stage surface (top face — polished wood color) */}
+      <mesh position={[0, stageH + 0.01, stageZ]} receiveShadow>
+        <boxGeometry args={[stageW, 0.05, stageD]} />
+        <meshStandardMaterial color="#c8a46e" roughness={0.4} />
+      </mesh>
+
+      {/* Stage front edge trim */}
+      <mesh position={[0, stageH / 2, stageZ + stageD / 2]}>
+        <boxGeometry args={[stageW, stageH, 0.12]} />
+        <meshStandardMaterial color="#5a4a3a" roughness={0.6} />
+      </mesh>
+
+      {/* Left side stairs to stage */}
+      {[0, 1, 2].map(si => (
+        <mesh key={`lstair-${si}`} position={[-stageW / 2 - 0.8, (si + 0.5) * (stageH / 3), stageZ + stageD / 2 - 1 + si * 0.5]} castShadow>
+          <boxGeometry args={[1.6, stageH / 3, 0.9]} />
+          <meshStandardMaterial color="#9a8a7a" roughness={0.7} />
+        </mesh>
+      ))}
+      {/* Right side stairs to stage */}
+      {[0, 1, 2].map(si => (
+        <mesh key={`rstair-${si}`} position={[stageW / 2 + 0.8, (si + 0.5) * (stageH / 3), stageZ + stageD / 2 - 1 + si * 0.5]} castShadow>
+          <boxGeometry args={[1.6, stageH / 3, 0.9]} />
+          <meshStandardMaterial color="#9a8a7a" roughness={0.7} />
+        </mesh>
+      ))}
+
+      {/* Backdrop panel wall behind stage (in front of back wall) */}
+      <mesh position={[0, height * 0.45, halfD - 1.5]} castShadow>
+        <boxGeometry args={[stageW * 0.9, height * 0.7, 0.25]} />
+        <meshStandardMaterial color="#3a2e5a" roughness={0.5} />
+      </mesh>
+      {/* Backdrop top gold trim bar */}
+      <mesh position={[0, height * 0.8, halfD - 1.5]}>
+        <boxGeometry args={[stageW * 0.9 + 0.2, 0.25, 0.15]} />
+        <meshStandardMaterial color="#c8a832" metalness={0.8} roughness={0.2} />
+      </mesh>
+      {/* Backdrop bottom gold trim bar */}
+      <mesh position={[0, stageH + 0.2, halfD - 1.5]}>
+        <boxGeometry args={[stageW * 0.9 + 0.2, 0.2, 0.15]} />
+        <meshStandardMaterial color="#c8a832" metalness={0.8} roughness={0.2} />
+      </mesh>
+
+      {/* Centre podium on stage */}
+      <mesh position={[0, stageH + 0.6, stageZ - 1]} castShadow>
+        <boxGeometry args={[1.0, 1.2, 0.6]} />
+        <meshStandardMaterial color="#4a3a2a" roughness={0.5} />
+      </mesh>
+      {/* Podium top slant face */}
+      <mesh position={[0, stageH + 1.22, stageZ - 1]} rotation={[0.2, 0, 0]}>
+        <boxGeometry args={[0.95, 0.08, 0.55]} />
+        <meshStandardMaterial color="#6a5a4a" roughness={0.4} />
+      </mesh>
+
+      {/* Two flanking microphone stands */}
+      {[-2.5, 2.5].map((mx, mi) => (
+        <group key={`mic-${mi}`} position={[mx, stageH, stageZ - 0.5]}>
+          {/* Stand pole */}
+          <mesh position={[0, 0.7, 0]} castShadow>
+            <cylinderGeometry args={[0.04, 0.04, 1.4, 8]} />
+            <meshStandardMaterial color="#888" metalness={0.8} roughness={0.2} />
+          </mesh>
+          {/* Mic head */}
+          <mesh position={[0, 1.45, 0]} castShadow>
+            <sphereGeometry args={[0.12, 8, 8]} />
+            <meshStandardMaterial color="#444" metalness={0.7} roughness={0.3} />
+          </mesh>
+        </group>
+      ))}
+
       {/* Inverted V Pitched Roof (Left Panel) */}
       <mesh 
         position={[-halfW / 2, height + roofHeight / 2, 0]} 
@@ -2314,7 +2427,7 @@ export function ConvocationHall({ position, size = [25, 85], floors = 3, color =
         castShadow
       >
         <boxGeometry args={[panelWidth, 0.3, d + 1]} />
-        <meshStandardMaterial color="#b5651d" roughness={0.6} /> {/* Clay tile color */}
+        <meshStandardMaterial color="#b5651d" roughness={0.6} />
       </mesh>
 
       {/* Inverted V Pitched Roof (Right Panel) */}
@@ -2336,6 +2449,7 @@ export function ConvocationHall({ position, size = [25, 85], floors = 3, color =
     </group>
   );
 }
+
 
 export function SingleTree({ position }) {
   return (
