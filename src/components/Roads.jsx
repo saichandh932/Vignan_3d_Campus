@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import * as THREE from 'three';
 
 function RoadSegment({ length, position, rotation, width = 12, hasTrees = true, hasTreesLeft = true, hasTreesRight = true, hasWalls = true, holesLeft = [], holesRight = [] }) {
   const getWallSegments = (len, holes) => {

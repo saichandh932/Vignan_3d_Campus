@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import { Sky, OrbitControls } from '@react-three/drei';
 import { Buildings } from './components/Buildings';
@@ -11,6 +11,7 @@ function PlayerController() {
   const { camera, scene } = useThree();
   const keys = useRef({ w: false, a: false, s: false, d: false });
   const playerRef = useRef();
+  const raycaster = useRef(new THREE.Raycaster());
   const speed = 25; // Movement speed
   const shieldTexture = useLoader(THREE.TextureLoader, '/shield.jpg');
 
@@ -117,12 +118,11 @@ function PlayerController() {
         const nextPosition = player.position.clone().add(moveDirection);
         
         // Raycast straight down from slightly above the next position to check for RoadMesh
-        const raycaster = new THREE.Raycaster();
         const origin = new THREE.Vector3(nextPosition.x, 10, nextPosition.z);
         const down = new THREE.Vector3(0, -1, 0);
-        raycaster.set(origin, down);
+        raycaster.current.set(origin, down);
         
-        const intersects = raycaster.intersectObjects(scene.children, true);
+        const intersects = raycaster.current.intersectObjects(scene.children, true);
         const hitRoad = intersects.some(hit => hit.object.name === "RoadMesh");
         
         // Only move if the next position is on a road
