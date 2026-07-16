@@ -177,10 +177,10 @@ const DEFAULT_MAP_ITEMS = [
   { id: 'bus_stop', type: 'bus_stop', label: 'BUS STOP', size: [42, 8], pos: [-81.8, 0.01, 124.1], rotation: Math.atan2(110, 130) },
 
   // 🏛️ Landmark Buildings
-  { id: 'library', type: 'custom_library', label: 'LIBRARY', pos: [-25.0, 0, -40.0], rotation: Math.PI / 6 },
-  { id: 'ablock', type: 'custom_ablock', label: 'A-BLOCK', pos: [52, 0, -12.0], rotation: Math.PI },
-  { id: 'hblock', type: 'custom_hblock', label: 'H-BLOCK', pos: [55.0, 0, -72.5], rotation: 0 },
-  { id: 'nblock', type: 'custom_nblock', label: 'N-BLOCK', pos: [-53.5, 0, -192.0], rotation: Math.PI / 2 },
+  { id: 'library', type: 'custom_library', label: 'LIBRARY', size: [21, 21], pos: [-25.0, 0, -40.0], rotation: Math.PI / 6 },
+  { id: 'ablock', type: 'custom_ablock', label: 'A-BLOCK', size: [75, 64], pos: [52, 0, -12.0], rotation: Math.PI },
+  { id: 'hblock', type: 'custom_hblock', label: 'H-BLOCK', size: [90, 53], pos: [55.0, 0, -72.5], rotation: 0 },
+  { id: 'nblock', type: 'custom_nblock', label: 'N-BLOCK', size: [62, 140], pos: [-53.5, 0, -192.0], rotation: Math.PI / 2 },
   { id: 'boyshostel', type: 'building', label: 'BOYS HOSTEL', pos: [40.0, 0, -165.0], size: [52, 22], floors: 3, color: '#FF8C00', rotation: 0 },
   { id: 'achostel', type: 'building', label: 'AC HOSTEL', pos: [95.0, 0, -165.0], size: [26, 22], floors: 3, color: '#E67E22', rotation: 0 },
   { id: 'hostel_connector', type: 'hostel_connector', label: 'CONNECTOR BRIDGE', pos: [75.0, 0, -180.0], rotation: 0 },

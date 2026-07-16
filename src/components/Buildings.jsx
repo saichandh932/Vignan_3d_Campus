@@ -342,9 +342,9 @@ export function Buildings({ zones = [] }) {
   const boundaryWall = getZone('boundary_wall', "WALL", [10, 0, 15], [25, 4], -Math.PI / 2);
   const busStopZone = getZone('bus_stop', 'BUS STOP', [-81.8, 0.01, 124.1], [42, 8], Math.atan2(110, 130));
 
-  const libZone = getZone('library', 'LIBRARY', [-25.0, 0, -40.0], null, Math.PI / 6);
-  const ablockZone = getZone('ablock', 'A-BLOCK', [52, 0, -12.0], null, Math.PI);
-  const hblockZone = getZone('hblock', 'H-BLOCK', [55.0, 0, -72.5], null, 0);
+  const libZone = getZone('library', 'LIBRARY', [-25.0, 0, -40.0], [21, 21], Math.PI / 6);
+  const ablockZone = getZone('ablock', 'A-BLOCK', [52, 0, -12.0], [75, 64], Math.PI);
+  const hblockZone = getZone('hblock', 'H-BLOCK', [55.0, 0, -72.5], [90, 53], 0);
   const nblockZone = getZone('nblock', 'N-BLOCK', [-53.5, 0, -192.0], [62, 140], Math.PI / 2);
   const boyshostelZone = getZone('boyshostel', 'BOYS HOSTEL', [40.0, 0, -165.0], [52, 22], 0);
   const achostelZone = getZone('achostel', 'AC HOSTEL', [95.0, 0, -165.0], [26, 22], 0);
@@ -409,7 +409,15 @@ export function Buildings({ zones = [] }) {
       {/* 🏛️ NTR VIGNAN CENTRAL LIBRARY */}
       {/* Position: [-25.0, 0, -40.0]. Rotated to face the center circle */}
       {libZone.render && (
-        <group position={libZone.pos} rotation={[0, libZone.rotation, 0]}>
+        <group 
+          position={libZone.pos} 
+          rotation={[0, libZone.rotation, 0]}
+          scale={[
+            libZone.size ? libZone.size[0] / 21 : 1,
+            1,
+            libZone.size ? libZone.size[1] / 21 : 1
+          ]}
+        >
         
         {/* MAIN OCTAGONAL STRUCTURE */}
         {/* 3 Floors of Octagon with Windows */}
@@ -511,7 +519,15 @@ export function Buildings({ zones = [] }) {
 
       {/* 🏢 A-BLOCK (Administrative Block) */}
       {ablockZone.render && (
-        <group position={ablockZone.pos} rotation={[0, ablockZone.rotation, 0]}>
+        <group 
+          position={ablockZone.pos} 
+          rotation={[0, ablockZone.rotation, 0]}
+          scale={[
+            ablockZone.size ? ablockZone.size[0] / 75 : 1,
+            1,
+            ablockZone.size ? ablockZone.size[1] / 64 : 1
+          ]}
+        >
         {/* Floating Label for A-Block */}
         <Text position={[0, 26, 0]} fontSize={4} color="white" outlineWidth={0.2} outlineColor="black">
           {ablockZone.label}
@@ -651,7 +667,15 @@ export function Buildings({ zones = [] }) {
 
       {/* 🏢 H-BLOCK (Sri Visweswaraya Bhavan) */}
       {hblockZone.render && (
-        <group position={hblockZone.pos} rotation={[0, hblockZone.rotation, 0]}>
+        <group 
+          position={hblockZone.pos} 
+          rotation={[0, hblockZone.rotation, 0]}
+          scale={[
+            hblockZone.size ? hblockZone.size[0] / 90 : 1,
+            1,
+            hblockZone.size ? hblockZone.size[1] / 53 : 1
+          ]}
+        >
         {/* --- Central Bar --- */}
         <mesh position={[0, 10, -5]} castShadow receiveShadow>
           <boxGeometry args={[80, 12, 12]} />
@@ -951,7 +975,15 @@ export function Buildings({ zones = [] }) {
 
       {/* 🏢 N-BLOCK (Nagarjuna Block) & MHP (The Most Happening Place) */}
       {nblockZone.render && (
-        <group position={nblockZone.pos} rotation={[0, nblockZone.rotation, 0]}>
+        <group 
+          position={nblockZone.pos} 
+          rotation={[0, nblockZone.rotation, 0]}
+          scale={[
+            nblockZone.size ? nblockZone.size[0] / 62 : 1,
+            1,
+            nblockZone.size ? nblockZone.size[1] / 140 : 1
+          ]}
+        >
           {/* Courtyard Concrete Pavement */}
           <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
             <planeGeometry args={[104, 58]} />
