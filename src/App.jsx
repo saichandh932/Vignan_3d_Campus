@@ -332,9 +332,26 @@ export default function App() {
   // Load items from localStorage or fallback to defaults
   const [mapItems, setMapItems] = useState(() => {
     const saved = localStorage.getItem('vignan_3d_campus_map_items');
+    const defaultSizes = {
+      'gate_main': [18, 5],
+      'gate_library': [18, 5],
+      'boundary_wall': [25, 4],
+      'bus_stop': [42, 8],
+      'library': [21, 21],
+      'ablock': [75, 64],
+      'hblock': [90, 53],
+      'nblock': [62, 140],
+    };
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        // Automatically inject missing default sizes to protect user's layout
+        return parsed.map(item => {
+          if (!item.size && defaultSizes[item.id]) {
+            return { ...item, size: defaultSizes[item.id] };
+          }
+          return item;
+        });
       } catch (e) {
         console.error("Failed to parse stored map items", e);
       }
