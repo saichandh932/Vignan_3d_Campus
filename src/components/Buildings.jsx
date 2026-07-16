@@ -1595,18 +1595,24 @@ export function Buildings({ zones = [] }) {
       {/* 🏟️ SECTOR C: NORTH-WEST / SPORTS ZONE LANDMARKS */}
       {cricketZone.render && (
         <group position={cricketZone.pos} rotation={[0, cricketZone.rotation, 0]}>
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
-            <ellipseGeometry args={[110, 40, 64]} />
-            <meshStandardMaterial color="#1e5c2f" roughness={0.9} />
-          </mesh>
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.025, 0]}>
-            <ringGeometry args={[107, 108, 64]} />
-            <meshBasicMaterial color="white" />
-          </mesh>
+          {/* Oval green field — circleGeometry scaled on Z to form an ellipse (110 x 40) */}
+          <group scale={[1, 1, 40 / 110]}>
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
+              <circleGeometry args={[110, 64]} />
+              <meshStandardMaterial color="#1e5c2f" roughness={0.9} />
+            </mesh>
+            {/* White boundary ring */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.025, 0]}>
+              <ringGeometry args={[107, 110, 64]} />
+              <meshBasicMaterial color="white" />
+            </mesh>
+          </group>
+          {/* Pitch strip (unscaled — centered on ground) */}
           <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0]}>
             <planeGeometry args={[6, 20]} />
             <meshStandardMaterial color="#c29c6a" roughness={0.8} />
           </mesh>
+          {/* Wickets at each end */}
           {[-8, 8].map((z) => (
             <group key={z} position={[0, 0, z]}>
               {[-0.2, 0, 0.2].map((x) => (
