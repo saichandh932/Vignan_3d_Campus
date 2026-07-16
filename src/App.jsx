@@ -202,13 +202,15 @@ const DEFAULT_MAP_ITEMS = [
   { id: 'pharmacy_volleyball', type: 'pharmacy_volleyball', label: 'PHARMACY VOLLEYBALL COURT', pos: [86.0, 0, -351.5], size: [30, 25], rotation: 0 },
   
   { id: 'cricketground', type: 'cricketground', label: 'CRICKET GROUND', pos: [-158.5, 0, -340.5], size: [150, 85], rotation: 0 },
+  { id: 'cricket_nets', type: 'cricket_nets', label: 'CRICKET NETS', pos: [-83.5, 0, -307.0], size: [55, 18], rotation: 0 },
   { id: 'open_gym', type: 'open_gym', label: 'OPEN GYM', pos: [-23.5, 0, -360.5], size: [30, 30], rotation: 0 },
   { id: 'kabaddi_courts', type: 'kabaddi_courts', label: 'KABADDI COURTS', pos: [-58.5, 0, -360.5], size: [30, 30], rotation: 0 },
   { id: 'khokho_courts', type: 'khokho_courts', label: 'KHO-KHO COURTS', pos: [-58.5, 0, -320.5], size: [30, 30], rotation: 0 },
   { id: 'lamp_pole_sports', type: 'lamp_pole_sports', label: 'SPORTS FLOODLIGHT', pos: [-41, 0, -360.5], size: [2, 2], rotation: 0 },
-  { id: 'basketballcourts', type: 'basketballcourts', label: 'BASKETBALL COURTS', pos: [-271.5, 0, -390.0], size: [35, 25], rotation: 0 },
-  { id: 'lara_ground', type: 'lara_ground', label: 'LARA GROUND', pos: [-271.5, 0, -350.0], size: [45, 50], rotation: 0 },
-  { id: 'pickleball_zone', type: 'pickleball_zone', label: 'PICKLEBALL ZONE', pos: [-271.5, 0, -310.0], size: [30, 25], rotation: 0 },
+  { id: 'basketballcourts', type: 'basketballcourts', label: 'BASKETBALL COURTS', pos: [-271.5, 0, -423.0], size: [35, 25], rotation: 0 },
+  { id: 'cricket_nets', type: 'cricket_nets', label: 'CRICKET NETS', pos: [-271.5, 0, -397.0], size: [55, 18], rotation: 0 },
+  { id: 'lara_ground', type: 'lara_ground', label: 'LARA GROUND', pos: [-271.5, 0, -352.0], size: [45, 50], rotation: 0 },
+  { id: 'pickleball_zone', type: 'pickleball_zone', label: 'PICKLEBALL ZONE', pos: [-271.5, 0, -305.0], size: [30, 25], rotation: 0 },
   { id: 'vignanpond', type: 'vignanpond', label: 'VIGNAN POND', pos: [-322.5, 0, -321.5], size: [45, 45], rotation: 0 },
   { id: 'priyadarshinihostel', type: 'building', label: 'PRIYADARSHINI HOSTEL', pos: [-322.5, 0, -379.0], size: [45, 60], floors: 4, color: '#8add61', rotation: 0 },
 
@@ -360,7 +362,8 @@ export default function App() {
       'lamp_pole_sports': [2, 2],
       'basketballcourts': [35, 25],
       'lara_ground': [45, 50],
-      'pickleball_zone': [30, 25]
+      'pickleball_zone': [30, 25],
+      'cricket_nets': [55, 18]
     };
     if (saved) {
       try {
@@ -371,15 +374,27 @@ export default function App() {
           if (item.id === 'convocationhall') {
             return { ...item, type: 'convocation', size: item.size || defaultSizes[item.id] };
           }
-          if (['volleyballcourts', 'pharmacy_badminton', 'pharmacy_volleyball', 'cricketground', 'basketballcourts', 'vignanpond', 'open_gym', 'kabaddi_courts', 'khokho_courts', 'lamp_pole_sports', 'lara_ground', 'pickleball_zone'].includes(item.id)) {
+          if (['volleyballcourts', 'pharmacy_badminton', 'pharmacy_volleyball', 'cricketground', 'cricket_nets', 'basketballcourts', 'vignanpond', 'open_gym', 'kabaddi_courts', 'khokho_courts', 'lamp_pole_sports', 'lara_ground', 'pickleball_zone'].includes(item.id)) {
             // Force-migrate cricketground to its new centered pos if it has its old default pos
             if (item.id === 'cricketground' && item.pos[0] === -121.0) {
               item.pos = [-158.5, 0, -340.5];
             }
             // Force-migrate basketballcourts to the new smaller size and position
-            if (item.id === 'basketballcourts' && (!item.size || item.size[1] === 125)) {
+            if (item.id === 'basketballcourts' && (!item.size || item.size[1] === 125 || item.pos[2] === -390.0)) {
               item.size = [35, 25];
-              item.pos = [-271.5, 0, -390.0];
+              item.pos = [-271.5, 0, -423.0];
+            }
+            // Force-migrate cricket_nets to its correct position between basketball and lara
+            if (item.id === 'cricket_nets' && (item.pos[0] !== -271.5 || item.pos[2] !== -397.0)) {
+              item.pos = [-271.5, 0, -397.0];
+            }
+            // Force-migrate lara_ground to updated position
+            if (item.id === 'lara_ground' && item.pos[2] !== -352.0) {
+              item.pos = [-271.5, 0, -352.0];
+            }
+            // Force-migrate pickleball_zone to updated position
+            if (item.id === 'pickleball_zone' && item.pos[2] !== -305.0) {
+              item.pos = [-271.5, 0, -305.0];
             }
             return { ...item, type: item.id, size: item.size || defaultSizes[item.id] };
           }
@@ -395,7 +410,7 @@ export default function App() {
           'ublock', 'convocationhall', 'guesthouse', 'volleyballcourts',
           'cricketground', 'basketballcourts', 'vignanpond', 'priyadarshinihostel',
           'open_gym', 'kabaddi_courts', 'khokho_courts', 'lamp_pole_sports',
-          'lara_ground', 'pickleball_zone'
+          'lara_ground', 'pickleball_zone', 'cricket_nets'
         ];
         
         essentialIds.forEach(id => {
@@ -550,7 +565,7 @@ export default function App() {
     } else if (type === 'tree_row') {
       newItem.label = 'TREE ROW';
       newItem.size = [40, 1];
-    } else if (type.startsWith('custom_') || ['canteen', 'sportsground', 'farm', 'shrine', 'smallzone', 'hostel_connector', 'ground', 'bus_stop', 'boundary_wall', 'volleyballcourts', 'pharmacy_badminton', 'pharmacy_volleyball', 'cricketground', 'basketballcourts', 'vignanpond', 'open_gym', 'kabaddi_courts', 'khokho_courts', 'lamp_pole_sports', 'lara_ground', 'pickleball_zone'].includes(type)) {
+    } else if (type.startsWith('custom_') || ['canteen', 'sportsground', 'farm', 'shrine', 'smallzone', 'hostel_connector', 'ground', 'bus_stop', 'boundary_wall', 'volleyballcourts', 'pharmacy_badminton', 'pharmacy_volleyball', 'cricketground', 'cricket_nets', 'basketballcourts', 'vignanpond', 'open_gym', 'kabaddi_courts', 'khokho_courts', 'lamp_pole_sports', 'lara_ground', 'pickleball_zone'].includes(type)) {
       const labelMap = {
         'custom_library': 'LIBRARY',
         'custom_ablock': 'A-BLOCK',
@@ -576,7 +591,8 @@ export default function App() {
         'khokho_courts': 'KHO-KHO COURTS',
         'lamp_pole_sports': 'SPORTS FLOODLIGHT',
         'lara_ground': 'LARA GROUND',
-        'pickleball_zone': 'PICKLEBALL ZONE'
+        'pickleball_zone': 'PICKLEBALL ZONE',
+        'cricket_nets': 'CRICKET NETS'
       };
       const sizeMap = {
         'sportsground': [70, 94],
@@ -590,7 +606,8 @@ export default function App() {
         'lamp_pole_sports': [2, 2],
         'basketballcourts': [35, 25],
         'lara_ground': [45, 50],
-        'pickleball_zone': [30, 25]
+        'pickleball_zone': [30, 25],
+        'cricket_nets': [55, 18]
       };
       newItem.type = type;
       newItem.id = type; // Keep predictable ID to bind properly in Buildings.jsx
@@ -746,7 +763,7 @@ export default function App() {
         {/* Render selection helpers for custom landmarks in editor mode */}
         {isDroneMode && mapItems.filter(item => 
           item.type.startsWith('custom_') || 
-          ['canteen', 'sportsground', 'farm', 'shrine', 'smallzone', 'hostel_connector', 'ground', 'bus_stop', 'boundary_wall', 'volleyballcourts', 'pharmacy_badminton', 'pharmacy_volleyball', 'cricketground', 'basketballcourts', 'vignanpond', 'convocationhall', 'open_gym', 'kabaddi_courts', 'khokho_courts', 'lamp_pole_sports', 'lara_ground', 'pickleball_zone'].includes(item.id) ||
+          ['canteen', 'sportsground', 'farm', 'shrine', 'smallzone', 'hostel_connector', 'ground', 'bus_stop', 'boundary_wall', 'volleyballcourts', 'pharmacy_badminton', 'pharmacy_volleyball', 'cricketground', 'cricket_nets', 'basketballcourts', 'vignanpond', 'convocationhall', 'open_gym', 'kabaddi_courts', 'khokho_courts', 'lamp_pole_sports', 'lara_ground', 'pickleball_zone'].includes(item.id) ||
           ['boyshostel', 'achostel', 'priyadarshinihostel'].includes(item.id)
         ).map(item => {
           const w = item.size ? item.size[0] : 20;

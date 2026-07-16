@@ -371,7 +371,10 @@ export function Buildings({ zones = [] }) {
   const kabaddiZone = getZone('kabaddi_courts', 'KABADDI COURTS', [-58.5, 0, -360.5], [30, 30], 0);
   const khokhoZone = getZone('khokho_courts', 'KHO-KHO COURTS', [-58.5, 0, -320.5], [30, 30], 0);
   const lampPoleZone = getZone('lamp_pole_sports', 'SPORTS FLOODLIGHT', [-41, 0, -360.5], [2, 2], 0);
-  const basketballZone = getZone('basketballcourts', 'BASKETBALL COURTS', [-271.5, 0, -359.5], [30, 125], 0);
+  const basketballZone = getZone('basketballcourts', 'BASKETBALL COURTS', [-271.5, 0, -423.0], [35, 25], 0);
+  const cricketNetsZone = getZone('cricket_nets', 'CRICKET NETS', [-271.5, 0, -397.0], [55, 18], 0);
+  const laraGroundZone = getZone('lara_ground', 'LARA GROUND', [-271.5, 0, -352.0], [45, 50], 0);
+  const pickleballZone = getZone('pickleball_zone', 'PICKLEBALL ZONE', [-271.5, 0, -305.0], [30, 25], 0);
   const pondZone = getZone('vignanpond', 'VIGNAN POND', [-322.5, 0, -321.5], [45, 45], 0);
   const girlsHostelZone = getZone('priyadarshinihostel', 'PRIYADARSHINI HOSTEL', [-322.5, 0, -379.0], [45, 60], 0);
 
@@ -1687,7 +1690,121 @@ export function Buildings({ zones = [] }) {
         );
       })()}
 
+      {/* 🏏 CRICKET BATTING NETS */}
+      {cricketNetsZone.render && (() => {
+        const [w, d] = cricketNetsZone.size || [55, 18];
+        // 4 lanes across width, each lane ~12 units deep, ~10 units wide
+        const numLanes = 4;
+        const laneW = 10;
+        const laneD = 12;
+        const poleH = 4.5;
+        const totalNetW = numLanes * laneW + (numLanes + 1) * 0.4; // lanes + divider posts
+        const scaleX = w / totalNetW;
+        const scaleZ = d / (laneD + 3);
+
+        return (
+          <group position={cricketNetsZone.pos} rotation={[0, cricketNetsZone.rotation, 0]}>
+            <group scale={[scaleX, 1, scaleZ]}>
+              {/* Outer concrete apron / pad */}
+              <mesh position={[0, 0.01, 0]} receiveShadow>
+                <boxGeometry args={[totalNetW + 2, 0.1, laneD + 4]} />
+                <meshStandardMaterial color="#8a8a7a" roughness={0.9} />
+              </mesh>
+
+              {/* Per-lane: turf + nets + poles + crease */}
+              {Array.from({ length: numLanes }, (_, i) => {
+                const laneX = -((numLanes - 1) * (laneW + 0.4)) / 2 + i * (laneW + 0.4);
+                return (
+                  <group key={`lane-${i}`} position={[laneX, 0, 0]}>
+                    {/* AstroTurf green surface */}
+                    <mesh position={[0, 0.06, 0]} receiveShadow>
+                      <boxGeometry args={[laneW - 0.1, 0.04, laneD]} />
+                      <meshStandardMaterial color="#1a6b2e" roughness={0.85} />
+                    </mesh>
+
+                    {/* Batting crease — white line near front */}
+                    <mesh position={[0, 0.09, laneD / 2 - 1.5]} rotation={[-Math.PI / 2, 0, 0]}>
+                      <planeGeometry args={[laneW - 0.5, 0.2]} />
+                      <meshBasicMaterial color="#ffffff" />
+                    </mesh>
+                    {/* Bowling crease — near back */}
+                    <mesh position={[0, 0.09, -(laneD / 2 - 1.5)]} rotation={[-Math.PI / 2, 0, 0]}>
+                      <planeGeometry args={[laneW - 0.5, 0.2]} />
+                      <meshBasicMaterial color="#ffffff" />
+                    </mesh>
+
+                    {/* Mini pitch strip */}
+                    <mesh position={[0, 0.085, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                      <planeGeometry args={[1.8, laneD - 3]} />
+                      <meshStandardMaterial color="#c29c6a" roughness={0.8} />
+                    </mesh>
+
+                    {/* Left side-net (wireframe white mesh wall) */}
+                    <mesh position={[-laneW / 2, poleH / 2, 0]}>
+                      <boxGeometry args={[0.05, poleH, laneD]} />
+                      <meshBasicMaterial color="#e0e0e0" wireframe />
+                    </mesh>
+                    {/* Right side-net */}
+                    <mesh position={[laneW / 2, poleH / 2, 0]}>
+                      <boxGeometry args={[0.05, poleH, laneD]} />
+                      <meshBasicMaterial color="#e0e0e0" wireframe />
+                    </mesh>
+                    {/* Back net (bowler's end) */}
+                    <mesh position={[0, poleH / 2, -laneD / 2]}>
+                      <boxGeometry args={[laneW, poleH, 0.05]} />
+                      <meshBasicMaterial color="#e0e0e0" wireframe />
+                    </mesh>
+                    {/* Top overhead net canopy */}
+                    <mesh position={[0, poleH, 0]}>
+                      <boxGeometry args={[laneW, 0.05, laneD]} />
+                      <meshBasicMaterial color="#d0d0d0" wireframe />
+                    </mesh>
+
+                    {/* Metal frame poles — corners + midpoints */}
+                    {[[-laneW / 2, -laneD / 2], [laneW / 2, -laneD / 2],
+                      [-laneW / 2, laneD / 2], [laneW / 2, laneD / 2],
+                      [-laneW / 2, 0], [laneW / 2, 0]].map(([px, pz], pi) => (
+                      <mesh key={`pole-${i}-${pi}`} position={[px, poleH / 2, pz]} castShadow>
+                        <cylinderGeometry args={[0.08, 0.08, poleH, 8]} />
+                        <meshStandardMaterial color="#b0b8c0" metalness={0.7} roughness={0.3} />
+                      </mesh>
+                    ))}
+                  </group>
+                );
+              })}
+
+              {/* Lane divider posts between lanes */}
+              {Array.from({ length: numLanes - 1 }, (_, i) => {
+                const divX = -((numLanes - 1) * (laneW + 0.4)) / 2 + (i + 0.5) * (laneW + 0.4) + laneW / 2 + 0.2;
+                return (
+                  <group key={`div-${i}`}>
+                    {[-laneD / 2, 0, laneD / 2].map((pz, pi) => (
+                      <mesh key={pi} position={[divX, poleH / 2, pz]} castShadow>
+                        <cylinderGeometry args={[0.07, 0.07, poleH, 8]} />
+                        <meshStandardMaterial color="#999aaa" metalness={0.6} roughness={0.3} />
+                      </mesh>
+                    ))}
+                  </group>
+                );
+              })}
+
+              {/* Front open face — small step/curb lip */}
+              <mesh position={[0, 0.15, (laneD + 4) / 2 - 0.1]}>
+                <boxGeometry args={[totalNetW + 2, 0.25, 0.2]} />
+                <meshStandardMaterial color="#6a6a5a" />
+              </mesh>
+            </group>
+
+            {/* Label */}
+            <Text position={[0, 7, 0]} fontSize={2.5} color="#ffdd55" outlineColor="#333" outlineWidth={0.12} fontWeight="bold">
+              {cricketNetsZone.label}
+            </Text>
+          </group>
+        );
+      })()}
+
       {openGymZone.render && (() => {
+
         const [w, d] = openGymZone.size || [30, 30];
         return (
           <group position={openGymZone.pos} rotation={[0, openGymZone.rotation, 0]}>
