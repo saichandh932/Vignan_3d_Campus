@@ -170,6 +170,29 @@ export default function App() {
   // Set this to true to view the campus from top-down for layout planning
   const isLayoutMode = true;
 
+  // Interactive Layout Editor State
+  const [draftZones, setDraftZones] = useState([]);
+  const [selectedZoneId, setSelectedZoneId] = useState(null);
+
+  const addDraftZone = () => {
+    const newId = `draft_${Date.now()}`;
+    const newZone = {
+      id: newId,
+      label: `NEW ZONE ${draftZones.length + 1}`,
+      size: [30, 30],
+      pos: [0, 0, 0],
+      color: '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')
+    };
+    setDraftZones([...draftZones, newZone]);
+    setSelectedZoneId(newId);
+  };
+
+  const updateSelectedZone = (fields) => {
+    setDraftZones(prev => prev.map(z => z.id === selectedZoneId ? { ...z, ...fields } : z));
+  };
+
+  const selectedZone = draftZones.find(z => z.id === selectedZoneId);
+
   return (
     <>
       <Canvas 
@@ -220,15 +243,153 @@ export default function App() {
         <Zones />
         
         {/* Ground */}
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]} receiveShadow>
+        <mesh 
+          rotation={[-Math.PI / 2, 0, 0]} 
+          position={[0, -0.1, 0]} 
+          receiveShadow
+          onPointerDown={(e) => {
+            if (isLayoutMode && selectedZoneId) {
+              e.stopPropagation();
+              const x = Math.round(e.point.x * 2) / 2;
+              const z = Math.round(e.point.z * 2) / 2;
+              updateSelectedZone({ pos: [x, 0, z] });
+            }
+          }}
+        >
           <planeGeometry args={[2000, 2000]} />
           <meshStandardMaterial color="#2E8B57" roughness={0.9} /> {/* Grass */}
         </mesh>
+
+        {/* Draft Zones rendering for layout editor */}
+        {isLayoutMode && draftZones.map((z) => (
+          <group key={z.id} position={z.pos}>
+            <mesh position={[0, 0.5, 0]}>
+              <boxGeometry args={[z.size[0], 1, z.size[1]]} />
+              <meshStandardMaterial 
+                color={z.color} 
+                transparent 
+                opacity={selectedZoneId === z.id ? 0.7 : 0.4} 
+                wireframe={selectedZoneId === z.id}
+              />
+            </mesh>
+            {/* Outline box for selected zone */}
+            {selectedZoneId === z.id && (
+              <mesh position={[0, 0.5, 0]}>
+                <boxGeometry args={[z.size[0] + 0.5, 1.1, z.size[1] + 0.5]} />
+                <meshBasicMaterial color="#ffffff" wireframe />
+              </mesh>
+            )}
+            <Text
+              position={[0, 8, 0]}
+              fontSize={4}
+              color="white"
+              outlineWidth={0.2}
+              outlineColor="black"
+            >
+              {z.label}
+            </Text>
+          </group>
+        ))}
       </Canvas>
 
       <Joystick joystickRef={joystick} />
 
       <div className="ui-container">
+        {/* Floating Layout Editor Panel (HTML Overlay) */}
+        {isLayoutMode && (
+          <div className="layout-editor-panel">
+            <h3>📐 Campus Layout Editor</h3>
+            <p className="help-text">Click on the ground to move the selected zone</p>
+            
+            <button className="add-btn" onClick={addDraftZone}>+ Add Draft Zone</button>
+            
+            {selectedZone && (
+              <div className="zone-details">
+                <h4>Editing: <span style={{color: selectedZone.color}}>{selectedZone.label}</span></h4>
+                <div className="input-row">
+                  <label>Label:</label>
+                  <input 
+                    type="text" 
+                    value={selectedZone.label} 
+                    onChange={(e) => updateSelectedZone({ label: e.target.value.toUpperCase() })} 
+                  />
+                </div>
+                <div className="slider-group">
+                  <div className="control-row">
+                    <label>Width: {selectedZone.size[0]}m</label>
+                    <input 
+                      type="range" min="5" max="300" step="5"
+                      value={selectedZone.size[0]} 
+                      onChange={(e) => updateSelectedZone({ size: [parseInt(e.target.value), selectedZone.size[1]] })} 
+                    />
+                  </div>
+                  <div className="control-row">
+                    <label>Depth: {selectedZone.size[1]}m</label>
+                    <input 
+                      type="range" min="5" max="300" step="5"
+                      value={selectedZone.size[1]} 
+                      onChange={(e) => updateSelectedZone({ size: [selectedZone.size[0], parseInt(e.target.value)] })} 
+                    />
+                  </div>
+                  <div className="control-row">
+                    <label>Position X: {selectedZone.pos[0]}</label>
+                    <input 
+                      type="number" step="1"
+                      value={selectedZone.pos[0]} 
+                      onChange={(e) => updateSelectedZone({ pos: [parseFloat(e.target.value) || 0, 0, selectedZone.pos[2]] })} 
+                    />
+                  </div>
+                  <div className="control-row">
+                    <label>Position Z: {selectedZone.pos[2]}</label>
+                    <input 
+                      type="number" step="1"
+                      value={selectedZone.pos[2]} 
+                      onChange={(e) => updateSelectedZone({ pos: [selectedZone.pos[0], 0, parseFloat(e.target.value) || 0] })} 
+                    />
+                  </div>
+                </div>
+                <button className="delete-btn" onClick={() => {
+                  setDraftZones(prev => prev.filter(z => z.id !== selectedZoneId));
+                  setSelectedZoneId(null);
+                }}>Delete Zone</button>
+              </div>
+            )}
+
+            <div className="zones-list">
+              <h4>Drafts List:</h4>
+              {draftZones.length === 0 ? (
+                <p className="empty-text">No draft zones added yet.</p>
+              ) : (
+                <ul>
+                  {draftZones.map(z => (
+                    <li 
+                      key={z.id} 
+                      className={selectedZoneId === z.id ? 'active' : ''}
+                      onClick={() => setSelectedZoneId(z.id)}
+                    >
+                      <span className="color-dot" style={{backgroundColor: z.color}}></span>
+                      <span className="zone-label-text">{z.label}</span>
+                      <span className="zone-coords">[{z.pos[0]}, {z.pos[2]}]</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            {draftZones.length > 0 && (
+              <div className="output-box">
+                <h4>Copy Configuration:</h4>
+                <textarea 
+                  readOnly 
+                  onClick={(e) => e.target.select()}
+                  value={draftZones.map(z => `{ id: '${z.id}', label: '${z.label}', size: [${z.size[0]}, ${z.size[1]}], color: '${z.color}', pos: [${z.pos[0]}, 0, ${z.pos[2]}] }`).join(',\n')}
+                />
+                <span className="copy-tip">Click to select all, then Ctrl+C</span>
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="instructions">
           <h3>Vignan University - 3D Walkthrough Tour</h3>
           <p>⌨️ **WASD / Arrow Keys** to move / walk around</p>
