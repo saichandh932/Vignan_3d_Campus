@@ -914,6 +914,30 @@ export function Buildings() {
           <meshStandardMaterial color="#fcfcfc" roughness={0.9} />
         </mesh>
 
+        {/* Orange End Cladding for West Wing (facing East/courtyard opening) */}
+        <mesh position={[-60, 12, 27.1]} castShadow>
+          <boxGeometry args={[16, 24, 0.2]} />
+          <meshStandardMaterial color="#C26D38" roughness={0.5} />
+        </mesh>
+
+        {/* Orange End Cladding for East Wing (facing East/courtyard opening) */}
+        <mesh position={[60, 12, 27.1]} castShadow>
+          <boxGeometry args={[16, 24, 0.2]} />
+          <meshStandardMaterial color="#C26D38" roughness={0.5} />
+        </mesh>
+
+        {/* Orange Corner Cladding (West Wing / Connector junction) */}
+        <mesh position={[-51, 12, -15]} castShadow>
+          <boxGeometry args={[2, 24, 2]} />
+          <meshStandardMaterial color="#C26D38" roughness={0.5} />
+        </mesh>
+
+        {/* Orange Corner Cladding (East Wing / Connector junction) */}
+        <mesh position={[51, 12, -15]} castShadow>
+          <boxGeometry args={[2, 24, 2]} />
+          <meshStandardMaterial color="#C26D38" roughness={0.5} />
+        </mesh>
+
         {/* 🏢 NORTH WING (Connector - West side in rotated frame) */}
         <mesh position={[0, 12, -23]} castShadow receiveShadow>
           <boxGeometry args={[104, 24, 16]} />
@@ -976,27 +1000,35 @@ export function Buildings() {
           );
         })}
 
+        {/* Vertical support columns for the ramps */}
+        {[-20, 0, 20].map((z) => (
+          <mesh key={`ramp-support-${z}`} position={[-73, 12, z]} castShadow>
+            <cylinderGeometry args={[0.2, 0.2, 24]} />
+            <meshStandardMaterial color="#ffffff" roughness={0.8} />
+          </mesh>
+        ))}
+
         {/* 🧱 TERRACOTTA VERTICAL PILLARS (Spacing out the windows) */}
         {[-25, -15, -5, 5, 15, 25].map((z) => (
           <group key={`pillars-${z}`}>
             {/* West Wing Inner Pillar */}
-            <mesh position={[-52.1, 12, z]} castShadow>
-              <boxGeometry args={[0.4, 24, 1.2]} />
+            <mesh position={[-51.8, 12, z]} castShadow>
+              <boxGeometry args={[0.5, 24, 1.4]} />
               <meshStandardMaterial color="#C26D38" roughness={0.5} />
             </mesh>
             {/* West Wing Outer Pillar */}
-            <mesh position={[-67.9, 12, z]} castShadow>
-              <boxGeometry args={[0.4, 24, 1.2]} />
+            <mesh position={[-68.2, 12, z]} castShadow>
+              <boxGeometry args={[0.5, 24, 1.4]} />
               <meshStandardMaterial color="#C26D38" roughness={0.5} />
             </mesh>
             {/* East Wing Inner Pillar */}
-            <mesh position={[52.1, 12, z]} castShadow>
-              <boxGeometry args={[0.4, 24, 1.2]} />
+            <mesh position={[51.8, 12, z]} castShadow>
+              <boxGeometry args={[0.5, 24, 1.4]} />
               <meshStandardMaterial color="#C26D38" roughness={0.5} />
             </mesh>
             {/* East Wing Outer Pillar */}
-            <mesh position={[67.9, 12, z]} castShadow>
-              <boxGeometry args={[0.4, 24, 1.2]} />
+            <mesh position={[68.2, 12, z]} castShadow>
+              <boxGeometry args={[0.5, 24, 1.4]} />
               <meshStandardMaterial color="#C26D38" roughness={0.5} />
             </mesh>
           </group>
