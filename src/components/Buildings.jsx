@@ -32,8 +32,8 @@ function HoardingBillboard() {
 function VignanBusStop({ position, rotation }) {
   return (
     <group position={position} rotation={rotation}>
-      {/* Shift right (15) to other side of the highway (campus side), slide down Z (100) to align with Main Gate, face -X towards road */}
-      <group position={[15, 0, 100]} rotation={[0, -Math.PI / 2, 0]}>
+      {/* Shift left (-35) across the highway, slide up Z (-100) to other side of entrance road, face +X towards road */}
+      <group position={[-35, 0, -100]} rotation={[0, Math.PI / 2, 0]}>
         {/* Concrete Base */}
       <mesh position={[0, 0.25, 0]} castShadow>
         <boxGeometry args={[40, 0.5, 6]} />
