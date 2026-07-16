@@ -166,10 +166,21 @@ function PlayerController({ joystick }) {
 
 export default function App() {
   const joystick = useRef({ x: 0, y: 0 });
+  
+  // Set this to true to view the campus from top-down for layout planning
+  const isLayoutMode = true;
 
   return (
     <>
-      <Canvas shadows camera={{ fov: 60, near: 0.1, far: 1000, position: [0, 15, 75] }}>
+      <Canvas 
+        shadows 
+        camera={{ 
+          fov: 60, 
+          near: 0.1, 
+          far: 1000, 
+          position: isLayoutMode ? [0, 400, 0] : [0, 15, 75] 
+        }}
+      >
         {/* Sky, lighting and fog */}
         <ambientLight intensity={0.7} />
         <directionalLight 
@@ -183,15 +194,25 @@ export default function App() {
         <fog attach="fog" args={['#87CEEB', 150, 600]} />
 
         {/* Custom Third-Person Controller + Orbit Controls */}
-        <PlayerController joystick={joystick} />
-        <OrbitControls 
-          makeDefault 
-          enablePan={false}
-          minPolarAngle={0} 
-          maxPolarAngle={Math.PI / 2 - 0.05} // Prevent camera from going under ground
-          minDistance={2}
-          maxDistance={15} // Restrict zoom out to keep third person view tight
-        />
+        {!isLayoutMode && <PlayerController joystick={joystick} />}
+        
+        {isLayoutMode ? (
+          <OrbitControls 
+            makeDefault 
+            enablePan={true}
+            maxDistance={500}
+            target={[0, 0, 0]}
+          />
+        ) : (
+          <OrbitControls 
+            makeDefault 
+            enablePan={false}
+            minPolarAngle={0} 
+            maxPolarAngle={Math.PI / 2 - 0.05} // Prevent camera from going under ground
+            minDistance={2}
+            maxDistance={15} // Restrict zoom out to keep third person view tight
+          />
+        )}
 
         {/* Scene Objects (Physics removed to avoid WASM/Rapier load failure crashes) */}
         <Buildings />

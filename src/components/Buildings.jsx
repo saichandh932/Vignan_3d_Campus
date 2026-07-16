@@ -1008,6 +1008,16 @@ export function Buildings() {
         </group>
       </group>
 
+      {/* 🏢 U-BLOCK */}
+      <MultiStoryBuilding
+        position={[-53.5, 0, -210.0]}
+        size={[85, 26]}
+        floors={5}
+        baseColor="#fcfcfc"
+        accentColor="#4682B4"
+        label="U - BLOCK"
+      />
+
       {/* 🏨 HOSTELS */}
       {/* Boys Hostel: 3 floors (height = 12), orange accent at [40.0, 0, -165.0] */}
       <MultiStoryBuilding

@@ -12,6 +12,7 @@ const ZONES = [
   { id: 'sportsground', label: 'HOCKEY & FOOTBALL GROUND', size: [70, 94], color: '#3CB371', pos: [135.0, 0, -93.0] },
   { id: 'mhp', label: 'MHP (Ground Floor)', size: [20, 20], color: '#DC143C', pos: [-20.0, 0, -165.0] },
   { id: 'nblock', label: 'N-BLOCK', size: [93, 50], color: '#800000', pos: [-53.5, 0, -161.0] },
+  { id: 'ublock', label: 'U-BLOCK', size: [93, 40], color: '#4682B4', pos: [-53.5, 0, -210.0] },
   { id: 'boyshostel', label: 'BOYS HOSTEL', size: [60, 50], color: '#FF8C00', pos: [40.0, 0, -165.0] },
   { id: 'achostel', label: 'AC HOSTEL', size: [30, 50], color: '#FF8C00', pos: [95.0, 0, -165.0] },
   { id: 'hostel_connector', label: '', size: [10, 20], color: '#FF8C00', pos: [75.0, 0, -180.0] },
