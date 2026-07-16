@@ -32,8 +32,8 @@ function HoardingBillboard() {
 function VignanBusStop({ position, rotation }) {
   return (
     <group position={position} rotation={rotation}>
-      {/* Shift right (15) to campus side of the highway, align Z (67.5) straight to the Main Gate entrance road (global X = 0), face -X towards road */}
-      <group position={[15, 0, 67.5]} rotation={[0, -Math.PI / 2, 0]}>
+      {/* Centered directly on the zone, no offset, face +X towards road */}
+      <group position={[0, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
         {/* Concrete Base */}
       <mesh position={[0, 0.25, 0]} castShadow>
         <boxGeometry args={[40, 0.5, 6]} />
@@ -340,7 +340,7 @@ export function Buildings({ zones = [] }) {
   const gateMain = getZone('gate_main', "VIGNAN'S FOUNDATION", [0, 0, 0], null, 0);
   const gateLibrary = getZone('gate_library', "LIBRARY ENTRANCE GATE", [-110, 0, -60], null, Math.PI / 2);
   const boundaryWall = getZone('boundary_wall', "WALL", [10, 0, 15], null, -Math.PI / 2);
-  const busStopZone = getZone('bus_stop', 'BUS STOP', [-55, 0.01, 5], null, Math.atan2(110, 130));
+  const busStopZone = getZone('bus_stop', 'BUS STOP', [-81.8, 0.01, 124.1], null, Math.atan2(110, 130));
 
   const libZone = getZone('library', 'LIBRARY', [-25.0, 0, -40.0], null, Math.PI / 6);
   const ablockZone = getZone('ablock', 'A-BLOCK', [52, 0, -12.0], null, Math.PI);

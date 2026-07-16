@@ -174,7 +174,7 @@ const DEFAULT_MAP_ITEMS = [
   { id: 'gate_main', type: 'gate', label: "VIGNAN'S FOUNDATION", pos: [0, 0, 0], rotation: 0 },
   { id: 'gate_library', type: 'gate', label: "LIBRARY ENTRANCE GATE", pos: [-110, 0, -60], rotation: Math.PI / 2 },
   { id: 'boundary_wall', type: 'boundary_wall', label: "WALL", pos: [10, 0, 15], rotation: -Math.PI / 2 },
-  { id: 'bus_stop', type: 'bus_stop', label: 'BUS STOP', pos: [-55, 0.01, 5], rotation: Math.atan2(110, 130) },
+  { id: 'bus_stop', type: 'bus_stop', label: 'BUS STOP', pos: [-81.8, 0.01, 124.1], rotation: Math.atan2(110, 130) },
 
   // 🏛️ Landmark Buildings
   { id: 'library', type: 'custom_library', label: 'LIBRARY', pos: [-25.0, 0, -40.0], rotation: Math.PI / 6 },
