@@ -20,6 +20,11 @@ const ZONES = [
   { id: 'achostel', label: 'AC HOSTEL', size: [30, 50], color: '#FF8C00', pos: [95.0, 0, -165.0] },
   { id: 'hostel_connector', label: '', size: [10, 20], color: '#FF8C00', pos: [75.0, 0, -180.0] },
   { id: 'ground', label: 'GROUND', size: [60, 25], color: '#FFFF00', pos: [40.0, 0, -125.0] },
+  
+  { id: 'textile', label: 'TEXTILE TECHNOLOGY', size: [15, 70], color: '#927b5d', pos: [49.0, 0, -334.5] },
+  { id: 'pharmacy', label: 'PHARMACY BLOCK', size: [30, 70], color: '#847e42', pos: [122.0, 0, -333.5] },
+  { id: 'pharmacy_badminton', label: 'PHARMACY BADMINTON COURT', size: [30, 30], color: '#5ae354', pos: [86.0, 0, -317.5] },
+  { id: 'pharmacy_volleyball', label: 'PHARMACY VOLLEYBALL COURT', size: [30, 25], color: '#75e391', pos: [86.0, 0, -351.5] },
 ];
 
 function BoundaryWall({ position, size, rotation = [0, 0, 0] }) {

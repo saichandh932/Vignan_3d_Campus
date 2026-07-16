@@ -1115,6 +1115,85 @@ export function Buildings() {
         </mesh>
       </group>
 
+      {/* 🏢 TEXTILE TECHNOLOGY BLOCK */}
+      <MultiStoryBuilding
+        position={[49.0, 0, -334.5]}
+        size={[11, 66]}
+        floors={3}
+        baseColor="#fcfcfc"
+        accentColor="#927b5d"
+        label="TEXTILE TECHNOLOGY"
+      />
+
+      {/* 🏢 PHARMACY BLOCK */}
+      <MultiStoryBuilding
+        position={[122.0, 0, -333.5]}
+        size={[26, 66]}
+        floors={4}
+        baseColor="#fcfcfc"
+        accentColor="#847e42"
+        label="PHARMACY BLOCK"
+      />
+
+      {/* 🏸 PHARMACY BADMINTON COURTS */}
+      <group position={[86.0, 0, -317.5]}>
+        {/* Boundary fence */}
+        <mesh position={[0, 1.5, 0]} castShadow>
+          <boxGeometry args={[30, 3, 30]} />
+          <meshStandardMaterial color="#5ae354" transparent opacity={0.1} wireframe />
+        </mesh>
+        
+        {/* Court 1 (Left) */}
+        <group position={[-6, 0.05, 0]}>
+          <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+            <planeGeometry args={[7, 14]} />
+            <meshStandardMaterial color="#0f766e" roughness={0.8} /> {/* Green court */}
+          </mesh>
+          {/* Net posts */}
+          <mesh position={[-3.6, 1, 0]} castShadow><cylinderGeometry args={[0.05, 0.05, 2]}/><meshStandardMaterial color="#555"/></mesh>
+          <mesh position={[3.6, 1, 0]} castShadow><cylinderGeometry args={[0.05, 0.05, 2]}/><meshStandardMaterial color="#555"/></mesh>
+          <mesh position={[0, 1.5, 0]}><boxGeometry args={[7.2, 0.7, 0.02]}/><meshStandardMaterial color="#eee" transparent opacity={0.6} wireframe /></mesh>
+        </group>
+
+        {/* Court 2 (Right) */}
+        <group position={[6, 0.05, 0]}>
+          <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+            <planeGeometry args={[7, 14]} />
+            <meshStandardMaterial color="#0f766e" roughness={0.8} />
+          </mesh>
+          {/* Net posts */}
+          <mesh position={[-3.6, 1, 0]} castShadow><cylinderGeometry args={[0.05, 0.05, 2]}/><meshStandardMaterial color="#555"/></mesh>
+          <mesh position={[3.6, 1, 0]} castShadow><cylinderGeometry args={[0.05, 0.05, 2]}/><meshStandardMaterial color="#555"/></mesh>
+          <mesh position={[0, 1.5, 0]}><boxGeometry args={[7.2, 0.7, 0.02]}/><meshStandardMaterial color="#eee" transparent opacity={0.6} wireframe /></mesh>
+        </group>
+        <Text position={[0, 4.5, 0]} fontSize={2.0} color="white" outlineWidth={0.08} outlineColor="black">
+          BADMINTON COURTS
+        </Text>
+      </group>
+
+      {/* 🏐 PHARMACY VOLLEYBALL COURT */}
+      <group position={[86.0, 0, -351.5]}>
+        {/* Fence */}
+        <mesh position={[0, 1.5, 0]} castShadow>
+          <boxGeometry args={[30, 3, 25]} />
+          <meshStandardMaterial color="#75e391" transparent opacity={0.1} wireframe />
+        </mesh>
+        
+        {/* Sand Court */}
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, 0]} receiveShadow>
+          <planeGeometry args={[18, 9]} />
+          <meshStandardMaterial color="#DFBA9D" roughness={1.0} />
+        </mesh>
+        {/* Net posts */}
+        <mesh position={[0, 1.5, -4.6]} castShadow><cylinderGeometry args={[0.08, 0.08, 3]}/><meshStandardMaterial color="#555"/></mesh>
+        <mesh position={[0, 1.5, 4.6]} castShadow><cylinderGeometry args={[0.08, 0.08, 3]}/><meshStandardMaterial color="#555"/></mesh>
+        <mesh position={[0, 2, 0]}><boxGeometry args={[0.02, 1, 9.2]}/><meshStandardMaterial color="#ccc" transparent opacity={0.4} wireframe /></mesh>
+        
+        <Text position={[0, 4.5, 0]} fontSize={2.0} color="white" outlineWidth={0.08} outlineColor="black">
+          PHARMACY VOLLEYBALL
+        </Text>
+      </group>
+
       {/* 🍽️ CANTEEN SHED */}
       <group position={[90.5, 0, -122.0]}>
         <mesh position={[0, 0.05, 0]} receiveShadow>
