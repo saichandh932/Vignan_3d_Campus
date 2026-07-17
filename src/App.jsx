@@ -233,7 +233,7 @@ const DEFAULT_MAP_ITEMS = [
   { id: 'pharmacy_volleyball', type: 'pharmacy_volleyball', label: "PHARMACY VOLLEYBALL COURT", pos: [86, 0, -351.5], size: [30, 25], rotation: 0 },
   { id: 'volleyballcourts', type: 'volleyballcourts', label: "VOLLEY BALL COURTS", pos: [-231.3, 0, -214.9], size: [64, 50], rotation: 1.5707963267948966 },
   { id: 'cricketground', type: 'cricketground', label: "CRICKET GROUND", pos: [-127, 0, -336.5], size: [150, 85], rotation: 0 },
-  { id: 'basketballcourts', type: 'basketballcourts', label: "BASKETBALL COURTS", pos: [-255.5, 0, -297.5], size: [30, 29], rotation: 4.71238898038469 },
+  { id: 'basketballcourts', type: 'basketballcourts', label: "BASKALBALL COURTS", pos: [-255.5, 0, -297.5], size: [30, 29], rotation: 4.71238898038469 },
   { id: 'vignanpond', type: 'vignanpond', label: "VIGNAN POND", pos: [-332.5, 0, -321.5], size: [45, 45], rotation: 0 },
   { id: 'open_gym', type: 'open_gym', label: "OPEN GYM", pos: [-9.5, 0, -306.5], size: [60, 30], rotation: 0 },
   { id: 'kabaddi_courts', type: 'kabaddi_courts', label: "KABADDI COURTS", pos: [-10.5, 0, -334.5], size: [60, 23], rotation: 3.141592653589793 },
@@ -242,9 +242,9 @@ const DEFAULT_MAP_ITEMS = [
   { id: 'item_1784224906629', type: 'road_highway', pos: [-89.7, 0, -74.2], rotation: 0, label: "HIGHWAY ROAD", size: [20, 200] },
   { id: 'item_1784224983665', type: 'road_highway', pos: [-240, 0, -220], rotation: 0, label: "HIGHWAY ROAD", size: [10, 77] },
   { id: 'item_1784225058908', type: 'road_highway', pos: [-235.5, 0, -184.8], rotation: 0, label: "HIGHWAY ROAD", size: [18, 8] },
-  { id: 'lara_ground', type: 'lara_ground', label: "LARA GROUND", pos: [-271.5, 0, -352], size: [42, 93], rotation: 0 },
-  { id: 'pickleball_zone', type: 'pickleball_zone', label: "PICKLEBALL ZONE", pos: [-271.5, 0, -305], size: [35, 16], rotation: 1.5707963267948966 },
-  { id: 'cricket_nets', type: 'cricket_nets', label: "CRICKET NETS", pos: [-271.5, 0, -397], size: [13, 18], rotation: 1.5707963267948966 },
+  { id: 'lara_ground', type: 'lara_ground', label: "LARA GROUND", pos: [-263.5, 0, -378], size: [42, 93], rotation: 0 },
+  { id: 'pickleball_zone', type: 'pickleball_zone', label: "PICKLEBALL ZONE", pos: [-277.5, 0, -297], size: [35, 16], rotation: 1.5707963267948966 },
+  { id: 'cricket_nets', type: 'cricket_nets', label: "CRICKET NETS", pos: [-275.5, 0, -321], size: [13, 18], rotation: 1.5707963267948966 },
   { id: 'item_1784227348304', type: 'road_highway', pos: [-400, 0, -360], rotation: 0.6283185307179586, label: "HIGHWAY ROAD", size: [20, 200] }
 ];
 
@@ -350,33 +350,12 @@ export default function App() {
       try {
         let parsed = JSON.parse(saved);
         
-        // 1. Automatically inject missing default sizes and fix convocation/landmark types to protect user's layout
+        // 1. Automatically inject missing default sizes and fix convocation/landmark types
         parsed = parsed.map(item => {
           if (item.id === 'convocationhall') {
             return { ...item, type: 'convocation', size: item.size || defaultSizes[item.id] };
           }
           if (['volleyballcourts', 'pharmacy_badminton', 'pharmacy_volleyball', 'cricketground', 'cricket_nets', 'basketballcourts', 'vignanpond', 'open_gym', 'kabaddi_courts', 'khokho_courts', 'lamp_pole_sports', 'lara_ground', 'pickleball_zone'].includes(item.id)) {
-            // Force-migrate cricketground to its new centered pos if it has its old default pos
-            if (item.id === 'cricketground' && item.pos[0] === -121.0) {
-              item.pos = [-158.5, 0, -340.5];
-            }
-            // Force-migrate basketballcourts to the new smaller size and position
-            if (item.id === 'basketballcourts' && (!item.size || item.size[1] === 125 || item.pos[2] === -390.0)) {
-              item.size = [35, 25];
-              item.pos = [-271.5, 0, -423.0];
-            }
-            // Force-migrate cricket_nets to its correct position between basketball and lara
-            if (item.id === 'cricket_nets' && (item.pos[0] !== -271.5 || item.pos[2] !== -397.0)) {
-              item.pos = [-271.5, 0, -397.0];
-            }
-            // Force-migrate lara_ground to updated position
-            if (item.id === 'lara_ground' && item.pos[2] !== -352.0) {
-              item.pos = [-271.5, 0, -352.0];
-            }
-            // Force-migrate pickleball_zone to updated position
-            if (item.id === 'pickleball_zone' && item.pos[2] !== -305.0) {
-              item.pos = [-271.5, 0, -305.0];
-            }
             return { ...item, type: item.id, size: item.size || defaultSizes[item.id] };
           }
           if (!item.size && defaultSizes[item.id]) {

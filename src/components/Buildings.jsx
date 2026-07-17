@@ -372,9 +372,9 @@ export function Buildings({ zones = [] }) {
   const khokhoZone = getZone('khokho_courts', 'KHO-KHO COURTS', [-9.8, 0, -361.9], [60, 30], 0);
   const lampPoleZone = getZone('lamp_pole_sports', 'SPORTS FLOODLIGHT', [-11, 0, -322.5], [2, 2], 0);
   const basketballZone = getZone('basketballcourts', 'BASKETBALL COURTS', [-255.5, 0, -297.5], [30, 29], 4.71238898038469);
-  const cricketNetsZone = getZone('cricket_nets', 'CRICKET NETS', [-271.5, 0, -397.0], [13, 18], 1.5707963267948966);
-  const laraGroundZone = getZone('lara_ground', 'LARA GROUND', [-271.5, 0, -352.0], [42, 93], 0);
-  const pickleballZone = getZone('pickleball_zone', 'PICKLEBALL ZONE', [-271.5, 0, -305.0], [35, 16], 1.5707963267948966);
+  const cricketNetsZone = getZone('cricket_nets', 'CRICKET NETS', [-275.5, 0, -321], [13, 18], 1.5707963267948966);
+  const laraGroundZone = getZone('lara_ground', 'LARA GROUND', [-263.5, 0, -378], [42, 93], 0);
+  const pickleballZone = getZone('pickleball_zone', 'PICKLEBALL ZONE', [-277.5, 0, -297], [35, 16], 1.5707963267948966);
   const pondZone = getZone('vignanpond', 'VIGNAN POND', [-332.5, 0, -321.5], [45, 45], 0);
   const girlsHostelZone = getZone('priyadarshinihostel', 'PRIYADARSHINI HOSTEL', [-332.5, 0, -399], [45, 102], 0);
 
