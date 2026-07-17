@@ -648,6 +648,18 @@ export default function App() {
     }
   };
 
+  const copyLayoutCoordinates = () => {
+    const formatted = JSON.stringify(mapItems, null, 2);
+    navigator.clipboard.writeText(formatted)
+      .then(() => {
+        alert("Campus coordinates copied to your clipboard! You can paste them directly into the AI chat.");
+      })
+      .catch(err => {
+        console.error("Failed to copy: ", err);
+        window.prompt("Failed to copy to clipboard automatically. Please copy the coordinates manually from below:", formatted);
+      });
+  };
+
   const rotationDeg = selectedItem ? Math.round(((selectedItem.rotation || 0) * 180) / Math.PI) : 0;
 
   return (
@@ -1130,8 +1142,9 @@ export default function App() {
             
             {/* Quick Actions (Keep reset/clear maps globally accessible at top of body) */}
             {editorTab !== 'edit' && (
-              <div className="editor-actions" style={{ marginBottom: '12px', gap: '8px' }}>
+              <div className="editor-actions" style={{ marginBottom: '12px', gap: '8px', display: 'flex' }}>
                 <button className="btn-secondary" style={{ flexGrow: 1, padding: '6px 10px', fontSize: '0.75rem' }} onClick={resetLayout}>Reset All</button>
+                <button className="btn-secondary" style={{ flexGrow: 1, padding: '6px 10px', fontSize: '0.75rem', background: '#3b82f6', color: 'white', borderColor: '#2563eb' }} onClick={copyLayoutCoordinates}>Copy Layout</button>
                 <button className="btn-danger" style={{ flexGrow: 1, padding: '6px 10px', fontSize: '0.75rem' }} onClick={clearMap}>Clear Map</button>
               </div>
             )}
