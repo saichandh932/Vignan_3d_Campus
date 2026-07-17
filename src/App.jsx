@@ -169,6 +169,10 @@ function PlayerController({ joystick }) {
   );
 }
 
+// IMPORTANT: Increment this version string whenever DEFAULT_MAP_ITEMS is updated.
+// This forces all users' browsers to discard their old localStorage and reload fresh defaults.
+const LAYOUT_VERSION = "v14";
+
 const DEFAULT_MAP_ITEMS = [
   { id: 'gate_main', type: 'gate', label: "VIGNAN'S FOUNDATION", pos: [0, 0, 0], rotation: 0, size: [18, 5] },
   { id: 'gate_library', type: 'gate', label: "LIBRARY ENTRANCE GATE", pos: [-110, 0, -60], rotation: 1.5707963267948966, size: [18, 5] },
@@ -233,7 +237,7 @@ const DEFAULT_MAP_ITEMS = [
   { id: 'pharmacy_volleyball', type: 'pharmacy_volleyball', label: "PHARMACY VOLLEYBALL COURT", pos: [86, 0, -351.5], size: [30, 25], rotation: 0 },
   { id: 'volleyballcourts', type: 'volleyballcourts', label: "VOLLEY BALL COURTS", pos: [-231.3, 0, -214.9], size: [64, 50], rotation: 1.5707963267948966 },
   { id: 'cricketground', type: 'cricketground', label: "CRICKET GROUND", pos: [-127, 0, -336.5], size: [150, 85], rotation: 0 },
-  { id: 'basketballcourts', type: 'basketballcourts', label: "BASKALBALL COURTS", pos: [-255.5, 0, -297.5], size: [30, 29], rotation: 4.71238898038469 },
+  { id: 'basketballcourts', type: 'basketballcourts', label: "BASKETBALL COURTS", pos: [-255.5, 0, -297.5], size: [30, 29], rotation: 4.71238898038469 },
   { id: 'vignanpond', type: 'vignanpond', label: "VIGNAN POND", pos: [-332.5, 0, -321.5], size: [45, 45], rotation: 0 },
   { id: 'open_gym', type: 'open_gym', label: "OPEN GYM", pos: [-9.5, 0, -306.5], size: [60, 30], rotation: 0 },
   { id: 'kabaddi_courts', type: 'kabaddi_courts', label: "KABADDI COURTS", pos: [-10.5, 0, -334.5], size: [60, 23], rotation: 3.141592653589793 },
@@ -324,8 +328,19 @@ export default function App() {
     }
   }, [selectedItemId]);
 
-  // Load items from localStorage or fallback to defaults
+  // Load items from localStorage or fallback to defaults.
+  // If LAYOUT_VERSION has changed since last save, wipe localStorage and use fresh defaults.
   const [mapItems, setMapItems] = useState(() => {
+    const storedVersion = localStorage.getItem('vignan_3d_campus_layout_version');
+    
+    // Version mismatch → wipe old data and reload with fresh defaults
+    if (storedVersion !== LAYOUT_VERSION) {
+      localStorage.removeItem('vignan_3d_campus_map_items');
+      localStorage.removeItem('vignan_3d_campus_layout_locked');
+      localStorage.setItem('vignan_3d_campus_layout_version', LAYOUT_VERSION);
+      return DEFAULT_MAP_ITEMS;
+    }
+
     const saved = localStorage.getItem('vignan_3d_campus_map_items');
     const defaultSizes = {
       'gate_main': [18, 5],
@@ -350,7 +365,7 @@ export default function App() {
       try {
         let parsed = JSON.parse(saved);
         
-        // 1. Automatically inject missing default sizes and fix convocation/landmark types
+        // Fix convocation/landmark types
         parsed = parsed.map(item => {
           if (item.id === 'convocationhall') {
             return { ...item, type: 'convocation', size: item.size || defaultSizes[item.id] };
@@ -364,7 +379,7 @@ export default function App() {
           return item;
         });
 
-        // 2. Automatically inject newly added landmark structures if missing from older layout versions
+        // Inject missing essential structures
         const essentialIds = [
           'pharmacy', 'pharmacy_badminton', 'pharmacy_volleyball', 'textile',
           'ublock', 'convocationhall', 'guesthouse', 'volleyballcourts',
@@ -388,9 +403,10 @@ export default function App() {
     return DEFAULT_MAP_ITEMS;
   });
 
-  // Persist layout items when updated
+  // Persist layout items and version when updated
   useEffect(() => {
     localStorage.setItem('vignan_3d_campus_map_items', JSON.stringify(mapItems));
+    localStorage.setItem('vignan_3d_campus_layout_version', LAYOUT_VERSION);
   }, [mapItems]);
 
   const selectedItem = mapItems.find(item => item.id === selectedItemId);
