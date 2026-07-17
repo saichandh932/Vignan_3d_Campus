@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import { Sky, OrbitControls, Text } from '@react-three/drei';
 import { Buildings, MultiStoryBuilding, CampusGate, UShapeBlock, OShapeBlock, ConvocationHall, SingleTree, TreeRow } from './components/Buildings';
@@ -306,6 +306,38 @@ function DroneCameraController({ active, selectedItemPos }) {
   }, [selectedItemPos, active, controls, camera]);
 
   return null;
+}
+// ── D-Pad Button helper ──────────────────────────────────────
+function DPadBtn({ label, onDown, onUp }) {
+  const [pressed, setPressed] = React.useState(false);
+  return (
+    <div
+      onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); setPressed(true); onDown(); }}
+      onPointerUp={() => { setPressed(false); onUp(); }}
+      onPointerLeave={() => { setPressed(false); onUp(); }}
+      style={{
+        width: 44, height: 44,
+        borderRadius: '10px',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        background: pressed
+          ? 'radial-gradient(circle, rgba(80,140,255,0.95) 0%, rgba(30,70,200,0.95) 100%)'
+          : 'radial-gradient(circle, rgba(40,60,110,0.88) 0%, rgba(15,25,60,0.92) 100%)',
+        border: `1.5px solid ${pressed ? 'rgba(150,200,255,0.9)' : 'rgba(100,160,255,0.4)'}`,
+        boxShadow: pressed
+          ? '0 0 16px rgba(80,140,255,0.6), inset 0 0 8px rgba(150,200,255,0.2)'
+          : '0 2px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)',
+        color: pressed ? '#fff' : 'rgba(160,200,255,0.85)',
+        fontSize: '18px',
+        cursor: 'pointer',
+        userSelect: 'none',
+        touchAction: 'none',
+        transition: 'background 0.07s, border-color 0.07s, box-shadow 0.07s',
+        transform: pressed ? 'scale(0.92)' : 'scale(1)',
+      }}
+    >
+      {label}
+    </div>
+  );
 }
 
 export default function App() {
@@ -1053,16 +1085,178 @@ export default function App() {
         </mesh>
       </Canvas>
 
-      <div className="ui-container">
-        {!isDroneMode && (
-          <div className="instructions">
-            <h3>Vignan University - 3D Walkthrough Tour</h3>
-            <p>⌨️ **WASD / Arrow Keys** to move / walk around</p>
-            <p>鼠标 **Left Click & Drag** to look around | **Right Click & Drag** to pan camera</p>
-            <p>🔍 **Scroll Mouse** to zoom in/out</p>
+      {/* Walk Mode HUD: Joystick + Info Panel */}
+      {!isDroneMode && (
+        <>
+          {/* ── Virtual Analog Joystick (bottom-left) ── */}
+          <div
+            id="joystick-zone"
+            style={{
+              position: 'fixed',
+              bottom: 32,
+              left: 32,
+              width: 130,
+              height: 130,
+              zIndex: 100,
+              userSelect: 'none',
+              touchAction: 'none',
+            }}
+            onPointerDown={(e) => {
+              e.currentTarget.setPointerCapture(e.pointerId);
+              const rect = e.currentTarget.getBoundingClientRect();
+              const cx = rect.left + rect.width / 2;
+              const cy = rect.top + rect.height / 2;
+              const dx = Math.max(-1, Math.min(1, (e.clientX - cx) / (rect.width / 2)));
+              const dy = Math.max(-1, Math.min(1, (e.clientY - cy) / (rect.height / 2)));
+              joystick.current.x = dx;
+              joystick.current.y = dy;
+              // move knob visually
+              const knob = document.getElementById('joystick-knob');
+              if (knob) { knob.style.transform = `translate(calc(-50% + ${dx * 34}px), calc(-50% + ${dy * 34}px))`; }
+            }}
+            onPointerMove={(e) => {
+              if (e.buttons === 0) return;
+              const rect = e.currentTarget.getBoundingClientRect();
+              const cx = rect.left + rect.width / 2;
+              const cy = rect.top + rect.height / 2;
+              const dx = Math.max(-1, Math.min(1, (e.clientX - cx) / (rect.width / 2)));
+              const dy = Math.max(-1, Math.min(1, (e.clientY - cy) / (rect.height / 2)));
+              joystick.current.x = dx;
+              joystick.current.y = dy;
+              const knob = document.getElementById('joystick-knob');
+              if (knob) { knob.style.transform = `translate(calc(-50% + ${dx * 34}px), calc(-50% + ${dy * 34}px))`; }
+            }}
+            onPointerUp={() => {
+              joystick.current.x = 0;
+              joystick.current.y = 0;
+              const knob = document.getElementById('joystick-knob');
+              if (knob) { knob.style.transform = 'translate(-50%, -50%)'; }
+            }}
+            onPointerLeave={() => {
+              joystick.current.x = 0;
+              joystick.current.y = 0;
+              const knob = document.getElementById('joystick-knob');
+              if (knob) { knob.style.transform = 'translate(-50%, -50%)'; }
+            }}
+          >
+            {/* Outer ring */}
+            <div style={{
+              position: 'absolute', inset: 0, borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(30,40,60,0.85) 60%, rgba(10,20,40,0.95) 100%)',
+              border: '2.5px solid rgba(100,160,255,0.5)',
+              boxShadow: '0 0 24px rgba(80,140,255,0.25), inset 0 0 12px rgba(0,0,0,0.5)',
+              backdropFilter: 'blur(8px)',
+            }} />
+            {/* Direction marks */}
+            {['↑','↓','←','→'].map((arrow, i) => {
+              const positions = [
+                { top: '8px', left: '50%', transform: 'translateX(-50%)' },
+                { bottom: '8px', left: '50%', transform: 'translateX(-50%)' },
+                { left: '8px', top: '50%', transform: 'translateY(-50%)' },
+                { right: '8px', top: '50%', transform: 'translateY(-50%)' },
+              ];
+              return (
+                <div key={i} style={{
+                  position: 'absolute', ...positions[i],
+                  color: 'rgba(140,180,255,0.7)', fontSize: '14px',
+                  fontWeight: 'bold', lineHeight: 1,
+                  textShadow: '0 0 6px rgba(100,160,255,0.8)',
+                  pointerEvents: 'none',
+                }}>{arrow}</div>
+              );
+            })}
+            {/* Knob */}
+            <div id="joystick-knob" style={{
+              position: 'absolute', top: '50%', left: '50%',
+              width: 46, height: 46,
+              transform: 'translate(-50%, -50%)',
+              borderRadius: '50%',
+              background: 'radial-gradient(circle at 38% 35%, rgba(120,180,255,0.95) 0%, rgba(50,100,220,0.9) 55%, rgba(20,50,160,0.95) 100%)',
+              border: '2px solid rgba(150,200,255,0.8)',
+              boxShadow: '0 4px 16px rgba(50,120,255,0.5), 0 0 8px rgba(100,180,255,0.4), inset 0 1px 0 rgba(255,255,255,0.3)',
+              transition: 'transform 0.05s ease-out',
+              cursor: 'grab',
+            }} />
           </div>
-        )}
-      </div>
+
+          {/* ── D-Pad Button Controls (below joystick zone, mobile-friendly) ── */}
+          <div style={{
+            position: 'fixed',
+            bottom: 170,
+            left: 24,
+            zIndex: 100,
+            display: 'grid',
+            gridTemplateColumns: '44px 44px 44px',
+            gridTemplateRows: '44px 44px 44px',
+            gap: '4px',
+            userSelect: 'none',
+            touchAction: 'none',
+          }}>
+            {/* Row 1: blank, Up, blank */}
+            <div />
+            <DPadBtn
+              label="▲"
+              onDown={() => { joystick.current.y = -1; }}
+              onUp={() => { if (joystick.current.y < 0) joystick.current.y = 0; }}
+            />
+            <div />
+            {/* Row 2: Left, blank, Right */}
+            <DPadBtn
+              label="◀"
+              onDown={() => { joystick.current.x = -1; }}
+              onUp={() => { if (joystick.current.x < 0) joystick.current.x = 0; }}
+            />
+            <div style={{
+              width: 44, height: 44, borderRadius: '50%',
+              background: 'rgba(30,40,60,0.7)',
+              border: '1.5px solid rgba(100,160,255,0.3)',
+            }} />
+            <DPadBtn
+              label="▶"
+              onDown={() => { joystick.current.x = 1; }}
+              onUp={() => { if (joystick.current.x > 0) joystick.current.x = 0; }}
+            />
+            {/* Row 3: blank, Down, blank */}
+            <div />
+            <DPadBtn
+              label="▼"
+              onDown={() => { joystick.current.y = 1; }}
+              onUp={() => { if (joystick.current.y > 0) joystick.current.y = 0; }}
+            />
+            <div />
+          </div>
+
+          {/* ── Info hint panel (bottom-center) ── */}
+          <div style={{
+            position: 'fixed',
+            bottom: 28,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 100,
+            background: 'rgba(8, 15, 35, 0.82)',
+            backdropFilter: 'blur(12px)',
+            border: '1px solid rgba(100,160,255,0.25)',
+            borderRadius: '18px',
+            padding: '12px 24px',
+            textAlign: 'center',
+            color: 'white',
+            pointerEvents: 'none',
+            boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
+            minWidth: '280px',
+          }}>
+            <div style={{ fontWeight: 700, fontSize: '0.95rem', marginBottom: 6, letterSpacing: '0.02em' }}>
+              🎓 Vignan University - 3D Walkthrough Tour
+            </div>
+            <div style={{ fontSize: '0.73rem', color: 'rgba(180,210,255,0.85)', display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <span>🕹️ Drag joystick (bottom-left) to walk</span>
+              <span>|</span>
+              <span>🖱️ Drag screen to look</span>
+              <span>|</span>
+              <span>⌨️ WASD / Arrow Keys also work</span>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Sandbox Editor Sidebar */}
       {isDroneMode && (
