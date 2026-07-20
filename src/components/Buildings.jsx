@@ -1,8 +1,19 @@
 import { useMemo } from 'react';
-import { Text } from '@react-three/drei';
+import { Text, useGLTF } from '@react-three/drei';
 import { useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
+function GaneshaModel(props) {
+  const { scene } = useGLTF('/models/Ganesha_3D.glb');
 
+  return (
+    <primitive
+      object={scene}
+      {...props}
+    />
+  );
+}
+
+useGLTF.preload('/models/Ganesha_3D.glb');
 // Helper component for loading hoarding texture
 function HoardingBillboard() {
   const texture = useLoader(THREE.TextureLoader, '/hoarding.jpg');
@@ -60,7 +71,7 @@ function VignanBusStop({ position, rotation }) {
         <meshStandardMaterial color="#DC143C" />
       </mesh>
       <Text position={[-19, 5, 3.75]} fontSize={0.5} color="white" fontWeight="bold">
-        NAAC A
+        NAAC A+
       </Text>
 
       {/* Right Red NAAC block */}
@@ -69,7 +80,7 @@ function VignanBusStop({ position, rotation }) {
         <meshStandardMaterial color="#DC143C" />
       </mesh>
       <Text position={[19, 5, 3.75]} fontSize={0.5} color="white" fontWeight="bold">
-        NAAC A
+        NAAC A+
       </Text>
 
       {/* Main Text */}
@@ -339,7 +350,7 @@ export function Buildings({ zones = [] }) {
 
   const gateMain = getZone('gate_main', "VIGNAN'S FOUNDATION", [0, 0, 0], [18, 5], 0);
   const gateLibrary = getZone('gate_library', "LIBRARY ENTRANCE GATE", [-110, 0, -60], [18, 5], 1.5707963267948966);
-  const boundaryWall = getZone('boundary_wall', "WALL", [10, 0, 15], [25, 4], -1.5707963267948966);
+  const boundaryWall = getZone('boundary_wall', "VIGNAN'S FOUNDATION", [10, 0, 15], [25, 4], -1.5707963267948966);
   const busStopZone = getZone('bus_stop', 'BUS STOP', [-11.4, 0.01, 156.5], [42, 8], 0.702256931509007);
 
   const libZone = getZone('library', 'LIBRARY', [-25.0, 0, -40.0], [21, 21], 0.5235987755982988);
@@ -355,8 +366,6 @@ export function Buildings({ zones = [] }) {
   const smallZone = getZone('smallzone', 'SMALL ZONE', [92.5, 0, -2.0], null, 0);
   const newOutsideZone = getZone('new_outside_zone', 'NEW ZONE', [-10, 0, 25.0], null, 0);
   const groundZone = getZone('ground', 'GROUND', [38, 0.05, -126.5], [53, 22], 0);
-
-  const ublockZone = getZone('ublock', 'U-BLOCK', [-141.5, 0, -198.0], [75, 85], 0);
   const convocationhallZone = getZone('convocationhall', 'CONVOCATION HALL', [-197.5, 0, -197.7], [18, 85], 0);
   const guesthouseZone = getZone('guesthouse', 'GUEST HOUSE', [-226.5, 0, -171.0], [30, 30], 0);
   const volleyballcourtsZone = getZone('volleyballcourts', 'VOLLEY BALL COURTS', [-231.3, 0, -214.9], [64, 50], 1.5707963267948966);
@@ -401,7 +410,7 @@ export function Buildings({ zones = [] }) {
           </mesh>
           {/* Golden 3D Text */}
           <Text position={[0, 2.5, 0.6]} fontSize={1.5} color="#FFD700" fontStyle="italic" fontWeight="bold">
-            {boundaryWall.label}
+            VIGNAN'S FOUNDATION
           </Text>
           <Text position={[0, 1.2, 0.6]} fontSize={0.7} color="#FFD700">
             FOR SCIENCE, TECHNOLOGY AND RESEARCH
@@ -524,6 +533,7 @@ export function Buildings({ zones = [] }) {
       </group>
       )}
 
+
       {/* 🏢 A-BLOCK (Administrative Block) */}
       {ablockZone.render && (
         <group 
@@ -534,7 +544,7 @@ export function Buildings({ zones = [] }) {
             1,
             ablockZone.size ? ablockZone.size[1] / 64 : 1
           ]}
-        >
+        >    
         {/* Floating Label for A-Block */}
         <Text position={[0, 26, 0]} fontSize={4} color="white" outlineWidth={0.2} outlineColor="black">
           {ablockZone.label}
@@ -642,15 +652,11 @@ export function Buildings({ zones = [] }) {
 
           {/* Portico Roof / Brown Fascia */}
           <mesh position={[0, 12.5, 5]} castShadow>
-            <boxGeometry args={[14, 1.5, 2]} />
+            <boxGeometry args={[16, 1.5, 2]} />
             <meshStandardMaterial color="#5C4033" roughness={0.6} />
           </mesh>
 
-          {/* Main Glass Facade Above Portico (Spans floors 3, 4, 5) */}
-          <mesh position={[0, 18, 4.5]} castShadow>
-            <boxGeometry args={[12, 10, 1]} />
-            <meshStandardMaterial color="#8FBC8F" roughness={0.2} metalness={0.8} transparent={true} opacity={0.85} />
-          </mesh>
+          
 
           {/* Signboard Text on Brown Fascia */}
           <Text
@@ -668,6 +674,33 @@ export function Buildings({ zones = [] }) {
           >
             FOR SCIENCE, TECHNOLOGY AND RESEARCH
           </Text>
+          {/* Brown Top Block */}
+          <mesh position={[0, 20, 5]} castShadow>
+            <boxGeometry args={[12, 2.5, 2.2]} />
+            <meshStandardMaterial color="#5C2E16" roughness={0.6} />
+          </mesh>
+          {/* BHUVANA VIJAYAM Text */}
+          <Text
+            position={[0, 20, 6.15]}
+            fontSize={1}
+            color="white"
+            fontWeight="bold"
+            anchorX="center"
+            anchorY="middle"
+          >
+            BHUVANA VIJAYAM
+          </Text>
+          {/* 4 Tall Upper Pillars */}
+          {[-6, -2, 2, 6].map((x, i) => (
+            <mesh
+              key={`upper-pillar-${i}`}
+              position={[x, 16.25, 5.2]}
+              castShadow
+            >
+              <cylinderGeometry args={[0.45, 0.45, 6, 32]} />
+              <meshStandardMaterial color="#fcfcfc" roughness={0.8} />
+            </mesh>
+          ))}
         </group>
       </group>
       )}
@@ -685,7 +718,7 @@ export function Buildings({ zones = [] }) {
         >
         {/* --- Central Bar --- */}
         <mesh position={[0, 10, -5]} castShadow receiveShadow>
-          <boxGeometry args={[80, 12, 12]} />
+          <boxGeometry args={[80, 13, 12]} />
           <meshStandardMaterial color="#fcfcfc" roughness={0.9} />
         </mesh>
         <mesh position={[0, 2, -6]} castShadow receiveShadow>
@@ -881,19 +914,14 @@ export function Buildings({ zones = [] }) {
             <meshStandardMaterial color="#4B0082" roughness={0.9} />
           </mesh>
 
-          {/* Portico Canopy */}
-          <mesh position={[0, 5, 4]} castShadow>
-            <boxGeometry args={[16, 1, 8]} />
-            <meshStandardMaterial color="#fcfcfc" />
-          </mesh>
 
           {/* Yellow Signboard on Portico */}
-          <mesh position={[0, 5, 8.05]} castShadow>
-            <boxGeometry args={[16.2, 1.5, 0.2]} />
+          <mesh position={[0, 12, 8.05]} castShadow>
+            <boxGeometry args={[22, 1.5, 0.2]} />
             <meshStandardMaterial color="#FADA5E" />
           </mesh>
           <Text
-            position={[0, 5, 8.2]}
+            position={[0, 12, 8.2]}
             fontSize={0.8}
             color="black"
             fontWeight="bold"
@@ -904,7 +932,7 @@ export function Buildings({ zones = [] }) {
           {/* Portico Pillars */}
           {[-7, -2.5, 2.5, 7].map((x, i) => (
             <mesh key={`hpillar-${i}`} position={[x, 2.5, 7.5]} castShadow>
-              <cylinderGeometry args={[0.3, 0.3, 5]} />
+              <cylinderGeometry args={[0.3, 0.3, 20]} />
               <meshStandardMaterial color="#fcfcfc" />
             </mesh>
           ))}
@@ -1476,7 +1504,7 @@ export function Buildings({ zones = [] }) {
       {/* 3. APPROACH ROAD LEFT ZONE (Shrine & Hoarding) */}
       {newOutsideZone.render && (
         <group position={newOutsideZone.pos} rotation={[0, newOutsideZone.rotation, 0]}>
-        {/* The Ganesha Shrine (Replacing Store A) */}
+        {/* The Ganesha Shrine (Replacing Store A) */} 
         <group position={[0, 0, -8]}>
           {/* Base / Plinth (Red with White border) */}
           <mesh position={[0, 0.5, 0]} castShadow>
@@ -1504,12 +1532,21 @@ export function Buildings({ zones = [] }) {
             <meshStandardMaterial color="#A0522D" />
           </mesh>
           
-          {/* Ganesha Idol */}
-          <mesh position={[0, 1.5, 0]} castShadow>
-            <cylinderGeometry args={[0.6, 0.8, 1.5, 8]} />
-            <meshStandardMaterial color="#FF6347" /> {/* Orange/Red hue */}
-          </mesh>
-          <Text position={[0, 5, 0]} fontSize={1.2} color="white" outlineColor="black" outlineWidth={0.05}>
+          
+          {/* Ganesha 3D Model */}
+          <GaneshaModel
+            position={[0, 2.5, 0]}
+            scale={3}
+            rotation={[0, 0, 0]}
+          />
+
+          <Text
+            position={[0, 5, 0]}
+            fontSize={1.2}
+            color="white"
+            outlineColor="black"
+            outlineWidth={0.05}
+          >
             {newOutsideZone.label}
           </Text>
         </group>
@@ -1527,12 +1564,6 @@ export function Buildings({ zones = [] }) {
       </group>
 
       {/* 🏢 SECTOR A: SOUTH-WEST ZONE LANDMARKS */}
-      {ublockZone.render && (
-        <group rotation={[0, ublockZone.rotation, 0]}>
-          <UShapeBlock position={ublockZone.pos} size={ublockZone.size || [75, 85]} floors={4} color="#dad20a" label={ublockZone.label} />
-        </group>
-      )}
-
       {convocationhallZone.render && (
         <ConvocationHall position={convocationhallZone.pos} size={convocationhallZone.size || [25, 85]} floors={3} color="#9f96f7" label={convocationhallZone.label} />
       )}
@@ -2308,13 +2339,17 @@ export function ConvocationHall({ position, size = [25, 85], floors = 3, color =
       {/* Solid Wall — West/Left side */}
       <mesh position={[-halfW + 0.15, height / 2, 0]} castShadow receiveShadow>
         <boxGeometry args={[0.3, height, d]} />
-        <meshStandardMaterial color={color} roughness={0.8} />
+        <meshStandardMaterial color="#d8d0c8" roughness={0.8} />
       </mesh>
-
+      {/* Solid Wall — East/Right side */}
+      <mesh position={[halfW - 0.15, height / 2, 0]} castShadow receiveShadow>
+        <boxGeometry args={[0.3, height, d]} />
+        <meshStandardMaterial color="#d8d0c8" roughness={0.8} />
+      </mesh>
       {/* ✅ Solid Back Wall (closed rear end, +Z direction) */}
       <mesh position={[0, height / 2, halfD - 0.15]} castShadow receiveShadow>
         <boxGeometry args={[w, height, 0.3]} />
-        <meshStandardMaterial color={color} roughness={0.8} />
+        <meshStandardMaterial color="#d8d0c8" roughness={0.8} />
       </mesh>
 
       {/* Back wall accent strip / dado rail */}
@@ -2427,7 +2462,7 @@ export function ConvocationHall({ position, size = [25, 85], floors = 3, color =
         castShadow
       >
         <boxGeometry args={[panelWidth, 0.3, d + 1]} />
-        <meshStandardMaterial color="#b5651d" roughness={0.6} />
+        <meshStandardMaterial color="#f8f7f7" roughness={0.6} />
       </mesh>
 
       {/* Inverted V Pitched Roof (Right Panel) */}
@@ -2437,7 +2472,7 @@ export function ConvocationHall({ position, size = [25, 85], floors = 3, color =
         castShadow
       >
         <boxGeometry args={[panelWidth, 0.3, d + 1]} />
-        <meshStandardMaterial color="#b5651d" roughness={0.6} />
+        <meshStandardMaterial color="#f8f7f7" roughness={0.6} />
       </mesh>
 
       {/* Floating Label */}

@@ -10,16 +10,16 @@ function PlayerController({ joystick }) {
   const { camera, scene } = useThree();
   const keys = useRef({ w: false, a: false, s: false, d: false });
   const playerRef = useRef();
-  const speed = 25; // Movement speed
-  const shieldTexture = useLoader(THREE.TextureLoader, '/shield.jpg');
+  const speed = 25;
 
   // Reset camera position to third-person view when Walk Mode mounts
   useEffect(() => {
     if (playerRef.current) {
-      camera.position.copy(playerRef.current.position).add(new THREE.Vector3(0, 10, 20));
+      camera.position
+        .copy(playerRef.current.position)
+        .add(new THREE.Vector3(0, 10, 20));
     }
   }, [camera]);
-
   useEffect(() => {
     const handleKeyDown = (e) => {
       switch (e.code) {
@@ -154,24 +154,57 @@ function PlayerController({ joystick }) {
 
   return (
     <group ref={playerRef} position={[0, 0, 50]}>
-      {/* Vignan Shield Avatar (Background removed via alphaMap) */}
-      <mesh position={[0, 1.5, 0]}>
-        <planeGeometry args={[2, 2.5]} />
-        <meshBasicMaterial 
-          map={shieldTexture} 
-          alphaMap={shieldTexture} 
-          transparent={true} 
-          side={THREE.DoubleSide} 
-          color="#FFF"
+
+      {/* Blue Navigation Arrow */}
+      <group
+        position={[0, 1.5, 0]}
+        rotation={[0, Math.PI, 0]}
+      >
+
+        {/* Arrow Head */}
+        <mesh
+          position={[0, 0, -0.6]}
+          rotation={[-Math.PI / 2, 0, 0]}
+          castShadow
+        >
+          <coneGeometry args={[0.7, 1.5, 3]} />
+          <meshStandardMaterial
+            color="#2196f3"
+            emissive="#1565c0"
+            emissiveIntensity={0.8}
+            metalness={0.2}
+            roughness={0.3}
+          />
+        </mesh>
+
+        {/* Arrow Tail */}
+        <mesh position={[0, 0, 0.45]} castShadow>
+          <boxGeometry args={[0.45, 0.18, 1.2]} />
+          <meshStandardMaterial
+            color="#2196f3"
+            emissive="#1565c0"
+            emissiveIntensity={0.8}
+            metalness={0.2}
+            roughness={0.3}
+          />
+        </mesh>
+
+        {/* Glow */}
+        <pointLight
+          position={[0, 0.5, 0]}
+          intensity={2}
+          distance={4}
         />
-      </mesh>
+
+      </group>
+
     </group>
-  );
+);
 }
 
 // IMPORTANT: Increment this version string whenever DEFAULT_MAP_ITEMS is updated.
 // This forces all users' browsers to discard their old localStorage and reload fresh defaults.
-const LAYOUT_VERSION = "v14";
+const LAYOUT_VERSION = "v15";
 
 const DEFAULT_MAP_ITEMS = [
   { id: 'gate_main', type: 'gate', label: "VIGNAN'S FOUNDATION", pos: [0, 0, 0], rotation: 0, size: [18, 5] },
@@ -186,7 +219,6 @@ const DEFAULT_MAP_ITEMS = [
   { id: 'canteen', type: 'canteen', label: "CANTEEN & TT", pos: [90.5, 0, -122], size: [19, 22], rotation: 0 },
   { id: 'farm', type: 'farm', label: "FARM ZONE", pos: [-30, 0, -93.5], size: [46, 53], rotation: 0 },
   { id: 'new_outside_zone', type: 'shrine', label: "SHRINE", pos: [-10, 0, 25], rotation: 0 },
-  { id: 'ublock', type: 'building', label: "U BLOCK", pos: [-141.5, 0, -198], size: [75, 85], floors: 4, color: "#dad20a", rotation: 0 },
   { id: 'convocationhall', type: 'convocation', label: "CONVOCATION HALL", pos: [-197.5, 0, -197.7], size: [18, 85], floors: 3, color: "#9f96f7", rotation: 0 },
   { id: 'guesthouse', type: 'building', label: "GUEST HOUSE", pos: [-226.5, 0, -171], size: [30, 30], floors: 2, color: "#37794b", rotation: 0 },
   { id: 'textile', type: 'building', label: "TEXTILE TECHNOLOGY", pos: [49, 0, -334.5], size: [15, 70], floors: 3, color: "#927b5d", rotation: 0 },
@@ -197,7 +229,6 @@ const DEFAULT_MAP_ITEMS = [
   { id: 'z_canteen', type: 'zone', label: "CANTEEN & TT", size: [19, 22], color: "#00FFFF", pos: [90.5, 0, -122] },
   { id: 'z_sportsground', type: 'zone', label: "HOCKEY & FOOTBALL GROUND", size: [70, 94], color: "#3CB371", pos: [135, 0, -93] },
   { id: 'z_ground', type: 'zone', label: "GROUND", size: [60, 25], color: "#FFFF00", pos: [40, 0, -125] },
-  { id: 'z_ublock', type: 'zone', label: "U-BLOCK", size: [75, 85], color: "#dad20a", pos: [-141.5, 0, -198] },
   { id: 'z_convocationhall', type: 'zone', label: "CONVOCATION HALL", size: [25, 85], color: "#9f96f7", pos: [-196.5, 0, -197.5] },
   { id: 'z_guesthouse', type: 'zone', label: "GUEST HOUSE", size: [30, 30], color: "#37794b", pos: [-226.5, 0, -171] },
   { id: 'z_textile', type: 'zone', label: "TEXTILE TECHNOLOGY", size: [15, 70], color: "#927b5d", pos: [49, 0, -334.5] },
@@ -414,7 +445,7 @@ export default function App() {
         // Inject missing essential structures
         const essentialIds = [
           'pharmacy', 'pharmacy_badminton', 'pharmacy_volleyball', 'textile',
-          'ublock', 'convocationhall', 'guesthouse', 'volleyballcourts',
+          'convocationhall', 'guesthouse', 'volleyballcourts',
           'cricketground', 'basketballcourts', 'vignanpond', 'priyadarshinihostel',
           'open_gym', 'kabaddi_courts', 'khokho_courts', 'lamp_pole_sports',
           'lara_ground', 'pickleball_zone', 'cricket_nets'

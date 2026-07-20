@@ -17,7 +17,6 @@ export const ZONES = [
   { id: 'hostel_connector', label: '', size: [10, 20], color: '#FF8C00', pos: [75.0, 0, -180.0] },
   { id: 'ground', label: 'GROUND', size: [60, 25], color: '#FFFF00', pos: [40.0, 0, -125.0] },
   
-  { id: 'ublock', label: 'U-BLOCK', size: [75, 85], color: '#dad20a', pos: [-141.5, 0, -198.0] },
   { id: 'convocationhall', label: 'CONVOCATION HALL', size: [25, 85], color: '#9f96f7', pos: [-196.5, 0, -197.5] },
   { id: 'guesthouse', label: 'GUEST HOUSE', size: [30, 30], color: '#37794b', pos: [-226.5, 0, -171.0] },
   { id: 'volleyballcourts', label: 'VOLLEY BALL COURTS', size: [50, 50], color: '#a5b65d', pos: [-236.5, 0, -214.0] },
