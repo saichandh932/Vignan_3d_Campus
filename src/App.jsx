@@ -1365,7 +1365,7 @@ const DEFAULT_MAP_ITEMS =
       0,
       -76
     ],
-    "rotation": 1.5707963267948966,
+    "rotation":0,
     "label": "HIGHWAY ROAD",
     "size": [
       14,
