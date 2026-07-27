@@ -1373,7 +1373,7 @@ const DEFAULT_MAP_ITEMS = [
     "floors": 3,
     "color": "#eaeaea"
   }
-];
+]];
 
 const ADD_TEMPLATES = [
 // Modular components
