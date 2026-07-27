@@ -1350,7 +1350,7 @@ const DEFAULT_MAP_ITEMS =
       0,
       -225
     ],
-    "rotation": 0,
+    "rotation": Math.PI / 2,
     "label": "NEW ROAD",
     "size": [
       12,
