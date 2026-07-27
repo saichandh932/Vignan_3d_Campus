@@ -273,11 +273,11 @@ const DEFAULT_MAP_ITEMS =
     "type": "custom_library",
     "label": "LIBRARY",
     "pos": [
-      -25,
+      -25.8,
       0,
-      -40
+      -40.8
     ],
-    "rotation": -0.45,
+    "rotation": -0.9735987755982987,
     "size": [
       21,
       21
