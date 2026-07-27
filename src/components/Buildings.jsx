@@ -1568,7 +1568,7 @@ color="#ffffff"
 roughness={0.7}
 side={THREE.DoubleSide}
 />
-
+</mesh>
 
 
 {/* Canopy Orange Trim */}
