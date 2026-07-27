@@ -337,6 +337,16 @@ return (
 }
 
 export function Buildings({ zones = [] }) {
+const getZone = (id, defaultLabel, defaultPos, defaultSize = null, defaultRot = 0) => {
+const found = zones.find(z => z.id === id);
+return {
+render: found ? true : false,
+pos: found ? found.pos : defaultPos,
+label: found ? found.label : defaultLabel,
+size: found ? found.size : defaultSize,
+rotation: found && found.rotation !== undefined ? found.rotation : defaultRot
+};
+};
   const getZone = (id, defaultLabel, defaultPos, defaultSize = null, defaultRot = 0) => {
     const found = zones.find(z => z.id === id);
     return {
@@ -1293,308 +1303,301 @@ THE MOST HAPPENING PLACE
 </group>
 </group>
 )}
-      {/* 🏢 U-BLOCK (Aryabhatta Bhavan) */}
-      // In Buildings.jsx
+{/* 🏢 U-BLOCK (Aryabhatta Bhavan) */}
+{ublockZone.render && (
+<group
+position={ublockZone.pos}
+rotation={[0, ublockZone.rotation, 0]}
+scale={[
+ublockZone.size ? ublockZone.size[0] / 75 : 1,
+1,
+ublockZone.size ? ublockZone.size[1] / 85 : 1
+]}
+>
 
-      {/* 🏢 U-BLOCK (Aryabhatta Bhavan) */}
-      {ublockZone.render && (
-        <group
-          position={ublockZone.pos}
-          rotation={[0, ublockZone.rotation, 0]}
-          scale={[
-            ublockZone.size ? ublockZone.size[0] / 75 : 1,
-            1,
-            ublockZone.size ? ublockZone.size[1] / 85 : 1
-          ]}
-        >
+{/* ========================================= */}
+{/* BACK / CENTRAL WING */}
+{/* ========================================= */}
 
-          {/* ========================================= */}
-          {/* BACK / CENTRAL WING */}
-          {/* ========================================= */}
+<mesh position={[0, 14, -12]} castShadow receiveShadow>
+<boxGeometry args={[75, 24, 12]} />
+<meshStandardMaterial color="#f5f5f5" roughness={0.9} />
+</mesh>
 
-          <mesh position={[0, 14, -12]} castShadow receiveShadow>
-            <boxGeometry args={[75, 24, 12]} />
-            <meshStandardMaterial color="#f5f5f5" roughness={0.9} />
-          </mesh>
+{/* Orange horizontal floor bands */}
+{[4, 8, 12, 16, 20, 24].map((y) => (
+<mesh key={`u-back-band-${y}`} position={[0, y, -5.9]}>
+<boxGeometry args={[75.2, 0.5, 0.4]} />
+<meshStandardMaterial color="#E87522" />
+</mesh>
+))}
 
-          {/* Orange horizontal floor bands */}
-          {[4, 8, 12, 16, 20, 24].map((y) => (
-            <mesh key={`u-back-band-${y}`} position={[0, y, -5.9]}>
-              <boxGeometry args={[75.2, 0.5, 0.4]} />
-              <meshStandardMaterial color="#E87522" />
-            </mesh>
-          ))}
-
-          {/* Back/Central Windows */}
-          <group position={[0, 4, -5.7]}>
-            <WindowGrid
-              width={75}
-              height={20}
-              floors={5}
-              floorHeight={4}
-              spacingX={5}
-              winW={2.4}
-              winH={1.8}
-            />
-          </group>
+{/* Back/Central Windows */}
+<group position={[0, 4, -5.7]}>
+<WindowGrid
+width={75}
+height={20}
+floors={5}
+floorHeight={4}
+spacingX={5}
+winW={2.4}
+winH={1.8}
+/>
+</group>
 
 
-          {/* ========================================= */}
-          {/* LEFT WING */}
-          {/* ========================================= */}
+{/* ========================================= */}
+{/* LEFT WING */}
+{/* ========================================= */}
 
-          <mesh position={[-31, 14, 15]} castShadow receiveShadow>
-            <boxGeometry args={[13, 24, 55]} />
-            <meshStandardMaterial color="#f5f5f5" roughness={0.9} />
-          </mesh>
+<mesh position={[-31, 14, 15]} castShadow receiveShadow>
+<boxGeometry args={[13, 24, 55]} />
+<meshStandardMaterial color="#f5f5f5" roughness={0.9} />
+</mesh>
 
-          {/* Left wing orange vertical columns */}
-          {[-8, 2, 12, 22, 32].map((z) => (
-            <mesh
-              key={`u-left-orange-${z}`}
-              position={[-24.3, 14, z]}
-              castShadow
-            >
-              <boxGeometry args={[0.8, 24, 1]} />
-              <meshStandardMaterial color="#E87522" />
-            </mesh>
-          ))}
+{/* Left wing orange vertical columns */}
+{[-8, 2, 12, 22, 32].map((z) => (
+<mesh
+key={`u-left-orange-${z}`}
+position={[-24.3, 14, z]}
+castShadow
+>
+<boxGeometry args={[0.8, 24, 1]} />
+<meshStandardMaterial color="#E87522" />
+</mesh>
+))}
 
-          {/* Left Wing Windows */}
-          <group
-            position={[-24.2, 4, 15]}
-            rotation={[0, Math.PI / 2, 0]}
-          >
-            <WindowGrid
-              width={55}
-              height={20}
-              floors={5}
-              floorHeight={4}
-              spacingX={5}
-              winW={2.5}
-              winH={1.8}
-            />
-          </group>
+{/* Left Wing Windows */}
+<group
+position={[-24.2, 4, 15]}
+rotation={[0, Math.PI / 2, 0]}
+>
+<WindowGrid
+width={55}
+height={20}
+floors={5}
+floorHeight={4}
+spacingX={5}
+winW={2.5}
+winH={1.8}
+/>
+</group>
 
-          {/* Left Wing White Floor Bands */}
-          {[4, 8, 12, 16, 20, 24].map((y) => (
-            <mesh
-              key={`u-left-band-${y}`}
-              position={[-24.1, y, 15]}
-            >
-              <boxGeometry args={[0.5, 0.5, 55]} />
-              <meshStandardMaterial color="#ffffff" />
-            </mesh>
-          ))}
-
-
-          {/* ========================================= */}
-          {/* RIGHT WING */}
-          {/* ========================================= */}
-
-          <mesh position={[31, 14, 15]} castShadow receiveShadow>
-            <boxGeometry args={[13, 24, 55]} />
-            <meshStandardMaterial color="#f5f5f5" roughness={0.9} />
-          </mesh>
-
-          {/* Right wing orange vertical columns */}
-          {[-8, 2, 12, 22, 32].map((z) => (
-            <mesh
-              key={`u-right-orange-${z}`}
-              position={[24.3, 14, z]}
-              castShadow
-            >
-              <boxGeometry args={[0.8, 24, 1]} />
-              <meshStandardMaterial color="#E87522" />
-            </mesh>
-          ))}
-
-          {/* Right Wing Windows */}
-          <group
-            position={[24.2, 4, 15]}
-            rotation={[0, -Math.PI / 2, 0]}
-          >
-            <WindowGrid
-              width={55}
-              height={20}
-              floors={5}
-              floorHeight={4}
-              spacingX={5}
-              winW={2.5}
-              winH={1.8}
-            />
-          </group>
-
-          {/* Right Wing White Floor Bands */}
-          {[4, 8, 12, 16, 20, 24].map((y) => (
-            <mesh
-              key={`u-right-band-${y}`}
-              position={[24.1, y, 15]}
-            >
-              <boxGeometry args={[0.5, 0.5, 55]} />
-              <meshStandardMaterial color="#ffffff" />
-            </mesh>
-          ))}
+{/* Left Wing White Floor Bands */}
+{[4, 8, 12, 16, 20, 24].map((y) => (
+<mesh
+key={`u-left-band-${y}`}
+position={[-24.1, y, 15]}
+>
+<boxGeometry args={[0.5, 0.5, 55]} />
+<meshStandardMaterial color="#ffffff" />
+</mesh>
+))}
 
 
-          {/* ========================================= */}
-          {/* ORANGE CORNER STRUCTURES */}
-          {/* Replacing stand-alone columns with bridging corner structures matching photo */}
-          {/* ========================================= */}
+{/* ========================================= */}
+{/* RIGHT WING */}
+{/* ========================================= */}
 
-          {[-24, 24].map((x) => (
-            <group key={`u-corner-${x}`}>
+<mesh position={[31, 14, 15]} castShadow receiveShadow>
+<boxGeometry args={[13, 24, 55]} />
+<meshStandardMaterial color="#f5f5f5" roughness={0.9} />
+</mesh>
 
-              {/* Back Corner Connector Bridge (bracing back and central wings) */}
-              <mesh position={[x, 14, -5]}>
-                <boxGeometry args={[1.2, 24, 1.2]} />
-                <meshStandardMaterial color="#E87522" />
-              </mesh>
+{/* Right wing orange vertical columns */}
+{[-8, 2, 12, 22, 32].map((z) => (
+<mesh
+key={`u-right-orange-${z}`}
+position={[24.3, 14, z]}
+castShadow
+>
+<boxGeometry args={[0.8, 24, 1]} />
+<meshStandardMaterial color="#E87522" />
+</mesh>
+))}
 
-              {/* Front Corner Bridge (at junction with side wings) */}
-              <mesh position={[x, 14, 10]}>
-                <boxGeometry args={[1.2, 24, 1.2]} />
-                <meshStandardMaterial color="#E87522" />
-              </mesh>
+{/* Right Wing Windows */}
+<group
+position={[24.2, 4, 15]}
+rotation={[0, -Math.PI / 2, 0]}
+>
+<WindowGrid
+width={55}
+height={20}
+floors={5}
+floorHeight={4}
+spacingX={5}
+winW={2.5}
+winH={1.8}
+/>
+</group>
 
-            </group>
-          ))}
-
-
-          {/* ========================================= */}
-          {/* ARYABHATTA BHAVAN NAME */}
-          {/* ========================================= */}
-
-          <mesh position={[0, 17.5, -5.5]} castShadow>
-            <boxGeometry args={[24, 2, 0.6]} />
-            <meshStandardMaterial color="#ffffff" />
-          </mesh>
-
-          <Text
-            position={[0, 17.5, -5.15]}
-            fontSize={1}
-            color="#333333"
-            fontWeight="bold"
-          >
-            ARYABHATTA BHAVAN
-          </Text>
-
-
-          {/* ========================================= */}
-          {/* FRONT ENTRANCE */}
-          {/* ========================================= */}
-
-          {/* Entrance Building / Glass Background */}
-          <mesh position={[0, 6, 0]} castShadow>
-            <boxGeometry args={[18, 12, 5]} />
-            <meshStandardMaterial
-              color="#d9e1e5"
-              roughness={0.3}
-            />
-          </mesh>
-
-          {/* Dark Glass Entrance */}
-          <mesh position={[0, 4.5, 2.55]}>
-            <boxGeometry args={[9, 7, 0.2]} />
-            <meshStandardMaterial
-              color="#253342"
-              metalness={0.5}
-              roughness={0.15}
-            />
-          </mesh>
+{/* Right Wing White Floor Bands */}
+{[4, 8, 12, 16, 20, 24].map((y) => (
+<mesh
+key={`u-right-band-${y}`}
+position={[24.1, y, 15]}
+>
+<boxGeometry args={[0.5, 0.5, 55]} />
+<meshStandardMaterial color="#ffffff" />
+</mesh>
+))}
 
 
-          {/* ========================================= */}
-          {/* GRAND ENTRANCE STAIRS */}
-          {/* Saddle brown color based on weathered plinth in photo */}
-          {/* ========================================= */}
+{/* ========================================= */}
+{/* ORANGE CORNER STRUCTURES */}
+{/* Similar to reference image */}
+{/* ========================================= */}
 
-          {[0, 1, 2, 3, 4, 5, 6].map((step) => (
-            <mesh
-              key={`u-step-${step}`}
-              position={[
-                0,
-                0.25 + step * 0.25,
-                12 - step * 0.8
-              ]}
-              receiveShadow
-            >
-              <boxGeometry
-                args={[
-                  18 - step * 0.5,
-                  0.5,
-                  1.2
-                ]}
-              />
-              <meshStandardMaterial color="#dddddd" />
-            </mesh>
-          ))}
+{[-24, 24].map((x) => (
+<group key={`u-corner-${x}`}>
+
+<mesh position={[x, 14, -5]}>
+<boxGeometry args={[1.2, 24, 1.2]} />
+<meshStandardMaterial color="#E87522" />
+</mesh>
+
+<mesh position={[x, 14, 10]}>
+<boxGeometry args={[1.2, 24, 1.2]} />
+<meshStandardMaterial color="#E87522" />
+</mesh>
+
+</group>
+))}
 
 
-          {/* ========================================= */}
-          {/* WHITE ENTRANCE PILLARS */}
-          {/* Updated count and start point to match the expansive photo */}
-          {/* ========================================= */}
+{/* ========================================= */}
+{/* ARYABHATTA BHAVAN NAME */}
+{/* ========================================= */}
 
-          {[-6, -2, 2, 6].map((x) => (
-            <mesh
-              key={`u-front-pillar-${x}`}
-              position={[x, 6, 5]}
-              castShadow
-            >
-              <cylinderGeometry args={[0.45, 0.55, 10, 32]} />
-              <meshStandardMaterial color="#ffffff" />
-            </mesh>
-          ))}
+<mesh position={[0, 17.5, -5.5]} castShadow>
+<boxGeometry args={[24, 2, 0.6]} />
+<meshStandardMaterial color="#ffffff" />
+</mesh>
 
-
-          {/* ========================================= */}
-          {/* CURVED FRONT CANOPY */}
-          {/* Blueish-grey canopy dome matching the photo */}
-          {/* ========================================= */}
-
-          <mesh
-            position={[0, 11, 5]}
-            rotation={[Math.PI / 2, 0, 0]}
-            castShadow
-          >
-            <cylinderGeometry
-              args={[9, 9, 1.2, 32, 1, false, 0, Math.PI]}
-            />
-            <meshStandardMaterial
-              color="#ffffff"
-              roughness={0.7}
-              side={THREE.DoubleSide}
-            />
-          </mesh>
+<Text
+position={[0, 17.5, -5.15]}
+fontSize={1}
+color="#333333"
+fontWeight="bold"
+>
+ARYABHATTA BHAVAN
+</Text>
 
 
-          {/* Canopy Orange Trim */}
-          <mesh
-            position={[0, 11.1, 5.5]}
-            rotation={[Math.PI / 2, 0, 0]}
-          >
-            <torusGeometry args={[9, 0.18, 8, 32, Math.PI]} />
-            <meshStandardMaterial color="#E87522" />
-          </mesh>
+{/* ========================================= */}
+{/* FRONT ENTRANCE */}
+{/* ========================================= */}
+
+{/* Entrance Building / Glass Background */}
+<mesh position={[0, 6, 0]} castShadow>
+<boxGeometry args={[18, 12, 5]} />
+<meshStandardMaterial
+color="#d9e1e5"
+roughness={0.3}
+/>
+</mesh>
+
+{/* Dark Glass Entrance */}
+<mesh position={[0, 4.5, 2.55]}>
+<boxGeometry args={[9, 7, 0.2]} />
+<meshStandardMaterial
+color="#253342"
+metalness={0.5}
+roughness={0.15}
+/>
+</mesh>
 
 
-          {/* ========================================= */}
-          {/* U-BLOCK LABEL */}
-          {/* ========================================= */}
+{/* ========================================= */}
+{/* GRAND ENTRANCE STAIRS */}
+{/* ========================================= */}
 
-          <Text
-            position={[0, 27, -10]}
-            fontSize={2.5}
-            color="white"
-            outlineWidth={0.15}
-            outlineColor="black"
-          >
-            {ublockZone.label}
-          </Text>
+{[0, 1, 2, 3, 4, 5, 6].map((step) => (
+<mesh
+key={`u-step-${step}`}
+position={[
+0,
+0.25 + step * 0.25,
+12 - step * 0.8
+]}
+receiveShadow
+>
+<boxGeometry
+args={[
+18 - step * 0.5,
+0.5,
+1.2
+]}
+/>
+<meshStandardMaterial color="#dddddd" />
+</mesh>
+))}
 
-        </group>
-      )}
+
+{/* ========================================= */}
+{/* WHITE ENTRANCE PILLARS */}
+{/* ========================================= */}
+
+{[-6, -2, 2, 6].map((x) => (
+<mesh
+key={`u-front-pillar-${x}`}
+position={[x, 6, 5]}
+castShadow
+>
+<cylinderGeometry args={[0.45, 0.55, 10, 32]} />
+<meshStandardMaterial color="#ffffff" />
+</mesh>
+))}
+
+
+{/* ========================================= */}
+{/* CURVED FRONT CANOPY */}
+{/* Reference-style semicircular entrance */}
+{/* ========================================= */}
+
+<mesh
+position={[0, 11, 5]}
+rotation={[Math.PI / 2, 0, 0]}
+castShadow
+>
+<cylinderGeometry
+args={[9, 9, 1.2, 32, 1, false, 0, Math.PI]}
+/>
+<meshStandardMaterial
+color="#ffffff"
+roughness={0.7}
+side={THREE.DoubleSide}
+/>
+</mesh>
+
+
+{/* Canopy Orange Trim */}
+<mesh
+position={[0, 11.1, 5.5]}
+rotation={[Math.PI / 2, 0, 0]}
+>
+<torusGeometry args={[9, 0.18, 8, 32, Math.PI]} />
+<meshStandardMaterial color="#E87522" />
+</mesh>
+
+
+{/* ========================================= */}
+{/* U-BLOCK LABEL */}
+{/* ========================================= */}
+
+<Text
+position={[0, 27, -10]}
+fontSize={2.5}
+color="white"
+outlineWidth={0.15}
+outlineColor="black"
+>
+{ublockZone.label}
+</Text>
+
+</group>
+)}
 {/* 🏨 HOSTELS */}
 {/* Boys Hostel: 3 floors (height = 12) */}
 {boyshostelZone.render && (
