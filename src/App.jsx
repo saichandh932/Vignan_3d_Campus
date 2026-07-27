@@ -1358,23 +1358,21 @@ const DEFAULT_MAP_ITEMS =
     ]
   },
   {
-    "id": "item_1785159351537",
-    "type": "road",
-    "label": "Right Road (A/H-Block) (Copy)",
+    "id": "item_1785160101490",
+    "type": "road_highway",
     "pos": [
-      -120.7,
+      -107,
       0,
-      -60.9
-    ],
-    "size": [
-      10,
-      94
+      -76
     ],
     "rotation": 1.5707963267948966,
-    "hasTreesLeft": false
+    "label": "HIGHWAY ROAD",
+    "size": [
+      14,
+      130
+    ]
   }
 ]
-
 const ADD_TEMPLATES = [
 // Modular components
 { type: 'building', label: 'Building Block', icon: '🏢', category: 'building' },
