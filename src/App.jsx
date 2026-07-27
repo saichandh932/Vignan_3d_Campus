@@ -1360,9 +1360,9 @@ const DEFAULT_MAP_ITEMS = [
     "id": "item_1785139391773",
     "type": "ushape",
     "pos": [
-      -137,
+      -139,
       0,
-      -203
+      -207
     ],
     "rotation": 3.141592653589793,
     "label": "U-SHAPE BLOCK",
