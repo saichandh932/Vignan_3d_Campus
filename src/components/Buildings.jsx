@@ -1011,6 +1011,7 @@ fontWeight="bold"
 </group>
 )}
 
+{/* 🏢 N-BLOCK (Nagarjuna Block) & MHP (The Most Happening Place) */}
 {/* 🏢 N-BLOCK (Nagarjuna Block) & Courtyard */}
 {nblockZone.render && (
 <group 
@@ -1074,30 +1075,23 @@ fontWeight="bold"
       <WindowGrid width={58} height={24} floors={6} floorHeight={4} spacingX={3.5} />
     </group>
 
-    {/* 🍔 THE MOST HAPPENING PLACE (MHP) - HOLLOW ENTRANCE ALCOVE (BOTTOM LEFT) */}
-    <group position={[0, 0, 24]}>
-      {/* Hollow Interior Enclosure Walls */}
-      <mesh position={[0, 3, -6]} receiveShadow>
-        <boxGeometry args={[15.8, 6, 0.2]} />
-        <meshStandardMaterial color="#3a2f2f" roughness={0.8} />
+    {/* 🍔 THE MOST HAPPENING PLACE (MHP) - BOTTOM LEFT END (FACING H-BLOCK) */}
+    <group position={[0, 0, 29.2]}>
+      {/* Entrance Frame */}
+      <mesh position={[0, 2.5, 0.1]} castShadow>
+        <boxGeometry args={[14, 5, 0.5]} />
+        <meshStandardMaterial color="#6E1E1E" />
       </mesh>
-      <mesh position={[-7.8, 3, 0]}>
-        <boxGeometry args={[0.2, 6, 12]} />
-        <meshStandardMaterial color="#3a2f2f" roughness={0.8} />
-      </mesh>
-      <mesh position={[7.8, 3, 0]}>
-        <boxGeometry args={[0.2, 6, 12]} />
-        <meshStandardMaterial color="#3a2f2f" roughness={0.8} />
-      </mesh>
-      <mesh position={[0, 6, 0]}>
-        <boxGeometry args={[15.8, 0.2, 12]} />
-        <meshStandardMaterial color="#2d2525" roughness={0.8} />
+      {/* Glass facade doors */}
+      <mesh position={[0, 2.2, 0.2]} castShadow>
+        <boxGeometry args={[11, 3.6, 0.1]} />
+        <meshStandardMaterial color="#88ccff" transparent opacity={0.6} roughness={0.1} />
       </mesh>
 
-      {/* Illuminated LED Sign Overhead */}
-      <group position={[0, 5.5, 5.2]}>
+      {/* Illuminated LED Sign "THE MOST HAPPENING PLACE" */}
+      <group position={[0, 4.4, 0.3]}>
         <mesh>
-          <boxGeometry args={[14, 0.8, 0.1]} />
+          <boxGeometry args={[13, 0.8, 0.1]} />
           <meshStandardMaterial color="#111" />
         </mesh>
         <Text
@@ -1112,12 +1106,12 @@ fontWeight="bold"
         </Text>
       </group>
 
-      {/* Food Court Tables Placed Inside the Hollow Cavity */}
-      <group position={[0, 0, -1]}>
+      {/* Food Court Seating/Tables Area */}
+      <group position={[0, 0, 3]}>
         {[
-          { pos: [-3, 0.5, -2], color: "#FF3B30" },
-          { pos: [3, 0.5, -2], color: "#FFCC00" },
-          { pos: [0, 0.5, 2], color: "#FFFFFF" }
+          { pos: [-3, 0.5, 0], color: "#FF3B30" },
+          { pos: [3, 0.5, 0], color: "#FFCC00" },
+          { pos: [0, 0.5, 3], color: "#FFFFFF" }
         ].map((tbl, i) => (
           <group key={`mhp-tbl-${i}`} position={tbl.pos}>
             <mesh position={[0, 0.6, 0]} castShadow>
@@ -1142,36 +1136,37 @@ fontWeight="bold"
     </group>
   </group>
 
-  {/* 🏢 EAST WING (Right Wing - Angled with Hollow Atrium Cavity) */}
+  {/* 🏢 EAST WING (Right Wing - Angled with Recessed Hollow Entrance Atrium) */}
   <group position={[55, 0, -2]} rotation={[0, 0.08, 0]}>
     <mesh position={[0, 12, 0]} castShadow receiveShadow>
       <boxGeometry args={[16, 24, 58]} />
       <meshStandardMaterial color="#fcfcfc" roughness={0.9} />
     </mesh>
 
-    {/* 🏛️ RECESSED HOLLOW ATRIUM (Empty Interior Void) */}
+    {/* 🏛️ RECESSED HOLLOW ATRIUM (Replaced solid dark box with open cavity walls & inner steps) */}
     <group position={[-5, 0, 12]}>
       {/* Interior Back Wall */}
       <mesh position={[2, 4, 0]} receiveShadow>
         <boxGeometry args={[0.2, 8, 18]} />
-        <meshStandardMaterial color="#5e5c5a" roughness={0.9} />
+        <meshStandardMaterial color="#7a7876" roughness={0.8} />
       </mesh>
       {/* Interior Top Ceiling */}
       <mesh position={[-3, 8, 0]}>
         <boxGeometry args={[10, 0.2, 18]} />
-        <meshStandardMaterial color="#4a4846" roughness={0.9} />
+        <meshStandardMaterial color="#8c8a88" roughness={0.8} />
       </mesh>
-      {/* Interior Side Walls */}
+      {/* Interior Left Side Wall */}
       <mesh position={[-3, 4, -9]}>
         <boxGeometry args={[10, 8, 0.2]} />
-        <meshStandardMaterial color="#5e5c5a" roughness={0.9} />
+        <meshStandardMaterial color="#7a7876" roughness={0.8} />
       </mesh>
+      {/* Interior Right Side Wall */}
       <mesh position={[-3, 4, 9]}>
         <boxGeometry args={[10, 8, 0.2]} />
-        <meshStandardMaterial color="#5e5c5a" roughness={0.9} />
+        <meshStandardMaterial color="#7a7876" roughness={0.8} />
       </mesh>
 
-      {/* 🪜 Steps Inside the Hollow Cavity */}
+      {/* 🪜 Interior Steps Inside the Hollow Cavity */}
       {[0, 1, 2, 3, 4].map((s) => (
         <mesh key={`atrium-step-${s}`} position={[1 - s * 0.8, 0.2 + s * 0.4, 0]} receiveShadow>
           <boxGeometry args={[1.2, 0.4, 16]} />
@@ -1180,7 +1175,7 @@ fontWeight="bold"
       ))}
     </group>
 
-    {/* White Slanted Pillars in Front of Open Void */}
+    {/* White Slanted Support Pillars in Front of Hollow Atrium */}
     {[-5, 2, 9].map((z) => (
       <mesh key={`e-arch-pil-${z}`} position={[-8, 4, z]} rotation={[0, 0, -0.15]} castShadow>
         <cylinderGeometry args={[0.45, 0.55, 8, 16]} />
