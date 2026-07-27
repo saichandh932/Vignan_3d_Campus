@@ -204,7 +204,7 @@ distance={4}
 
 // IMPORTANT: Increment this version string whenever DEFAULT_MAP_ITEMS is updated.
 // This forces all users' browsers to discard their old localStorage and reload fresh defaults.
-const LAYOUT_VERSION = "v15";
+const LAYOUT_VERSION = "v16";
 
 const DEFAULT_MAP_ITEMS = [
 [
