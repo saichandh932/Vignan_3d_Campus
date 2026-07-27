@@ -1555,30 +1555,35 @@ castShadow
           {/* Blueish-grey canopy dome matching the photo */}
 {/* ========================================= */}
 
-<mesh
-position={[0, 11.1, 5.5]}
-rotation={[Math.PI / 2, 0, 0]}
-castShadow
->
-<cylinderGeometry
-args={[9, 9, 1.2, 32, 1, false, 0, Math.PI]}
-/>
-<meshStandardMaterial
-color="#ffffff"
-roughness={0.7}
-side={THREE.DoubleSide}
-/>
-</mesh>
 
+<group position={[0, 11.1, 5.5]}>
+  {/* Main Canopy Base */}
+  <mesh
+    rotation={[Math.PI / 2, 0, 0]}
+    castShadow
+  >
+    <cylinderGeometry args={[9, 9, 1.2, 32, 1, false, 0, Math.PI]} />
+    <meshStandardMaterial
+      color="#ffffff"
+      roughness={0.7}
+      side={THREE.DoubleSide}
+    />
+  </mesh>
 
-{/* Canopy Orange Trim */}
-<mesh
-position={[0, 11.1, 5.5]}
-rotation={[Math.PI / 2, 0, 0]}
->
-<torusGeometry args={[9, 0.18, 8, 32, Math.PI]} />
-<meshStandardMaterial color="#E87522" />
-</mesh>
+  {/* Orange Border Trim */}
+  <mesh
+    position={[0, 0.45, 0]}
+    rotation={[Math.PI / 2, 0, 0]}
+    castShadow
+  >
+    <cylinderGeometry args={[9.1, 9.1, 0.3, 32, 1, false, 0, Math.PI]} />
+    <meshStandardMaterial
+      color="#ff5500"
+      roughness={0.5}
+      side={THREE.DoubleSide}
+    />
+  </mesh>
+</group>
 
 
 {/* ========================================= */}
