@@ -2503,7 +2503,7 @@ style={{ backgroundColor: item.color || (item.type?.startsWith('road') ? '#444' 
 {item.label || item.type?.toUpperCase()}
 </span>
 <span style={{ opacity: 0.6, fontSize: '0.75rem' }}>
-[{Math.round(item.pos[0])}, {Math.round(item.pos[2])}]
+[{Math.round(item.pos?.[0] ?? 0)}, {Math.round(item.pos?.[2] ?? 0)}]
 </span>
 </div>
 ))}
@@ -2556,7 +2556,7 @@ style={{ opacity: isLayoutLocked ? 0.5 : 1 }}
 <div className="input-group">
 <div className="input-label">
 <span>Position X (Left-Right)</span>
-<span className="slider-val">{Math.round(selectedItem.pos[0])}</span>
+<span className="slider-val">{Math.round(selectedItem.pos[0] ?? 0)}</span>
 </div>
 <div className="slider-container">
 <input 
