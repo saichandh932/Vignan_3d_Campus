@@ -1556,10 +1556,11 @@ castShadow
 {/* ========================================= */}
 
 
+
 <group position={[0, 11.1, 5.5]}>
   {/* Main Canopy Base */}
   <mesh
-    rotation={[Math.PI , 0, 0]}
+    rotation={[Math.PI / 2, 0, 0]}
     castShadow
   >
     <cylinderGeometry args={[9, 9, 1.2, 32, 1, false, 0, Math.PI]} />
@@ -1573,7 +1574,7 @@ castShadow
   {/* Orange Border Trim */}
   <mesh
     position={[0, 0.45, 0]}
-    rotation={[Math.PI , 0, 0]}
+    rotation={[Math.PI / 2, 0, 0]}
     castShadow
   >
     <cylinderGeometry args={[9.1, 9.1, 0.3, 32, 1, false, 0, Math.PI]} />
