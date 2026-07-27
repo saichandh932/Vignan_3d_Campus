@@ -1557,7 +1557,7 @@ castShadow
 
 <mesh
 position={[0, 11, 5]}
-rotation={[Math.PI, 90, 0]}
+rotation={[Math.PI, 90, 90]}
 castShadow
 >
 <cylinderGeometry
