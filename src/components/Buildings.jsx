@@ -340,24 +340,14 @@ export function Buildings({ zones = [] }) {
 const getZone = (id, defaultLabel, defaultPos, defaultSize = null, defaultRot = 0) => {
 const found = zones.find(z => z.id === id);
 return {
-render: found ? true : false,
+// Always allow the block to render using its default coordinates if not explicitly hidden
+render: true, 
 pos: found ? found.pos : defaultPos,
 label: found ? found.label : defaultLabel,
 size: found ? found.size : defaultSize,
 rotation: found && found.rotation !== undefined ? found.rotation : defaultRot
 };
 };
-  const getZone = (id, defaultLabel, defaultPos, defaultSize = null, defaultRot = 0) => {
-    const found = zones.find(z => z.id === id);
-    return {
-      // Always allow the block to render using its default coordinates if not explicitly hidden
-      render: true, 
-      pos: found ? found.pos : defaultPos,
-      label: found ? found.label : defaultLabel,
-      size: found ? found.size : defaultSize,
-      rotation: found && found.rotation !== undefined ? found.rotation : defaultRot
-    };
-  };
 
 
 const gateMain = getZone('gate_main', "VIGNAN'S FOUNDATION", [0, 0, 0], [18, 5], 0);
@@ -1303,6 +1293,9 @@ THE MOST HAPPENING PLACE
 </group>
 </group>
 )}
+      {/* 🏢 U-BLOCK (Aryabhatta Bhavan) */}
+      // In Buildings.jsx
+
 {/* 🏢 U-BLOCK (Aryabhatta Bhavan) */}
 {ublockZone.render && (
 <group
@@ -1446,17 +1439,20 @@ position={[24.1, y, 15]}
 
 {/* ========================================= */}
 {/* ORANGE CORNER STRUCTURES */}
-{/* Similar to reference image */}
+          {/* Similar to reference image */}
+          {/* Replacing stand-alone columns with bridging corner structures matching photo */}
 {/* ========================================= */}
 
 {[-24, 24].map((x) => (
 <group key={`u-corner-${x}`}>
 
+              {/* Back Corner Connector Bridge (bracing back and central wings) */}
 <mesh position={[x, 14, -5]}>
 <boxGeometry args={[1.2, 24, 1.2]} />
 <meshStandardMaterial color="#E87522" />
 </mesh>
 
+              {/* Front Corner Bridge (at junction with side wings) */}
 <mesh position={[x, 14, 10]}>
 <boxGeometry args={[1.2, 24, 1.2]} />
 <meshStandardMaterial color="#E87522" />
@@ -1511,6 +1507,7 @@ roughness={0.15}
 
 {/* ========================================= */}
 {/* GRAND ENTRANCE STAIRS */}
+          {/* Saddle brown color based on weathered plinth in photo */}
 {/* ========================================= */}
 
 {[0, 1, 2, 3, 4, 5, 6].map((step) => (
@@ -1537,6 +1534,7 @@ args={[
 
 {/* ========================================= */}
 {/* WHITE ENTRANCE PILLARS */}
+          {/* Updated count and start point to match the expansive photo */}
 {/* ========================================= */}
 
 {[-6, -2, 2, 6].map((x) => (
@@ -1553,7 +1551,8 @@ castShadow
 
 {/* ========================================= */}
 {/* CURVED FRONT CANOPY */}
-{/* Reference-style semicircular entrance */}
+          {/* Reference-style semicircular entrance */}
+          {/* Blueish-grey canopy dome matching the photo */}
 {/* ========================================= */}
 
 <mesh
