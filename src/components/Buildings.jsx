@@ -1555,20 +1555,13 @@ castShadow
           {/* Blueish-grey canopy dome matching the photo */}
 {/* ========================================= */}
 
-<mesh
-position={[0, 11, 5]}
-rotation={[Math.PI / 2, 0, 0]}
-castShadow
->
-<cylinderGeometry
-args={[9, 9, 1.2, 32, 1, false, 0, Math.PI]}
-/>
-<meshStandardMaterial
-color="#ffffff"
-roughness={0.7}
-side={THREE.DoubleSide}
-/>
+<mesh position={[0, 11, 5]} rotation={[0, 0, 0]} castShadow> 
+  {/* Increased depth to 6 to make a wide protective canopy */}
+  <cylinderGeometry args={[9, 9, 6, 32, 1, false, 0, Math.PI]} /> 
+  {/* Changed to a blue color with low roughness to mimic the smooth roof sheen */}
+  <meshStandardMaterial color="#3a7bd5" roughness={0.3} side={THREE.DoubleSide} /> 
 </mesh>
+
 
 
 {/* Canopy Orange Trim */}
