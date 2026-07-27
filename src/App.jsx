@@ -206,7 +206,8 @@ distance={4}
 // This forces all users' browsers to discard their old localStorage and reload fresh defaults.
 const LAYOUT_VERSION = "v17";
 
-const DEFAULT_MAP_ITEMS = [
+const DEFAULT_MAP_ITEMS = 
+[
   {
     "id": "gate_main",
     "type": "gate",
@@ -231,7 +232,7 @@ const DEFAULT_MAP_ITEMS = [
       0,
       -62
     ],
-    "rotation": 2.234021442552742,
+    "rotation": 5.3756140961425345,
     "size": [
       18,
       5
@@ -331,17 +332,17 @@ const DEFAULT_MAP_ITEMS = [
     "id": "ublock",
     "type": "custom_ublock",
     "pos": [
-      -139,
+      -140,
       0,
-      -207
+      -194
     ],
     "rotation": 3.141592653589793,
     "label": "U-BLOCK",
     "size": [
-      73,
-      94
+      84,
+      76
     ],
-    "floors": 4,
+    "floors": 3,
     "color": "#eaeaea"
   },
   {
@@ -711,9 +712,9 @@ const DEFAULT_MAP_ITEMS = [
     "type": "road",
     "label": "Spine Road Seg 1",
     "pos": [
+      -29.3,
       0,
-      0,
-      -17
+      0.6
     ],
     "size": [
       12,
@@ -873,13 +874,13 @@ const DEFAULT_MAP_ITEMS = [
     "type": "road",
     "label": "Library Gate Road",
     "pos": [
-      -87,
+      -77,
       0,
       -61.4
     ],
     "size": [
       12,
-      165
+      149
     ],
     "rotation": 1.5707963267948966,
     "hasWalls": false,
@@ -1371,6 +1372,22 @@ const DEFAULT_MAP_ITEMS = [
       12,
       64
     ]
+  },
+  {
+    "id": "item_1785159351537",
+    "type": "road",
+    "label": "Right Road (A/H-Block) (Copy)",
+    "pos": [
+      -124,
+      0,
+      -61
+    ],
+    "size": [
+      10,
+      94
+    ],
+    "rotation": 1.5707963267948966,
+    "hasTreesLeft": false
   }
 ]
 
