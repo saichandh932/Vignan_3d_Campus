@@ -1649,7 +1649,7 @@ return () => window.removeEventListener('keydown', handleKeyDown);
 const addItem = (type, landmarkId = null) => {
 if (isLayoutLocked) return;
 const id = landmarkId || `item_${Date.now()}`;
-let newItem = { id, type, pos: [0, 0, -50], rotation: 0, label: '' };
+let newItem = { id, type: type, pos: [0, 0, -50], rotation: 0, label: '' };
 
 if (type === 'building') {
 newItem.label = 'NEW BLOCK';
@@ -2500,7 +2500,7 @@ setEditorTab('edit');
 className="zone-color-indicator" 
 style={{ backgroundColor: item.color || (item.type?.startsWith('road') ? '#444' : '#6b7280') }}
 />
-{item.label || item.type.toUpperCase()}
+{item.label || item.type?.toUpperCase()}
 </span>
 <span style={{ opacity: 0.6, fontSize: '0.75rem' }}>
 [{Math.round(item.pos[0])}, {Math.round(item.pos[2])}]
