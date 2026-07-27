@@ -1558,9 +1558,9 @@ castShadow
 
 
 <group position={[0, 11.1, 5.5]}>
-  {/* Main Canopy Base */}
+  {/* White Main Canopy (Horizontal Half-Cylinder) */}
   <mesh
-    rotation={[Math.PI / 2, 0, 0]}
+    rotation={[0, -Math.PI / 2, 0]}
     castShadow
   >
     <cylinderGeometry args={[9, 9, 1.2, 32, 1, false, 0, Math.PI]} />
@@ -1571,13 +1571,13 @@ castShadow
     />
   </mesh>
 
-  {/* Orange Border Trim */}
+  {/* Orange Top Rim / Border Trim */}
   <mesh
-    position={[0, 0.45, 0]}
-    rotation={[Math.PI / 2, 0, 0]}
+    position={[0, 0.61, 0]}
+    rotation={[0, -Math.PI / 2, 0]}
     castShadow
   >
-    <cylinderGeometry args={[9.1, 9.1, 0.3, 32, 1, false, 0, Math.PI]} />
+    <cylinderGeometry args={[9.1, 9.1, 0.2, 32, 1, false, 0, Math.PI]} />
     <meshStandardMaterial
       color="#ff5500"
       roughness={0.5}
