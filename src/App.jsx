@@ -915,7 +915,7 @@ const DEFAULT_MAP_ITEMS =
     "pos": [
       -0.2,
       0,
-      -199.2
+      -196
     ],
     "size": [
       12,
@@ -930,7 +930,7 @@ const DEFAULT_MAP_ITEMS =
     "pos": [
       74.8,
       0,
-      -124
+      -127
     ],
     "size": [
       12,
@@ -1348,13 +1348,13 @@ const DEFAULT_MAP_ITEMS =
     "pos": [
       -140,
       0,
-      -229
+      -225
     ],
     "rotation": 0,
     "label": "NEW ROAD",
     "size": [
       12,
-      64
+      66
     ]
   },
   {
@@ -1365,7 +1365,7 @@ const DEFAULT_MAP_ITEMS =
       0,
       -76
     ],
-    "rotation":Math.PI / 2,
+    "rotation": 1.5707963267948966,
     "label": "HIGHWAY ROAD",
     "size": [
       14,
