@@ -1136,22 +1136,50 @@ fontWeight="bold"
     </group>
   </group>
 
-  {/* 🏢 EAST WING (Right Wing - Angled with Elevated Entrance) */}
+  {/* 🏢 EAST WING (Right Wing - Angled with Recessed Hollow Entrance Atrium) */}
   <group position={[55, 0, -2]} rotation={[0, 0.08, 0]}>
     <mesh position={[0, 12, 0]} castShadow receiveShadow>
       <boxGeometry args={[16, 24, 58]} />
       <meshStandardMaterial color="#fcfcfc" roughness={0.9} />
     </mesh>
 
-    {/* Open Ground Floor Passageway & Slanted Support Pillars */}
-    <mesh position={[-8, 3, 15]} castShadow>
-      <boxGeometry args={[1, 6, 20]} />
-      <meshStandardMaterial color="#333" />
-    </mesh>
-    {[-4, 4, 12].map((z) => (
-      <mesh key={`e-arch-pil-${z}`} position={[-6, 3, z]} rotation={[0, 0, -0.2]} castShadow>
-        <cylinderGeometry args={[0.5, 0.5, 6, 16]} />
-        <meshStandardMaterial color="#dedede" />
+    {/* 🏛️ RECESSED HOLLOW ATRIUM (Replaced solid dark box with open cavity walls & inner steps) */}
+    <group position={[-5, 0, 12]}>
+      {/* Interior Back Wall */}
+      <mesh position={[2, 4, 0]} receiveShadow>
+        <boxGeometry args={[0.2, 8, 18]} />
+        <meshStandardMaterial color="#7a7876" roughness={0.8} />
+      </mesh>
+      {/* Interior Top Ceiling */}
+      <mesh position={[-3, 8, 0]}>
+        <boxGeometry args={[10, 0.2, 18]} />
+        <meshStandardMaterial color="#8c8a88" roughness={0.8} />
+      </mesh>
+      {/* Interior Left Side Wall */}
+      <mesh position={[-3, 4, -9]}>
+        <boxGeometry args={[10, 8, 0.2]} />
+        <meshStandardMaterial color="#7a7876" roughness={0.8} />
+      </mesh>
+      {/* Interior Right Side Wall */}
+      <mesh position={[-3, 4, 9]}>
+        <boxGeometry args={[10, 8, 0.2]} />
+        <meshStandardMaterial color="#7a7876" roughness={0.8} />
+      </mesh>
+
+      {/* 🪜 Interior Steps Inside the Hollow Cavity */}
+      {[0, 1, 2, 3, 4].map((s) => (
+        <mesh key={`atrium-step-${s}`} position={[1 - s * 0.8, 0.2 + s * 0.4, 0]} receiveShadow>
+          <boxGeometry args={[1.2, 0.4, 16]} />
+          <meshStandardMaterial color="#b0ac32" roughness={0.7} />
+        </mesh>
+      ))}
+    </group>
+
+    {/* White Slanted Support Pillars in Front of Hollow Atrium */}
+    {[-5, 2, 9].map((z) => (
+      <mesh key={`e-arch-pil-${z}`} position={[-8, 4, z]} rotation={[0, 0, -0.15]} castShadow>
+        <cylinderGeometry args={[0.45, 0.55, 8, 16]} />
+        <meshStandardMaterial color="#ffffff" roughness={0.6} />
       </mesh>
     ))}
 
