@@ -277,7 +277,7 @@ const DEFAULT_MAP_ITEMS =
       0,
       -40
     ],
-    "rotation": 0.5235987755982988,
+    "rotation": -0.45,
     "size": [
       21,
       21
