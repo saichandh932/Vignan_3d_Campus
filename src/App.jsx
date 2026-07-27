@@ -1357,20 +1357,20 @@ const DEFAULT_MAP_ITEMS = [
 ]
 },
 {
-"id": "item_1785139391773",
-"type": "ushape",
+"id": "ublock",
+"type": "custome_ublock",
 "pos": [
 -137,
 0,
 -203
 ],
 "rotation": 3.141592653589793,
-"label": "U-SHAPE BLOCK",
+"label": "U BLOCK",
 "size": [
 73,
 94
 ],
-"floors": 3,
+"floors": 4,
 "color": "#eaeaea"
 }
 ];
