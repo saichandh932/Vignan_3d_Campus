@@ -1557,7 +1557,7 @@ castShadow
 
 
 
-<group position={[0, 11.1, 5.5]}>
+<group position={[0, 11.1, 3.0]}>
   {/* White Main Canopy (Horizontal Half-Cylinder) */}
   <mesh
     rotation={[0, -Math.PI / 2, 0]}
