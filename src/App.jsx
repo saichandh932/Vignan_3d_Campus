@@ -1697,7 +1697,7 @@ newItem.label = 'SINGLE TREE';
 } else if (type === 'tree_row') {
 newItem.label = 'TREE ROW';
 newItem.size = [40, 1];
-} else if (type.startsWith('custom_') || ['canteen', 'sportsground', 'farm', 'shrine', 'smallzone', 'hostel_connector', 'ground', 'bus_stop', 'boundary_wall', 'volleyballcourts', 'pharmacy_badminton', 'pharmacy_volleyball', 'cricketground', 'cricket_nets', 'basketballcourts', 'vignanpond', 'open_gym', 'kabaddi_courts', 'khokho_courts', 'lamp_pole_sports', 'lara_ground', 'pickleball_zone'].includes(type)) {
+} else if (type?.startsWith('custom_') || ['canteen', 'sportsground', 'farm', 'shrine', 'smallzone', 'hostel_connector', 'ground', 'bus_stop', 'boundary_wall', 'volleyballcourts', 'pharmacy_badminton', 'pharmacy_volleyball', 'cricketground', 'cricket_nets', 'basketballcourts', 'vignanpond', 'open_gym', 'kabaddi_courts', 'khokho_courts', 'lamp_pole_sports', 'lara_ground', 'pickleball_zone'].includes(type)) {
 const labelMap = {
 'custom_library': 'LIBRARY',
 'custom_ablock': 'A-BLOCK',
@@ -1906,7 +1906,7 @@ label={item.label}
 
 {/* Render selection helpers for custom landmarks in editor mode */}
 {isDroneMode && mapItems.filter(item => 
-item.type.startsWith('custom_') || 
+item.type?.startsWith('custom_') || 
 ['canteen', 'sportsground', 'farm', 'shrine', 'smallzone', 'hostel_connector', 'ground', 'bus_stop', 'boundary_wall', 'volleyballcourts', 'pharmacy_badminton', 'pharmacy_volleyball', 'cricketground', 'cricket_nets', 'basketballcourts', 'vignanpond', 'convocationhall', 'open_gym', 'kabaddi_courts', 'khokho_courts', 'lamp_pole_sports', 'lara_ground', 'pickleball_zone'].includes(item.id) ||
 ['boyshostel', 'achostel', 'priyadarshinihostel'].includes(item.id)
 ).map(item => {
@@ -2484,7 +2484,7 @@ if (filterCategory === 'all') return true;
 if (filterCategory === 'building') return ['building', 'ushape', 'oshape', 'convocation'].includes(item.type);
 if (filterCategory === 'road') return ['road', 'road_cross', 'road_corner', 'road_highway', 'road_circle'].includes(item.type);
 if (filterCategory === 'zone') return ['zone', 'tree_single', 'tree_row'].includes(item.type);
-if (filterCategory === 'landmark') return item.type.startsWith('custom_') || ['canteen', 'sportsground', 'farm', 'shrine', 'smallzone', 'hostel_connector', 'ground', 'bus_stop', 'boundary_wall'].includes(item.type);
+if (filterCategory === 'landmark') return item.type?.startsWith('custom_') || ['canteen', 'sportsground', 'farm', 'shrine', 'smallzone', 'hostel_connector', 'ground', 'bus_stop', 'boundary_wall'].includes(item.type);
 return item.type === filterCategory;
 }).map(item => (
 <div 
@@ -2498,7 +2498,7 @@ setEditorTab('edit');
 <span>
 <span 
 className="zone-color-indicator" 
-style={{ backgroundColor: item.color || (item.type.startsWith('road') ? '#444' : '#6b7280') }}
+style={{ backgroundColor: item.color || (item.type?.startsWith('road') ? '#444' : '#6b7280') }}
 />
 {item.label || item.type.toUpperCase()}
 </span>
