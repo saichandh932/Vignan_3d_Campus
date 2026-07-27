@@ -207,82 +207,1172 @@ distance={4}
 const LAYOUT_VERSION = "v17";
 
 const DEFAULT_MAP_ITEMS = [
-{ id: 'gate_main', type: 'gate', label: "VIGNAN'S FOUNDATION", pos: [0, 0, 0], rotation: 0, size: [18, 5] },
-{ id: 'gate_library', type: 'gate', label: "LIBRARY ENTRANCE GATE", pos: [-110, 0, -60], rotation: 1.5707963267948966, size: [18, 5] },
-{ id: 'boundary_wall', type: 'boundary_wall', label: "WALL", pos: [10, 0, 15], rotation: -1.5707963267948966, size: [25, 4] },
-{ id: 'bus_stop', type: 'bus_stop', label: "BUS STOP", pos: [-11.4, 0.01, 156.5], rotation: 0.702256931509007, size: [42, 8] },
-{ id: 'library', type: 'custom_library', label: "LIBRARY", pos: [-25, 0, -40], rotation: 0.5235987755982988, size: [21, 21] },
-{ id: 'ablock', type: 'custom_ablock', label: "A-BLOCK", pos: [56.9, 0, 5.6], rotation: 3.141592653589793, size: [65, 145] },
-{ id: 'hblock', type: 'custom_hblock', label: "H-BLOCK", pos: [55, 0, -72.5], rotation: 0, size: [90, 53] },
-{ id: 'nblock', type: 'custom_nblock', label: "N-BLOCK", pos: [-49.1, 0, -189.6], rotation: 1.5707963267948966, size: [49, 189] },
-{ id: "ublock",type: "custom_ublock",pos: [-140, 0, -194],rotation: 3.141592653589793,label: "U-BLOCK",size: [84, 76],floors: 3,color: "#eaeaea"},
-{ id: 'hostel_connector', type: 'hostel_connector', label: "CONNECTOR BRIDGE", pos: [75, 0, -180], rotation: 0 },
-{ id: 'canteen', type: 'canteen', label: "CANTEEN & TT", pos: [90.5, 0, -122], size: [19, 22], rotation: 0 },
-{ id: 'farm', type: 'farm', label: "FARM ZONE", pos: [-30, 0, -93.5], size: [46, 53], rotation: 0 },
-{ id: 'new_outside_zone', type: 'shrine', label: "SHRINE", pos: [-10, 0, 25], rotation: 0 },
-{ id: 'convocationhall', type: 'convocation', label: "CONVOCATION HALL", pos: [-197.5, 0, -197.7], size: [18, 85], floors: 3, color: "#9f96f7", rotation: 0 },
-{ id: 'guesthouse', type: 'building', label: "GUEST HOUSE", pos: [-226.5, 0, -171], size: [30, 30], floors: 2, color: "#37794b", rotation: 0 },
-{ id: 'textile', type: 'building', label: "TEXTILE TECHNOLOGY", pos: [49, 0, -334.5], size: [15, 70], floors: 3, color: "#927b5d", rotation: 0 },
-{ id: 'priyadarshinihostel', type: 'building', label: "PRIYADARSHINI HOSTEL", pos: [-332.5, 0, -399], size: [45, 102], floors: 5, color: "#8add61", rotation: 0 },
-{ id: 'z_library', type: 'zone', label: "LIBRARY", size: [21, 21], color: "#8B4513", pos: [-25, 0, -40] },
-{ id: 'z_farm', type: 'zone', label: "FARM ZONE", size: [46, 53], color: "#228B22", pos: [-30, 0, -93.5] },
-{ id: 'z_smallzone', type: 'zone', label: "SMALL ZONE", size: [15, 64], color: "#FF1493", pos: [92.5, 0, -2] },
-{ id: 'z_canteen', type: 'zone', label: "CANTEEN & TT", size: [19, 22], color: "#00FFFF", pos: [90.5, 0, -122] },
-{ id: 'z_sportsground', type: 'zone', label: "HOCKEY & FOOTBALL GROUND", size: [70, 94], color: "#3CB371", pos: [135, 0, -93] },
-{ id: 'z_ground', type: 'zone', label: "GROUND", size: [60, 25], color: "#FFFF00", pos: [40, 0, -125] },
-{ id: 'z_convocationhall', type: 'zone', label: "CONVOCATION HALL", size: [25, 85], color: "#9f96f7", pos: [-196.5, 0, -197.5] },
-{ id: 'z_guesthouse', type: 'zone', label: "GUEST HOUSE", size: [30, 30], color: "#37794b", pos: [-226.5, 0, -171] },
-{ id: 'z_textile', type: 'zone', label: "TEXTILE TECHNOLOGY", size: [15, 70], color: "#927b5d", pos: [49, 0, -334.5] },
-{ id: 'z_pharmacy_badminton', type: 'zone', label: "PHARMACY BADMINTON COURT", size: [23, 20], color: "#5ae354", pos: [88, 0, -319.5] },
-{ id: 'z_pharmacy_volleyball', type: 'zone', label: "PHARMACY VOLLEYBALL COURT", size: [22, 25], color: "#75e391", pos: [88, 0, -353.5] },
-{ id: 'z_cricketground', type: 'zone', label: "CRICKET GROUND", size: [235, 85], color: "#223269", pos: [-94.6, 0, -334.5] },
-{ id: 'z_vignanpond', type: 'zone', label: "VIGNAN POND", size: [45, 45], color: "#7fb0c9", pos: [-332.5, 0, -321.5] },
-{ id: 'z_priyadarshinihostel', type: 'zone', label: "PRIYADARSHINI HOSTEL", size: [45, 60], color: "#8add61", pos: [-322.5, 0, -379] },
-{ id: 'road_highway', type: 'road_highway', label: "Diagonal Highway (SH 261)", pos: [-155.3, 0.01, -60], size: [20, 600], rotation: 0.702256931509007 },
-{ id: 'road_approach', type: 'road', label: "Approach Road", pos: [-0.4, 0, 54.4], size: [12, 191], rotation: 0, hasTrees: false, hasWalls: false },
-{ id: 'road_spine_1', type: 'road', label: "Spine Road Seg 1", pos: [0, 0, -17], size: [12, 34], rotation: 0, hasTreesRight: false },
-{ id: 'road_spine_1b', type: 'road', label: "Spine Road Seg 1b", pos: [0, 0, -40], size: [12, 12], rotation: 0, hasTrees: false, hasWalls: false },
-{ id: 'road_spine_2', type: 'road', label: "Spine Road Seg 2", pos: [0, 0, -50], size: [12, 8], rotation: 0, hasTreesRight: false },
-{ id: 'road_spine_2b', type: 'road', label: "Spine Road Seg 2b", pos: [0, 0, -60], size: [12, 12], rotation: 0, hasTrees: false, hasWalls: false },
-{ id: 'road_spine_3', type: 'road', label: "Spine Road Seg 3", pos: [0, 0, -82.5], size: [12, 33], rotation: 0, hasTreesLeft: false },
-{ id: 'road_spine_3b', type: 'road', label: "Spine Road Seg 3b", pos: [0, 0, -105], size: [12, 12], rotation: 0, hasTrees: false, hasWalls: false },
-{ id: 'road_spine_4', type: 'road', label: "Spine Road Seg 4", pos: [0, 0, -117.5], size: [12, 13], rotation: 0, hasTreesLeft: false },
-{ id: 'road_spine_4b', type: 'road', label: "Spine Road Seg 4b", pos: [0, 0, -130], size: [12, 12], rotation: 0, hasTrees: false, hasWalls: false },
-{ id: 'road_spine_5', type: 'road', label: "Spine Road Seg 5", pos: [0, 0, -138], size: [12, 4], rotation: 0 },
-{ id: 'road_lib_circle', type: 'road_circle', label: "Library Circle", pos: [-25, 0, -40], size: [15, 27], rotation: 0 },
-{ id: 'road_lib_gate', type: 'road', label: "Library Gate Road", pos: [-56.7, 0, -61.4], size: [12, 104], rotation: 1.5707963267948966, hasWalls: false, hasTreesRight: false },
-{ id: 'road_right_a_h', type: 'road', label: "Right Road (A/H-Block)", pos: [52.7, 0, -38.7], size: [12, 94], rotation: 1.5707963267948966, hasTreesLeft: false },
-{ id: 'road_right_h_gr', type: 'road', label: "Right Road (H/Ground)", pos: [53, 0, -105], size: [12, 94], rotation: 1.5707963267948966, hasTreesLeft: false, holesLeft: [{ start: 16, end: 28 }] },
-{ id: 'road_spine_deep', type: 'road', label: "Spine Road Deep", pos: [-0.2, 0, -199.2], size: [12, 123], rotation: 0 },
-{ id: 'road_hostel_h', type: 'road', label: "Hostel to H-Block Road", pos: [74.8, 0, -124], size: [12, 31], rotation: 0, hasTreesRight: false, holesRight: [{ start: 0.5, end: 7.5 }] },
-{ id: 'road_ac_canteen', type: 'road', label: "AC Hostel to Canteen Road", pos: [90.5, 0, -136.5], size: [7, 19], rotation: 1.5707963267948966, hasTreesLeft: false },
-{ id: 'item_1784218958565', type: 'building', pos: [66, 0, -196], rotation: 0, label: "Hostel", size: [94, 107], floors: 4, color: "#FF8C00" },
-{ id: 'item_1784219400616', type: 'road_highway', pos: [-129.8, 0, -282.5], rotation: 1.5707963267948963, label: "HIGHWAY ROAD", size: [20, 442] },
-{ id: 'item_1784220061382', type: 'road_highway', pos: [80, 0, -326], rotation: 0, label: "HIGHWAY ROAD", size: [13, 111] },
-{ id: 'item_1784220132123', type: 'road_highway', pos: [-214, 0, -346], rotation: 0, label: "HIGHWAY ROAD", size: [20, 170] },
-{ id: 'item_1784220216781', type: 'road_highway', pos: [-279.6, 0, -361.2], rotation: 0, label: "HIGHWAY ROAD", size: [14, 169] },
-{ id: 'item_1784220401591', type: 'road_highway', pos: [-124.2, 0, -409.8], rotation: 1.5707963267948966, label: "HIGHWAY ROAD", size: [9, 191] },
-{ id: 'item_1784220840575', type: 'ushape', pos: [110, 0, -334], rotation: 4.71238898038469, label: "Pharmacy block", size: [58, 15], floors: 3, color: "#eaeaea" },
-{ id: 'item_1784220960590', type: 'road_highway', pos: [88, 0, -350], rotation: 1.5707963267948966, label: "HIGHWAY ROAD", size: [8, 34] },
-{ id: 'pharmacy', type: 'building', label: "PHARMACY BLOCK", pos: [122, 0, -333.5], size: [30, 70], floors: 4, color: "#847e42", rotation: 0 },
-{ id: 'pharmacy_badminton', type: 'pharmacy_badminton', label: "PHARMACY BADMINTON COURT", pos: [86, 0, -317.5], size: [30, 30], rotation: 0 },
-{ id: 'pharmacy_volleyball', type: 'pharmacy_volleyball', label: "PHARMACY VOLLEYBALL COURT", pos: [86, 0, -351.5], size: [30, 25], rotation: 0 },
-{ id: 'volleyballcourts', type: 'volleyballcourts', label: "VOLLEY BALL COURTS", pos: [-231.3, 0, -214.9], size: [64, 50], rotation: 1.5707963267948966 },
-{ id: 'cricketground', type: 'cricketground', label: "CRICKET GROUND", pos: [-127, 0, -336.5], size: [150, 85], rotation: 0 },
-{ id: 'basketballcourts', type: 'basketballcourts', label: "BASKETBALL COURTS", pos: [-255.5, 0, -297.5], size: [30, 29], rotation: 4.71238898038469 },
-{ id: 'vignanpond', type: 'vignanpond', label: "VIGNAN POND", pos: [-332.5, 0, -321.5], size: [45, 45], rotation: 0 },
-{ id: 'open_gym', type: 'open_gym', label: "OPEN GYM", pos: [-9.5, 0, -306.5], size: [60, 30], rotation: 0 },
-{ id: 'kabaddi_courts', type: 'kabaddi_courts', label: "KABADDI COURTS", pos: [-10.5, 0, -334.5], size: [60, 23], rotation: 3.141592653589793 },
-{ id: 'khokho_courts', type: 'khokho_courts', label: "KHO-KHO COURTS", pos: [-9.8, 0, -361.9], size: [60, 30], rotation: 0 },
-{ id: 'lamp_pole_sports', type: 'lamp_pole_sports', label: "SPORTS FLOODLIGHT", pos: [-11, 0, -322.5], size: [2, 2], rotation: 0 },
-{ id: 'item_1784224906629', type: 'road_highway', pos: [-89.7, 0, -74.2], rotation: 0, label: "HIGHWAY ROAD", size: [20, 200] },
-{ id: 'item_1784224983665', type: 'road_highway', pos: [-240, 0, -220], rotation: 0, label: "HIGHWAY ROAD", size: [10, 77] },
-{ id: 'item_1784225058908', type: 'road_highway', pos: [-235.5, 0, -184.8], rotation: 0, label: "HIGHWAY ROAD", size: [18, 8] },
-{ id: 'lara_ground', type: 'lara_ground', label: "LARA GROUND", pos: [-263.5, 0, -378], size: [42, 93], rotation: 0 },
-{ id: 'pickleball_zone', type: 'pickleball_zone', label: "PICKLEBALL ZONE", pos: [-277.5, 0, -297], size: [35, 16], rotation: 1.5707963267948966 },
-{ id: 'cricket_nets', type: 'cricket_nets', label: "CRICKET NETS", pos: [-275.5, 0, -321], size: [13, 18], rotation: 1.5707963267948966 },
-{ id: 'item_1784227348304', type: 'road_highway', pos: [-400, 0, -360], rotation: 0.6283185307179586, label: "HIGHWAY ROAD", size: [20, 200] }
-];
+  {
+    "id": "gate_main",
+    "type": "gate",
+    "label": "VIGNAN'S FOUNDATION",
+    "pos": [
+      0,
+      0,
+      0
+    ],
+    "rotation": 0,
+    "size": [
+      18,
+      5
+    ]
+  },
+  {
+    "id": "gate_library",
+    "type": "gate",
+    "label": "LIBRARY ENTRANCE GATE",
+    "pos": [
+      -162,
+      0,
+      -62
+    ],
+    "rotation": 2.234021442552742,
+    "size": [
+      18,
+      5
+    ]
+  },
+  {
+    "id": "boundary_wall",
+    "type": "boundary_wall",
+    "label": "WALL",
+    "pos": [
+      10,
+      0,
+      15
+    ],
+    "rotation": -1.5707963267948966,
+    "size": [
+      25,
+      4
+    ]
+  },
+  {
+    "id": "bus_stop",
+    "type": "bus_stop",
+    "label": "BUS STOP",
+    "pos": [
+      -11.4,
+      0.01,
+      156.5
+    ],
+    "rotation": 0.702256931509007,
+    "size": [
+      42,
+      8
+    ]
+  },
+  {
+    "id": "library",
+    "type": "custom_library",
+    "label": "LIBRARY",
+    "pos": [
+      -25,
+      0,
+      -40
+    ],
+    "rotation": 0.5235987755982988,
+    "size": [
+      21,
+      21
+    ]
+  },
+  {
+    "id": "ablock",
+    "type": "custom_ablock",
+    "label": "A-BLOCK",
+    "pos": [
+      56.9,
+      0,
+      5.6
+    ],
+    "rotation": 3.141592653589793,
+    "size": [
+      65,
+      145
+    ]
+  },
+  {
+    "id": "hblock",
+    "type": "custom_hblock",
+    "label": "H-BLOCK",
+    "pos": [
+      55,
+      0,
+      -72.5
+    ],
+    "rotation": 0,
+    "size": [
+      90,
+      53
+    ]
+  },
+  {
+    "id": "nblock",
+    "type": "custom_nblock",
+    "label": "N-BLOCK",
+    "pos": [
+      -49.1,
+      0,
+      -189.6
+    ],
+    "rotation": 1.5707963267948966,
+    "size": [
+      49,
+      189
+    ]
+  },
+  {
+    "id": "ublock",
+    "type": "custom_ublock",
+    "pos": [
+      -140,
+      0,
+      -194
+    ],
+    "rotation": 3.141592653589793,
+    "label": "U-BLOCK",
+    "size": [
+      84,
+      76
+    ],
+    "floors": 3,
+    "color": "#eaeaea"
+  },
+  {
+    "id": "hostel_connector",
+    "type": "hostel_connector",
+    "label": "CONNECTOR BRIDGE",
+    "pos": [
+      75,
+      0,
+      -180
+    ],
+    "rotation": 0
+  },
+  {
+    "id": "canteen",
+    "type": "canteen",
+    "label": "CANTEEN & TT",
+    "pos": [
+      90.5,
+      0,
+      -122
+    ],
+    "size": [
+      19,
+      22
+    ],
+    "rotation": 0
+  },
+  {
+    "id": "farm",
+    "type": "farm",
+    "label": "FARM ZONE",
+    "pos": [
+      -30,
+      0,
+      -93.5
+    ],
+    "size": [
+      46,
+      53
+    ],
+    "rotation": 0
+  },
+  {
+    "id": "new_outside_zone",
+    "type": "shrine",
+    "label": "SHRINE",
+    "pos": [
+      -10,
+      0,
+      25
+    ],
+    "rotation": 0
+  },
+  {
+    "id": "convocationhall",
+    "type": "convocation",
+    "label": "CONVOCATION HALL",
+    "pos": [
+      -197.5,
+      0,
+      -197.7
+    ],
+    "size": [
+      18,
+      85
+    ],
+    "floors": 3,
+    "color": "#9f96f7",
+    "rotation": 0
+  },
+  {
+    "id": "guesthouse",
+    "type": "building",
+    "label": "GUEST HOUSE",
+    "pos": [
+      -226.5,
+      0,
+      -171
+    ],
+    "size": [
+      30,
+      30
+    ],
+    "floors": 2,
+    "color": "#37794b",
+    "rotation": 0
+  },
+  {
+    "id": "textile",
+    "type": "building",
+    "label": "TEXTILE TECHNOLOGY",
+    "pos": [
+      49,
+      0,
+      -334.5
+    ],
+    "size": [
+      15,
+      70
+    ],
+    "floors": 3,
+    "color": "#927b5d",
+    "rotation": 0
+  },
+  {
+    "id": "priyadarshinihostel",
+    "type": "building",
+    "label": "PRIYADARSHINI HOSTEL",
+    "pos": [
+      -332.5,
+      0,
+      -399
+    ],
+    "size": [
+      45,
+      102
+    ],
+    "floors": 5,
+    "color": "#8add61",
+    "rotation": 0
+  },
+  {
+    "id": "z_library",
+    "type": "zone",
+    "label": "LIBRARY",
+    "size": [
+      21,
+      21
+    ],
+    "color": "#8B4513",
+    "pos": [
+      -25,
+      0,
+      -40
+    ]
+  },
+  {
+    "id": "z_farm",
+    "type": "zone",
+    "label": "FARM ZONE",
+    "size": [
+      46,
+      53
+    ],
+    "color": "#228B22",
+    "pos": [
+      -30,
+      0,
+      -93.5
+    ]
+  },
+  {
+    "id": "z_smallzone",
+    "type": "zone",
+    "label": "SMALL ZONE",
+    "size": [
+      15,
+      64
+    ],
+    "color": "#FF1493",
+    "pos": [
+      92.5,
+      0,
+      -2
+    ]
+  },
+  {
+    "id": "z_canteen",
+    "type": "zone",
+    "label": "CANTEEN & TT",
+    "size": [
+      19,
+      22
+    ],
+    "color": "#00FFFF",
+    "pos": [
+      90.5,
+      0,
+      -122
+    ]
+  },
+  {
+    "id": "z_sportsground",
+    "type": "zone",
+    "label": "HOCKEY & FOOTBALL GROUND",
+    "size": [
+      70,
+      94
+    ],
+    "color": "#8B4513",
+    "pos": [
+      135,
+      0,
+      -93
+    ]
+  },
+  {
+    "id": "z_ground",
+    "type": "zone",
+    "label": "GROUND",
+    "size": [
+      60,
+      25
+    ],
+    "color": "#FFFF00",
+    "pos": [
+      40,
+      0,
+      -125
+    ]
+  },
+  {
+    "id": "z_convocationhall",
+    "type": "zone",
+    "label": "CONVOCATION HALL",
+    "size": [
+      25,
+      85
+    ],
+    "color": "#9f96f7",
+    "pos": [
+      -196.5,
+      0,
+      -197.5
+    ]
+  },
+  {
+    "id": "z_guesthouse",
+    "type": "zone",
+    "label": "GUEST HOUSE",
+    "size": [
+      30,
+      30
+    ],
+    "color": "#37794b",
+    "pos": [
+      -226.5,
+      0,
+      -171
+    ]
+  },
+  {
+    "id": "z_textile",
+    "type": "zone",
+    "label": "TEXTILE TECHNOLOGY",
+    "size": [
+      15,
+      70
+    ],
+    "color": "#927b5d",
+    "pos": [
+      49,
+      0,
+      -334.5
+    ]
+  },
+  {
+    "id": "z_pharmacy_badminton",
+    "type": "zone",
+    "label": "PHARMACY BADMINTON COURT",
+    "size": [
+      23,
+      20
+    ],
+    "color": "#5ae354",
+    "pos": [
+      88,
+      0,
+      -319.5
+    ]
+  },
+  {
+    "id": "z_pharmacy_volleyball",
+    "type": "zone",
+    "label": "PHARMACY VOLLEYBALL COURT",
+    "size": [
+      22,
+      25
+    ],
+    "color": "#75e391",
+    "pos": [
+      88,
+      0,
+      -353.5
+    ]
+  },
+  {
+    "id": "z_cricketground",
+    "type": "zone",
+    "label": "CRICKET GROUND",
+    "size": [
+      235,
+      85
+    ],
+    "color": "#223269",
+    "pos": [
+      -94.6,
+      0,
+      -334.5
+    ]
+  },
+  {
+    "id": "z_vignanpond",
+    "type": "zone",
+    "label": "VIGNAN POND",
+    "size": [
+      45,
+      45
+    ],
+    "color": "#7fb0c9",
+    "pos": [
+      -332.5,
+      0,
+      -321.5
+    ]
+  },
+  {
+    "id": "z_priyadarshinihostel",
+    "type": "zone",
+    "label": "PRIYADARSHINI HOSTEL",
+    "size": [
+      45,
+      60
+    ],
+    "color": "#8add61",
+    "pos": [
+      -322.5,
+      0,
+      -379
+    ]
+  },
+  {
+    "id": "road_highway",
+    "type": "road_highway",
+    "label": "Diagonal Highway (SH 261)",
+    "pos": [
+      -155.3,
+      0.01,
+      -60
+    ],
+    "size": [
+      20,
+      600
+    ],
+    "rotation": 0.702256931509007
+  },
+  {
+    "id": "road_approach",
+    "type": "road",
+    "label": "Approach Road",
+    "pos": [
+      -0.4,
+      0,
+      54.4
+    ],
+    "size": [
+      12,
+      191
+    ],
+    "rotation": 0,
+    "hasTrees": false,
+    "hasWalls": false
+  },
+  {
+    "id": "road_spine_1",
+    "type": "road",
+    "label": "Spine Road Seg 1",
+    "pos": [
+      0,
+      0,
+      -17
+    ],
+    "size": [
+      12,
+      34
+    ],
+    "rotation": 0,
+    "hasTreesRight": false
+  },
+  {
+    "id": "road_spine_1b",
+    "type": "road",
+    "label": "Spine Road Seg 1b",
+    "pos": [
+      0,
+      0,
+      -40
+    ],
+    "size": [
+      12,
+      12
+    ],
+    "rotation": 0,
+    "hasTrees": false,
+    "hasWalls": false
+  },
+  {
+    "id": "road_spine_2",
+    "type": "road",
+    "label": "Spine Road Seg 2",
+    "pos": [
+      0,
+      0,
+      -50
+    ],
+    "size": [
+      12,
+      8
+    ],
+    "rotation": 0,
+    "hasTreesRight": false
+  },
+  {
+    "id": "road_spine_2b",
+    "type": "road",
+    "label": "Spine Road Seg 2b",
+    "pos": [
+      0,
+      0,
+      -60
+    ],
+    "size": [
+      12,
+      12
+    ],
+    "rotation": 0,
+    "hasTrees": false,
+    "hasWalls": false
+  },
+  {
+    "id": "road_spine_3",
+    "type": "road",
+    "label": "Spine Road Seg 3",
+    "pos": [
+      0,
+      0,
+      -82.5
+    ],
+    "size": [
+      12,
+      33
+    ],
+    "rotation": 0,
+    "hasTreesLeft": false
+  },
+  {
+    "id": "road_spine_3b",
+    "type": "road",
+    "label": "Spine Road Seg 3b",
+    "pos": [
+      0,
+      0,
+      -105
+    ],
+    "size": [
+      12,
+      12
+    ],
+    "rotation": 0,
+    "hasTrees": false,
+    "hasWalls": false
+  },
+  {
+    "id": "road_spine_4",
+    "type": "road",
+    "label": "Spine Road Seg 4",
+    "pos": [
+      0,
+      0,
+      -117.5
+    ],
+    "size": [
+      12,
+      13
+    ],
+    "rotation": 0,
+    "hasTreesLeft": false
+  },
+  {
+    "id": "road_spine_4b",
+    "type": "road",
+    "label": "Spine Road Seg 4b",
+    "pos": [
+      0,
+      0,
+      -130
+    ],
+    "size": [
+      12,
+      12
+    ],
+    "rotation": 0,
+    "hasTrees": false,
+    "hasWalls": false
+  },
+  {
+    "id": "road_spine_5",
+    "type": "road",
+    "label": "Spine Road Seg 5",
+    "pos": [
+      0,
+      0,
+      -138
+    ],
+    "size": [
+      12,
+      4
+    ],
+    "rotation": 0
+  },
+  {
+    "id": "road_lib_circle",
+    "type": "road_circle",
+    "label": "Library Circle",
+    "pos": [
+      -25,
+      0,
+      -40
+    ],
+    "size": [
+      15,
+      27
+    ],
+    "rotation": 0
+  },
+  {
+    "id": "road_lib_gate",
+    "type": "road",
+    "label": "Library Gate Road",
+    "pos": [
+      -87,
+      0,
+      -61.4
+    ],
+    "size": [
+      12,
+      165
+    ],
+    "rotation": 1.5707963267948966,
+    "hasWalls": false,
+    "hasTreesRight": false
+  },
+  {
+    "id": "road_right_a_h",
+    "type": "road",
+    "label": "Right Road (A/H-Block)",
+    "pos": [
+      52.7,
+      0,
+      -38.7
+    ],
+    "size": [
+      12,
+      94
+    ],
+    "rotation": 1.5707963267948966,
+    "hasTreesLeft": false
+  },
+  {
+    "id": "road_right_h_gr",
+    "type": "road",
+    "label": "Right Road (H/Ground)",
+    "pos": [
+      53,
+      0,
+      -105
+    ],
+    "size": [
+      12,
+      94
+    ],
+    "rotation": 1.5707963267948966,
+    "hasTreesLeft": false,
+    "holesLeft": [
+      {
+        "start": 16,
+        "end": 28
+      }
+    ]
+  },
+  {
+    "id": "road_spine_deep",
+    "type": "road",
+    "label": "Spine Road Deep",
+    "pos": [
+      -0.2,
+      0,
+      -199.2
+    ],
+    "size": [
+      12,
+      123
+    ],
+    "rotation": 0
+  },
+  {
+    "id": "road_hostel_h",
+    "type": "road",
+    "label": "Hostel to H-Block Road",
+    "pos": [
+      74.8,
+      0,
+      -124
+    ],
+    "size": [
+      12,
+      31
+    ],
+    "rotation": 0,
+    "hasTreesRight": false,
+    "holesRight": [
+      {
+        "start": 0.5,
+        "end": 7.5
+      }
+    ]
+  },
+  {
+    "id": "road_ac_canteen",
+    "type": "road",
+    "label": "AC Hostel to Canteen Road",
+    "pos": [
+      90.5,
+      0,
+      -136.5
+    ],
+    "size": [
+      7,
+      19
+    ],
+    "rotation": 1.5707963267948966,
+    "hasTreesLeft": false
+  },
+  {
+    "id": "item_1784218958565",
+    "type": "building",
+    "pos": [
+      66,
+      0,
+      -196
+    ],
+    "rotation": 0,
+    "label": "Hostel",
+    "size": [
+      94,
+      107
+    ],
+    "floors": 4,
+    "color": "#FF8C00"
+  },
+  {
+    "id": "item_1784219400616",
+    "type": "road_highway",
+    "pos": [
+      -129.8,
+      0,
+      -282.5
+    ],
+    "rotation": 1.5707963267948963,
+    "label": "HIGHWAY ROAD",
+    "size": [
+      20,
+      442
+    ]
+  },
+  {
+    "id": "item_1784220061382",
+    "type": "road_highway",
+    "pos": [
+      80,
+      0,
+      -326
+    ],
+    "rotation": 0,
+    "label": "HIGHWAY ROAD",
+    "size": [
+      13,
+      111
+    ]
+  },
+  {
+    "id": "item_1784220132123",
+    "type": "road_highway",
+    "pos": [
+      -214,
+      0,
+      -346
+    ],
+    "rotation": 0,
+    "label": "HIGHWAY ROAD",
+    "size": [
+      20,
+      170
+    ]
+  },
+  {
+    "id": "item_1784220216781",
+    "type": "road_highway",
+    "pos": [
+      -279.6,
+      0,
+      -361.2
+    ],
+    "rotation": 0,
+    "label": "HIGHWAY ROAD",
+    "size": [
+      14,
+      169
+    ]
+  },
+  {
+    "id": "item_1784220401591",
+    "type": "road_highway",
+    "pos": [
+      -124.2,
+      0,
+      -409.8
+    ],
+    "rotation": 1.5707963267948966,
+    "label": "HIGHWAY ROAD",
+    "size": [
+      9,
+      191
+    ]
+  },
+  {
+    "id": "item_1784220840575",
+    "type": "ushape",
+    "pos": [
+      110,
+      0,
+      -334
+    ],
+    "rotation": 4.71238898038469,
+    "label": "Pharmacy block",
+    "size": [
+      58,
+      15
+    ],
+    "floors": 3,
+    "color": "#eaeaea"
+  },
+  {
+    "id": "item_1784220960590",
+    "type": "road_highway",
+    "pos": [
+      88,
+      0,
+      -350
+    ],
+    "rotation": 1.5707963267948966,
+    "label": "HIGHWAY ROAD",
+    "size": [
+      8,
+      34
+    ]
+  },
+  {
+    "id": "pharmacy",
+    "type": "building",
+    "label": "PHARMACY BLOCK",
+    "pos": [
+      122,
+      0,
+      -333.5
+    ],
+    "size": [
+      30,
+      70
+    ],
+    "floors": 4,
+    "color": "#847e42",
+    "rotation": 0
+  },
+  {
+    "id": "pharmacy_badminton",
+    "type": "pharmacy_badminton",
+    "label": "PHARMACY BADMINTON COURT",
+    "pos": [
+      86,
+      0,
+      -317.5
+    ],
+    "size": [
+      30,
+      30
+    ],
+    "rotation": 0
+  },
+  {
+    "id": "pharmacy_volleyball",
+    "type": "pharmacy_volleyball",
+    "label": "PHARMACY VOLLEYBALL COURT",
+    "pos": [
+      86,
+      0,
+      -351.5
+    ],
+    "size": [
+      30,
+      25
+    ],
+    "rotation": 0
+  },
+  {
+    "id": "volleyballcourts",
+    "type": "volleyballcourts",
+    "label": "VOLLEY BALL COURTS",
+    "pos": [
+      -231.3,
+      0,
+      -214.9
+    ],
+    "size": [
+      64,
+      50
+    ],
+    "rotation": 1.5707963267948966
+  },
+  {
+    "id": "cricketground",
+    "type": "cricketground",
+    "label": "CRICKET GROUND",
+    "pos": [
+      -127,
+      0,
+      -336.5
+    ],
+    "size": [
+      150,
+      85
+    ],
+    "rotation": 0
+  },
+  {
+    "id": "basketballcourts",
+    "type": "basketballcourts",
+    "label": "BASKETBALL COURTS",
+    "pos": [
+      -255.5,
+      0,
+      -297.5
+    ],
+    "size": [
+      30,
+      29
+    ],
+    "rotation": 4.71238898038469
+  },
+  {
+    "id": "vignanpond",
+    "type": "vignanpond",
+    "label": "VIGNAN POND",
+    "pos": [
+      -332.5,
+      0,
+      -321.5
+    ],
+    "size": [
+      45,
+      45
+    ],
+    "rotation": 0
+  },
+  {
+    "id": "open_gym",
+    "type": "open_gym",
+    "label": "OPEN GYM",
+    "pos": [
+      -9.5,
+      0,
+      -306.5
+    ],
+    "size": [
+      60,
+      30
+    ],
+    "rotation": 0
+  },
+  {
+    "id": "kabaddi_courts",
+    "type": "kabaddi_courts",
+    "label": "KABADDI COURTS",
+    "pos": [
+      -10.5,
+      0,
+      -334.5
+    ],
+    "size": [
+      60,
+      23
+    ],
+    "rotation": 3.141592653589793
+  },
+  {
+    "id": "khokho_courts",
+    "type": "khokho_courts",
+    "label": "KHO-KHO COURTS",
+    "pos": [
+      -9.8,
+      0,
+      -361.9
+    ],
+    "size": [
+      60,
+      30
+    ],
+    "rotation": 0
+  },
+  {
+    "id": "lamp_pole_sports",
+    "type": "lamp_pole_sports",
+    "label": "SPORTS FLOODLIGHT",
+    "pos": [
+      -11,
+      0,
+      -322.5
+    ],
+    "size": [
+      2,
+      2
+    ],
+    "rotation": 0
+  },
+  {
+    "id": "item_1784224983665",
+    "type": "road_highway",
+    "pos": [
+      -240,
+      0,
+      -220
+    ],
+    "rotation": 0,
+    "label": "HIGHWAY ROAD",
+    "size": [
+      10,
+      77
+    ]
+  },
+  {
+    "id": "item_1784225058908",
+    "type": "road_highway",
+    "pos": [
+      -235.5,
+      0,
+      -184.8
+    ],
+    "rotation": 0,
+    "label": "HIGHWAY ROAD",
+    "size": [
+      18,
+      8
+    ]
+  },
+  {
+    "id": "lara_ground",
+    "type": "lara_ground",
+    "label": "LARA GROUND",
+    "pos": [
+      -263.5,
+      0,
+      -378
+    ],
+    "size": [
+      42,
+      93
+    ],
+    "rotation": 0
+  },
+  {
+    "id": "pickleball_zone",
+    "type": "pickleball_zone",
+    "label": "PICKLEBALL ZONE",
+    "pos": [
+      -277.5,
+      0,
+      -297
+    ],
+    "size": [
+      35,
+      16
+    ],
+    "rotation": 1.5707963267948966
+  },
+  {
+    "id": "cricket_nets",
+    "type": "cricket_nets",
+    "label": "CRICKET NETS",
+    "pos": [
+      -275.5,
+      0,
+      -321
+    ],
+    "size": [
+      13,
+      18
+    ],
+    "rotation": 1.5707963267948966
+  },
+  {
+    "id": "item_1784227348304",
+    "type": "road_highway",
+    "pos": [
+      -400,
+      0,
+      -360
+    ],
+    "rotation": 0.6283185307179586,
+    "label": "HIGHWAY ROAD",
+    "size": [
+      20,
+      200
+    ]
+  },
+  {
+    "id": "item_1785151296708",
+    "type": "road",
+    "pos": [
+      -140,
+      0,
+      -229
+    ],
+    "rotation": 0,
+    "label": "NEW ROAD",
+    "size": [
+      12,
+      64
+    ]
+  }
+]
 
 const ADD_TEMPLATES = [
 // Modular components
