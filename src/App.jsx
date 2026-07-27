@@ -1373,7 +1373,6 @@ const DEFAULT_MAP_ITEMS = [
 "floors": 4,
 "color": "#eaeaea"
 }
-];
 ]];
 
 const ADD_TEMPLATES = [
