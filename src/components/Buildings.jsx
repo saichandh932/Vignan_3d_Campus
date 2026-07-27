@@ -337,16 +337,18 @@ return (
 }
 
 export function Buildings({ zones = [] }) {
-const getZone = (id, defaultLabel, defaultPos, defaultSize = null, defaultRot = 0) => {
-const found = zones.find(z => z.id === id);
-return {
-render: found ? true : false,
-pos: found ? found.pos : defaultPos,
-label: found ? found.label : defaultLabel,
-size: found ? found.size : defaultSize,
-rotation: found && found.rotation !== undefined ? found.rotation : defaultRot
-};
-};
+  const getZone = (id, defaultLabel, defaultPos, defaultSize = null, defaultRot = 0) => {
+    const found = zones.find(z => z.id === id);
+    return {
+      // Always allow the block to render using its default coordinates if not explicitly hidden
+      render: true, 
+      pos: found ? found.pos : defaultPos,
+      label: found ? found.label : defaultLabel,
+      size: found ? found.size : defaultSize,
+      rotation: found && found.rotation !== undefined ? found.rotation : defaultRot
+    };
+  };
+
 
 const gateMain = getZone('gate_main', "VIGNAN'S FOUNDATION", [0, 0, 0], [18, 5], 0);
 const gateLibrary = getZone('gate_library', "LIBRARY ENTRANCE GATE", [-110, 0, -60], [18, 5], 1.5707963267948966);
