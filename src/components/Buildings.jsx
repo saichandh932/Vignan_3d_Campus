@@ -358,9 +358,9 @@ export function Buildings({ zones = [] }) {
   const hblockZone = getZone('hblock', 'H-BLOCK', [55.0, 0, -72.5], [90, 53], 0);
   const nblockZone = getZone('nblock', 'N-BLOCK', [-49.1, 0, -189.6], [49, 189], 1.5707963267948966);
   const ublockZone = getZone(
-  'ublock',
-  'U-BLOCK',
-  [-141.5, 0, -198.0],
+  "ublock",
+  "U-BLOCK",
+  [-141.5, 0, -198],
   [75, 85],
   0
 );
@@ -1299,14 +1299,16 @@ export function Buildings({ zones = [] }) {
       )}
       {/* 🏢 U-BLOCK (Aryabhatta Bhavan) */}
       {ublockZone.render && (
-        <group
-          position={ublockZone.pos}
-          rotation={[0, ublockZone.rotation, 0]}
-          scale={[
-            ublockZone.size ? ublockZone.size[0] / 75 : 1,
-            1,
-            ublockZone.size ? ublockZone.size[1] / 85 : 1
-          ]}
+            <group rotation={[0, ublockZone.rotation, 0]}>
+              <UShapeBlock
+                position={ublockZone.pos}
+                size={[ublockZone.size[0], 15, ublockZone.size[1]]}
+                floors={3}
+                color="#f5f5f5"
+                label={ublockZone.label}
+              />
+            </group>
+          )}
         >
 <mesh position={[0, 10, 0]}>
   <boxGeometry args={[20, 20, 20]} />
