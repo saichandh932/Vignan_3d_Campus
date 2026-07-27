@@ -1357,7 +1357,7 @@ const DEFAULT_MAP_ITEMS = [
     ]
   },
   {
-    "id": "item_1785139391773",
+    "id": "ublock",
     "type": "custom_ublock",
     "pos": [
       -139,
