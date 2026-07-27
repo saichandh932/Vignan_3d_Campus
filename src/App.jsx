@@ -1358,19 +1358,19 @@ const DEFAULT_MAP_ITEMS = [
   },
   {
     "id": "item_1785139391773",
-    "type": "ushape",
+    "type": "custom_ublock",
     "pos": [
       -139,
       0,
       -207
     ],
     "rotation": 3.141592653589793,
-    "label": "U-SHAPE BLOCK",
+    "label": "U BLOCK",
     "size": [
       73,
       94
     ],
-    "floors": 3,
+    "floors": 4,
     "color": "#eaeaea"
   }
 ]];
@@ -1395,6 +1395,7 @@ const ADD_TEMPLATES = [
 { type: 'custom_ablock', label: 'A - Block', icon: '🏛️', category: 'landmark' },
 { type: 'custom_hblock', label: 'H - Block', icon: '🏛️', category: 'landmark' },
 { type: 'custom_nblock', label: 'N - Block', icon: '🏛️', category: 'landmark' },
+{ type: 'custom_ublock', label: 'U - Block', icon: '🏛️', category: 'landmark' },
 { type: 'canteen', label: 'Canteen Shed', icon: '🍽️', category: 'landmark' },
 { type: 'sportsground', label: 'Sports Ground', icon: '⚽', category: 'landmark' },
 { type: 'farm', label: 'Farm Zone', icon: '🚜', category: 'landmark' },
