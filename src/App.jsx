@@ -204,7 +204,7 @@ distance={4}
 
 // IMPORTANT: Increment this version string whenever DEFAULT_MAP_ITEMS is updated.
 // This forces all users' browsers to discard their old localStorage and reload fresh defaults.
-const LAYOUT_VERSION = "v15";
+const LAYOUT_VERSION = "v17";
 
 const DEFAULT_MAP_ITEMS = [
 { id: 'gate_main', type: 'gate', label: "VIGNAN'S FOUNDATION", pos: [0, 0, 0], rotation: 0, size: [18, 5] },
