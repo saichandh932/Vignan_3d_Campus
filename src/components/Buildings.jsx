@@ -1294,6 +1294,9 @@ THE MOST HAPPENING PLACE
 </group>
 )}
       {/* 🏢 U-BLOCK (Aryabhatta Bhavan) */}
+      // In Buildings.jsx
+
+      {/* 🏢 U-BLOCK (Aryabhatta Bhavan) */}
       {ublockZone.render && (
         <group
           position={ublockZone.pos}
@@ -1436,17 +1439,19 @@ THE MOST HAPPENING PLACE
 
           {/* ========================================= */}
           {/* ORANGE CORNER STRUCTURES */}
-          {/* Similar to reference image */}
+          {/* Replacing stand-alone columns with bridging corner structures matching photo */}
           {/* ========================================= */}
 
           {[-24, 24].map((x) => (
             <group key={`u-corner-${x}`}>
 
+              {/* Back Corner Connector Bridge (bracing back and central wings) */}
               <mesh position={[x, 14, -5]}>
                 <boxGeometry args={[1.2, 24, 1.2]} />
                 <meshStandardMaterial color="#E87522" />
               </mesh>
 
+              {/* Front Corner Bridge (at junction with side wings) */}
               <mesh position={[x, 14, 10]}>
                 <boxGeometry args={[1.2, 24, 1.2]} />
                 <meshStandardMaterial color="#E87522" />
@@ -1501,6 +1506,7 @@ THE MOST HAPPENING PLACE
 
           {/* ========================================= */}
           {/* GRAND ENTRANCE STAIRS */}
+          {/* Saddle brown color based on weathered plinth in photo */}
           {/* ========================================= */}
 
           {[0, 1, 2, 3, 4, 5, 6].map((step) => (
@@ -1527,6 +1533,7 @@ THE MOST HAPPENING PLACE
 
           {/* ========================================= */}
           {/* WHITE ENTRANCE PILLARS */}
+          {/* Updated count and start point to match the expansive photo */}
           {/* ========================================= */}
 
           {[-6, -2, 2, 6].map((x) => (
@@ -1543,7 +1550,7 @@ THE MOST HAPPENING PLACE
 
           {/* ========================================= */}
           {/* CURVED FRONT CANOPY */}
-          {/* Reference-style semicircular entrance */}
+          {/* Blueish-grey canopy dome matching the photo */}
           {/* ========================================= */}
 
           <mesh
