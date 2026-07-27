@@ -331,17 +331,17 @@ const DEFAULT_MAP_ITEMS = [
     "id": "ublock",
     "type": "custom_ublock",
     "pos": [
-      -140,
+      -139,
       0,
-      -194
+      -207
     ],
     "rotation": 3.141592653589793,
     "label": "U-BLOCK",
     "size": [
-      84,
-      76
+      73,
+      94
     ],
-    "floors": 3,
+    "floors": 4,
     "color": "#eaeaea"
   },
   {
