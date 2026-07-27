@@ -1308,7 +1308,10 @@ export function Buildings({ zones = [] }) {
             ublockZone.size ? ublockZone.size[1] / 85 : 1
           ]}
         >
-
+<mesh position={[0, 10, 0]}>
+  <boxGeometry args={[20, 20, 20]} />
+  <meshStandardMaterial color="red" />
+</mesh>
           {/* ========================================= */}
           {/* BACK / CENTRAL WING */}
           {/* ========================================= */}
