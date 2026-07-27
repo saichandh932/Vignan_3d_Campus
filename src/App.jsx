@@ -708,22 +708,6 @@ const DEFAULT_MAP_ITEMS =
     "hasWalls": false
   },
   {
-    "id": "road_spine_1",
-    "type": "road",
-    "label": "Spine Road Seg 1",
-    "pos": [
-      -29.3,
-      0,
-      0.6
-    ],
-    "size": [
-      12,
-      34
-    ],
-    "rotation": 0,
-    "hasTreesRight": false
-  },
-  {
     "id": "road_spine_1b",
     "type": "road",
     "label": "Spine Road Seg 1b",
@@ -874,7 +858,7 @@ const DEFAULT_MAP_ITEMS =
     "type": "road",
     "label": "Library Gate Road",
     "pos": [
-      -77,
+      -59,
       0,
       -61.4
     ],
@@ -1378,9 +1362,9 @@ const DEFAULT_MAP_ITEMS =
     "type": "road",
     "label": "Right Road (A/H-Block) (Copy)",
     "pos": [
-      -124,
+      -120.7,
       0,
-      -61
+      -60.9
     ],
     "size": [
       10,
