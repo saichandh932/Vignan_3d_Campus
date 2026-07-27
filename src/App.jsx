@@ -204,7 +204,7 @@ function PlayerController({ joystick }) {
 
 // IMPORTANT: Increment this version string whenever DEFAULT_MAP_ITEMS is updated.
 // This forces all users' browsers to discard their old localStorage and reload fresh defaults.
-const LAYOUT_VERSION = "v15";
+const LAYOUT_VERSION = "v16";
 
 const DEFAULT_MAP_ITEMS = [
   { id: 'gate_main', type: 'gate', label: "VIGNAN'S FOUNDATION", pos: [0, 0, 0], rotation: 0, size: [18, 5] },
@@ -215,6 +215,7 @@ const DEFAULT_MAP_ITEMS = [
   { id: 'ablock', type: 'custom_ablock', label: "A-BLOCK", pos: [56.9, 0, 5.6], rotation: 3.141592653589793, size: [65, 145] },
   { id: 'hblock', type: 'custom_hblock', label: "H-BLOCK", pos: [55, 0, -72.5], rotation: 0, size: [90, 53] },
   { id: 'nblock', type: 'custom_nblock', label: "N-BLOCK", pos: [-49.1, 0, -189.6], rotation: 1.5707963267948966, size: [49, 189] },
+  {id: "item_1785130465963",type: "ushape",pos: [-140, 0, -194],rotation: 3.141592653589793,label: "U-SHAPE BLOCK",size: [84, 76],floors: 3,color: "#eaeaea"},
   { id: 'hostel_connector', type: 'hostel_connector', label: "CONNECTOR BRIDGE", pos: [75, 0, -180], rotation: 0 },
   { id: 'canteen', type: 'canteen', label: "CANTEEN & TT", pos: [90.5, 0, -122], size: [19, 22], rotation: 0 },
   { id: 'farm', type: 'farm', label: "FARM ZONE", pos: [-30, 0, -93.5], size: [46, 53], rotation: 0 },
